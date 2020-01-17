@@ -1,3 +1,7 @@
+# Output folder of the PIOLab
+ProcessedData/**
+ALANGfiles/**
+
 # History files
 .Rhistory
 .Rapp.history
