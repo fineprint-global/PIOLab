@@ -1,0 +1,1108 @@
+"Commodity Name";commodityid;Country;ISOAlpha-2;Concentration;UnitFactor;UsedFactor;Comment;AddComment
+Antimony;8;Algeria;DZ;0.05;0.001;0.02;"Global average";
+Antimony;8;Australia;AU;1;0.001;0.001;"By-product of lead ores ";NULL
+Antimony;8;Austria;AT;0.05;0.001;0.02;"Global average";NULL
+Antimony;8;Bolivia;BO;0.05;0.001;0.02;"Global average concentration";NULL
+Antimony;8;Brazil;BR;0.05;0.001;0.02;"Global average";NULL
+Antimony;8;Canada;CA;0.05;0.001;0.02;"Global average concentration";NULL
+Antimony;8;China;CN;0.05;0.001;0.02;"Global average concentration";NULL
+Antimony;8;Czechoslovakia;CS;0.05;0.001;0.02;"Global average concentration";NULL
+Antimony;8;France;FR;1;0.001;0.001;"By-product of lead ores ";NULL
+Antimony;8;Guatemala;GT;0.05;0.001;0.02;"Global average concentration";NULL
+Antimony;8;Honduras;HN;0.05;0.001;0.02;"Global average";NULL
+Antimony;8;India;IN;0.05;0.001;0.02;"Global average";
+Antimony;8;Italy;IT;1;0.001;0.001;"By-product of lead ores ";NULL
+Antimony;8;Japan;JP;0.05;0.001;0.02;"Global average";
+Antimony;8;Kazakhstan;KZ;0.05;0.001;0.02;"Global average";NULL
+Antimony;8;Kyrgyzstan;KG;0.05;0.001;0.02;"Global average concentration";NULL
+Antimony;8;Laos;LA;0.05;0.001;0.02;"Global average";NULL
+Antimony;8;Malaysia;MY;0.05;0.001;0.02;"Global average";NULL
+Antimony;8;Mexico;MX;0.05;0.001;0.02;"Global average concentration";NULL
+Antimony;8;Morocco;MA;1;0.001;0.001;"By-product of lead ores";NULL
+Antimony;8;Myanmar;MM;0.05;0.001;0.02;"Global average";NULL
+Antimony;8;Pakistan;PK;0.05;0.001;0.02;"Global average concentration";NULL
+Antimony;8;Peru;PE;0.05;0.001;0.02;"Global average concentration";NULL
+Antimony;8;Portugal;PT;0.05;0.001;0.02;"Global average";
+Antimony;8;Romania;RO;0.05;0.001;0.02;"Global average";NULL
+Antimony;8;"Russian Federation";RU;1;0.001;0.001;"By-product of other ores";NULL
+Antimony;8;"South Africa";ZA;1;0.001;0.001;"By-product of gold ores ";NULL
+Antimony;8;"South Korea";KR;0.05;0.001;0.02;"Global average";
+Antimony;8;Spain;ES;1;0.001;0.001;"By-product of lead ores ";NULL
+Antimony;8;Tajikistan;TJ;0.05;0.001;0.02;"Global average concentration";NULL
+Antimony;8;Thailand;TH;0.05;0.001;0.02;"Global average concentration";NULL
+Antimony;8;Turkey;TR;0.05;0.001;0.02;"Global average concentration";NULL
+Antimony;8;"United States of America";US;0.05;0.001;0.02;"Global average concentration";NULL
+Antimony;8;USSR;SU;0.01;0.001;0.1;"National metal content Assumption: same as in Russian Federation ";NULL
+Antimony;8;"Viet Nam";VN;0.05;0.001;0.02;"Global average";
+Antimony;8;"Yugoslavia SFR";YU;1;0.001;0.001;"By-product of other mining";NULL
+Antimony;8;Zimbabwe;ZW;0.05;0.001;0.02;"Global average";NULL
+Arsenic;9;Belgium;BE;1;0.001;0.001;"By-product of other ores";NULL
+Arsenic;9;Bolivia;BO;1;0.001;0.001;"By-product of other polymetallic ores";NULL
+Arsenic;9;Canada;CA;1;0.001;0.001;"By-product of other ores";NULL
+Arsenic;9;Chile;CL;1;0.001;0.001;"By-product of other poly-metallic ores";NULL
+Arsenic;9;China;CN;1;0.001;0.001;"By-product of other ores";NULL
+Arsenic;9;France;FR;1;0.001;0.001;"By-product of other ores";NULL
+Arsenic;9;Germany;DE;1;0.001;0.001;"By-product of other ores";NULL
+Arsenic;9;Iran;IR;1;0.001;0.001;"By-product of other ores";NULL
+Arsenic;9;Japan;JP;1;0.001;0.001;"By-product of other ores";NULL
+Arsenic;9;Kazakhstan;KZ;1;0.001;0.001;"By-product of poly-metallic ores";NULL
+Arsenic;9;Mexico;MX;1;0.001;0.001;"By-product of poly-metallic ores";NULL
+Arsenic;9;Namibia;NA;1;0.001;0.001;"By-product of other ores";NULL
+Arsenic;9;Peru;PE;1;0.001;0.001;"By-product of poly-metallic ores";NULL
+Arsenic;9;Philippines;PH;1;0.001;0.001;"By-product of other ores";NULL
+Arsenic;9;Portugal;PT;1;0.001;0.001;"By-product of other ores";NULL
+Arsenic;9;"Russian Federation";RU;1;0.001;0.001;"By-product of other ores";NULL
+Arsenic;9;USSR;SU;1;0.001;0.001;"By-product of other ores";NULL
+"Bauxite (Aluminium)";10;Albania;AL;0.395;0.001;0.001;"National metal contents";NULL
+"Bauxite (Aluminium)";10;Australia;AU;0.398;0.001;0.001;"National metal contents";NULL
+"Bauxite (Aluminium)";10;"Bosnia and Herzegovina";BA;0.353666667;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;Brazil;BR;0.5;0.001;0.001;"National metal contents";NULL
+"Bauxite (Aluminium)";10;China;CN;0.38575;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;Colombia;CO;0.489;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;Croatia;HR;0.353666667;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;"Dominican Republic";DO;0.489;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;France;FR;0.353666667;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;Ghana;GH;0.6;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;Greece;GR;0.22;0.001;0.001;"National metal contents";NULL
+"Bauxite (Aluminium)";10;Guinea;GN;0.6;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;Guyana;GY;0.52;0.001;0.001;"National metal contents";NULL
+"Bauxite (Aluminium)";10;Hungary;HU;0.353666667;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;India;IN;0.38575;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;Indonesia;ID;0.398;0.001;0.001;"National metal contents";NULL
+"Bauxite (Aluminium)";10;Iran;IR;0.38575;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;Iraq;IQ;0.38575;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;Italy;IT;0.446;0.001;0.001;"Global average";NULL
+"Bauxite (Aluminium)";10;Jamaica;JM;0.44;0.001;0.001;"National metal contents";NULL
+"Bauxite (Aluminium)";10;Kazakhstan;KZ;0.44;0.001;0.001;"National metal contents";NULL
+"Bauxite (Aluminium)";10;Malaysia;MY;0.38575;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;Montenegro;ME;0.353666667;0.001;0.001;"Assumption: same as in Serbia";NULL
+"Bauxite (Aluminium)";10;Mozambique;MZ;0.6;0.001;0.001;"National metal contents";NULL
+"Bauxite (Aluminium)";10;Pakistan;PK;0.38575;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;"Russian Federation";RU;0.5;0.001;0.001;"National metal contents";NULL
+"Bauxite (Aluminium)";10;"Serbia (and Montenegro)";RS;0.353666667;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;"Serbia and Montenegro";XS;0.353666667;0.001;0.001;"Assumption: same as in Serbia";NULL
+"Bauxite (Aluminium)";10;"Sierra Leone";SL;0.6;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;Suriname;SR;0.5;0.001;0.001;"National metal contents";NULL
+"Bauxite (Aluminium)";10;Tanzania;TZ;0.6;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;Turkey;TR;0.205;0.001;0.001;"National metal contents";NULL
+"Bauxite (Aluminium)";10;"United States of America";US;0.431928571;0.001;0.001;"Global average";NULL
+"Bauxite (Aluminium)";10;USSR;SU;0.38575;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;Venezuela;VE;0.485;0.001;0.001;"National metal contents";NULL
+"Bauxite (Aluminium)";10;"Viet Nam";VN;0.38575;0.001;0.001;"regional average";NULL
+"Bauxite (Aluminium)";10;"Yugoslavia SFR";YU;1;0.001;0.001;"0";NULL
+Beryllium;11;Brazil;BR;1;0.001;0.001;"By-product of other ores";NULL
+Beryllium;11;China;CN;1;0.001;0.001;"By-product of other ores";NULL
+Beryllium;11;Kazakhstan;KZ;1;0.001;0.001;"By-product of other ores";NULL
+Beryllium;11;Madagascar;MG;1;0.001;0.001;"By-product of other ores";NULL
+Beryllium;11;Mozambique;MZ;0.12;0.001;0.001;"By-product of other ores";NULL
+Beryllium;11;Uganda;UG;1;0.001;0.001;"By-product of other ores";NULL
+Beryllium;11;"United States of America";US;1;0.001;0.001;"By-product of other ores";NULL
+Beryllium;11;Zambia;ZM;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;Armenia;AM;1;0.001;0.001;"By-product of other ores";
+Bismuth;12;Australia;AU;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;Bolivia;BO;1;0.001;0.001;"By-product of other polymetallic ores";NULL
+Bismuth;12;Bulgaria;BG;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;Canada;CA;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;China;CN;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;France;FR;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;Germany;DE;1;0.001;0.001;"By-product of other ores";
+Bismuth;12;Italy;IT;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;Japan;JP;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;Kazakhstan;KZ;1;0.001;0.001;"By-product of other ores (in particular, Zinc ores)";NULL
+Bismuth;12;Mexico;MX;1;0.001;0.001;"By-product of poly-metallic ores";NULL
+Bismuth;12;Peru;PE;1;0.001;0.001;"By-product of other ores (in particular, zinc)";NULL
+Bismuth;12;Romania;RO;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;"Russian Federation";RU;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;"Serbia (and Montenegro)";RS;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;"Serbia and Montenegro";XS;1;0.001;0.001;"Assumption: same as in Serbia";NULL
+Bismuth;12;"South Korea";KR;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;Sweden;SE;1;0.001;0.001;"By-product of other ores";
+Bismuth;12;Tajikistan;TJ;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;Uganda;UG;1;0.001;0.001;"By-product of other ores";
+Bismuth;12;"United States of America";US;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;USSR;SU;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;Uzbekistan;UZ;1;0.001;0.001;"By-product of other ores";NULL
+Bismuth;12;"Viet Nam";VN;1;0.001;0.001;"By-product of other ores";
+Bismuth;12;"Yugoslavia SFR";YU;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;Argentina;AR;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;Australia;AU;1;0.001;0.001;"By-product of Zinc ores";NULL
+Cadmium;13;Belgium;BE;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;Brazil;BR;1;0.001;0.001;"By-product of other ores (in particular, zinc)";NULL
+Cadmium;13;Bulgaria;BG;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;Canada;CA;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;China;CN;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;Finland;FI;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;France;FR;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;Germany;DE;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;Honduras;HN;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;India;IN;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;Italy;IT;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;Japan;JP;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;Kazakhstan;KZ;1;0.001;0.001;"By-product of other ores (in particular, Zinc ores)";NULL
+Cadmium;13;Macedonia;MK;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;Mexico;MX;1;0.001;0.001;"By-product of poly-metallic ores";NULL
+Cadmium;13;Netherlands;NL;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;"North Korea";KP;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;Norway;NO;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;Peru;PE;1;0.001;0.001;"By-product of other ores (in particular, zinc)";NULL
+Cadmium;13;Poland;PL;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;"Russian Federation";RU;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;"South Korea";KR;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;"United Kingdom";GB;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;"United States of America";US;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;USSR;SU;1;0.001;0.001;"By-product of other ores";NULL
+Cadmium;13;"Yugoslavia SFR";YU;1;0.001;0.001;"By-product of other ores";NULL
+Chromium;15;Afghanistan;AF;0.406545455;0.001;0.001;"regional average";NULL
+Chromium;15;Albania;AL;0.42;0.001;0.001;"National metal contents";NULL
+Chromium;15;Australia;AU;0.373;0.001;0.001;"Global metal contents ";NULL
+Chromium;15;Brazil;BR;0.38;0.001;0.001;"Cr2O3";NULL
+Chromium;15;China;CN;0.373;0.001;0.001;"Global metal contents ";NULL
+Chromium;15;Cuba;CU;0.21;0.001;0.001;"Cr2O3";NULL
+Chromium;15;Finland;FI;0.41;0.001;0.001;"National metal contents";NULL
+Chromium;15;India;IN;0.44;0.001;0.001;"National metal contents ";NULL
+Chromium;15;Indonesia;ID;0.373;0.001;0.001;"Global metal contents ";NULL
+Chromium;15;Iran;IR;0.5;0.001;0.001;"National metal contents ";NULL
+Chromium;15;Japan;JP;0.373;0.001;0.001;"Global metal contents";NULL
+Chromium;15;Kazakhstan;KZ;0.49;0.001;0.001;"Cr2O3";NULL
+Chromium;15;Madagascar;MG;0.367;0.001;0.001;"regional average";NULL
+Chromium;15;Myanmar;MM;0.373;0.001;0.001;"Global metal contents ";NULL
+Chromium;15;Oman;OM;0.406545455;0.001;0.001;"regional average";NULL
+Chromium;15;Pakistan;PK;0.406545455;0.001;0.001;"regional average";NULL
+Chromium;15;Philippines;PH;0.31;0.001;0.001;"National metal contents";NULL
+Chromium;15;"Russian Federation";RU;0.43;0.001;0.001;"Cr2O3";NULL
+Chromium;15;"South Africa";ZA;0.44;0.001;0.001;"National metal contents";NULL
+Chromium;15;Sudan;SD;0.373;0.001;0.001;"Global average";NULL
+Chromium;15;Turkey;TR;0.38;0.001;0.001;"National metal contents";NULL
+Chromium;15;"United Arab Emirates";AE;0.373;0.001;0.001;"Global metal contents ";NULL
+Chromium;15;USSR;SU;0.43;0.001;0.001;"National metal contents Assumption: same as in Russian Federation ";NULL
+Chromium;15;"Viet Nam";VN;0.406545455;0.001;0.001;"regional average";NULL
+Chromium;15;Zimbabwe;ZW;0.46;0.001;0.001;"National metal contents";NULL
+Cobalt;16;Albania;AL;1;0.001;0.001;"By-product of other ores";NULL
+Cobalt;16;Australia;AU;1;0.001;0.001;"By-product of nickel ores ";NULL
+Cobalt;16;Botswana;BW;1;0.001;0.001;"By-product of other ores";NULL
+Cobalt;16;Brazil;BR;1;0.001;0.001;"By-product of copper ore extraction";NULL
+Cobalt;16;Canada;CA;1;0.001;0.001;"By-product of other mining";NULL
+Cobalt;16;China;CN;1;0.001;0.001;"By-product of other ores";NULL
+Cobalt;16;Cuba;CU;1;0.001;0.001;"By-product of cobalt extraction";NULL
+Cobalt;16;"DR Congo";CD;1;0.001;0.001;"By-product of other ores";NULL
+Cobalt;16;Finland;FI;1;0.001;0.001;"By-product of other ores";NULL
+Cobalt;16;Indonesia;ID;1;0.001;0.001;"By-product of other ores";NULL
+Cobalt;16;Madagascar;MG;1;0.001;0.001;"By-product of other ores";NULL
+Cobalt;16;Morocco;MA;1;0.001;0.001;"By-product of nickel ores";NULL
+Cobalt;16;"New Caledonia";NC;1;0.001;0.001;"By-product of nickel ores ";NULL
+Cobalt;16;"Papua New Guinea";PG;1;0.001;0.001;"By-product of other ores";NULL
+Cobalt;16;Philippines;PH;1;0.001;0.001;"By-product of other ores";NULL
+Cobalt;16;"Russian Federation";RU;1;0.001;0.001;"By-product of other ores";NULL
+Cobalt;16;"South Africa";ZA;1;0.001;0.001;"By-product of nickel ores ";NULL
+Cobalt;16;Uganda;UG;0.003;0.001;0.333333333333333;"Global average";NULL
+Cobalt;16;"United States of America";US;1;0.001;0.001;"By-product of other ores";
+Cobalt;16;USSR;SU;1;0.001;0.001;"By-product of other ores";NULL
+Cobalt;16;"Viet Nam";VN;1;0.001;0.001;"By-product of other ores";
+Cobalt;16;Zambia;ZM;1;0.001;0.001;"By-product of copper ores";NULL
+Cobalt;16;Zimbabwe;ZW;1;0.001;0.001;"By-product of nickel ores ";NULL
+Copper;17;Albania;AL;0.0126;0.001;0.0793650793650794;"0";NULL
+Copper;17;Algeria;DZ;0.0099;0.001;0.101010101010101;"Global average";NULL
+Copper;17;Argentina;AR;0.0066;0.001;0.151515151515152;"National metal contents";NULL
+Copper;17;Armenia;AM;1;0.001;0.001;"By-product of other ores";NULL
+Copper;17;Australia;AU;0.0101;0.001;0.099009900990099;"National metal contents";NULL
+Copper;17;Austria;AT;0.0074;0.001;0.135135135135135;"Regional average";
+Copper;17;Azerbaijan;AZ;0.0099;0.001;0.101010101010101;"Global average";NULL
+Copper;17;Bolivia;BO;0.00905;0.001;0.110497237569061;"National metal contents ";NULL
+Copper;17;Botswana;BW;0.0099;0.001;0.101010101010101;"Global average ";NULL
+Copper;17;Brazil;BR;0.0079;0.001;0.126582278481013;"National metal contents";NULL
+Copper;17;Bulgaria;BG;0.00905;0.001;0.110497237569061;"National metal contents ";NULL
+Copper;17;Canada;CA;0.008;0.001;0.125;"National metal contents";NULL
+Copper;17;Chile;CL;0.01;0.001;0.1;"National metal contents";NULL
+Copper;17;China;CN;0.01;0.001;0.1;"National metal contents ";NULL
+Copper;17;Colombia;CO;0.0099;0.001;0.101010101010101;"Global average ";NULL
+Copper;17;Cuba;CU;0.0099;0.001;0.101010101010101;"Global average ";NULL
+Copper;17;Cyprus;CY;1;0.001;0.001;"By-product of other ores";NULL
+Copper;17;Czechoslovakia;CS;0.00640625;0.001;0.15609756097561;"regional average";NULL
+Copper;17;"Dominican Republic";DO;0.0099;0.001;0.101010101010101;"Global average";NULL
+Copper;17;"DR Congo";CD;0.0391;0.001;0.0255754475703325;"National metal contents ";NULL
+Copper;17;Ecuador;EC;0.007;0.001;0.142857142857143;"National metal contents";NULL
+Copper;17;Eritrea;ER;0.0099;0.001;0.101010101010101;"Global average";NULL
+Copper;17;Finland;FI;1;0.001;0.001;"By-product of other ores";NULL
+Copper;17;France;FR;0.0074;0.001;0.135135135135135;"Regional average";NULL
+Copper;17;Georgia;GE;0.014;0.001;0.0714285714285714;"National metal contents";NULL
+Copper;17;Germany;DE;0.0074;0.001;0.135135135135135;"Regional average";NULL
+Copper;17;Greece;GR;0.0099;0.001;0.101010101010101;"Global average";NULL
+Copper;17;Guatemala;GT;0.0099;0.001;0.101010101010101;"Global average";NULL
+Copper;17;Haiti;HT;0.0099;0.001;0.101010101010101;"Global average";
+Copper;17;Honduras;HN;0.005;0.001;0.2;"National metal contents Assumption: same concentration as in Panama";NULL
+Copper;17;Hungary;HU;0.0074;0.001;0.135135135135135;"Regional average";
+Copper;17;India;IN;0.0133;0.001;0.075187969924812;"National metal contents";NULL
+Copper;17;Indonesia;ID;0.0085;0.001;0.117647058823529;"National metal contents";NULL
+Copper;17;Iran;IR;0.0052;0.001;0.192307692307692;"Regional metal contents";NULL
+Copper;17;Ireland;IE;0.0099;0.001;0.101010101010101;"Global average";NULL
+Copper;17;Israel;IL;0.0052;0.001;0.192307692307692;"Regional average";NULL
+Copper;17;Italy;IT;0.0074;0.001;0.135135135135135;"Regional average";NULL
+Copper;17;Japan;JP;0.0052;0.001;0.192307692307692;"Regional metal contents ";NULL
+Copper;17;Kazakhstan;KZ;0.0055;0.001;0.181818181818182;"National metal content Assumption: same as in China";NULL
+Copper;17;Kenya;KE;0.0099;0.001;0.101010101010101;"Global average";
+Copper;17;Kyrgyzstan;KG;0.0099;0.001;0.101010101010101;"Global average";
+Copper;17;Laos;LA;0.0052;0.001;0.192307692307692;"Regional average";NULL
+Copper;17;Macedonia;MK;0.0023;0.001;0.434782608695652;"0";NULL
+Copper;17;Malaysia;MY;0.0052;0.001;0.192307692307692;"Regional average";NULL
+Copper;17;Mauritania;MR;0.0099;0.001;0.101010101010101;"Global average ";NULL
+Copper;17;Mexico;MX;0.0066;0.001;0.151515151515152;"National metal contents";NULL
+Copper;17;Mongolia;MN;0.00552;0.001;0.181159420289855;"National metal contents ";NULL
+Copper;17;Morocco;MA;0.00905;0.001;0.110497237569061;"National metal contents ";NULL
+Copper;17;Mozambique;MZ;0.0078;0.001;0.128205128205128;"Global average";NULL
+Copper;17;Myanmar;MM;0.0052;0.001;0.192307692307692;"Regional average";NULL
+Copper;17;Namibia;NA;0.0099;0.001;0.101010101010101;"Global average ";NULL
+Copper;17;"New Zealand";NZ;0.0101;0.001;0.099009900990099;"Assumption: same as Australia";
+Copper;17;Nicaragua;NI;0.0099;0.001;0.101010101010101;"Global average";
+Copper;17;"North Korea";KP;0.0052;0.001;0.192307692307692;"Regional metal contents";NULL
+Copper;17;Norway;NO;0.00905;0.001;0.110497237569061;"National metal contents";NULL
+Copper;17;Oman;OM;0.0052;0.001;0.192307692307692;"Regional average";NULL
+Copper;17;Pakistan;PK;0.0052;0.001;0.192307692307692;"Regional average";NULL
+Copper;17;"Papua New Guinea";PG;0.0052;0.001;0.192307692307692;"Regional average";NULL
+Copper;17;Peru;PE;0.018;0.001;0.0555555555555556;"National metal contents";NULL
+Copper;17;Philippines;PH;0.0046;0.001;0.217391304347826;"National metal contents ";NULL
+Copper;17;Poland;PL;0.0074;0.001;0.135135135135135;"Regional average";NULL
+Copper;17;Portugal;PT;1;0.001;0.001;"By-product of other ores";NULL
+Copper;17;"Rep Congo";CG;0.0099;0.001;0.101010101010101;"Global average";NULL
+Copper;17;Romania;RO;0.0035;0.001;0.285714285714286;"National metal contents";NULL
+Copper;17;"Russian Federation";RU;0.016;0.001;0.0625;"0";NULL
+Copper;17;"Saudi Arabia";SA;0.0052;0.001;0.192307692307692;"based on Asian metal contents in crude Cu ores";NULL
+Copper;17;"Serbia (and Montenegro)";RS;0.0041;0.001;0.24390243902439;"National metal contents ";NULL
+Copper;17;"Serbia and Montenegro";XS;0.0041;0.001;0.24390243902439;"Assumption: same as in Serbia";NULL
+Copper;17;Slovakia;SK;0.0074;0.001;0.135135135135135;"Regional average";NULL
+Copper;17;"South Africa";ZA;0.01;0.001;0.1;"National metal contents ";NULL
+Copper;17;"South Korea";KR;0.0052;0.001;0.192307692307692;"Regional average";NULL
+Copper;17;Spain;ES;0.0099;0.001;0.101010101010101;"Global average ";NULL
+Copper;17;Sweden;SE;0.0038;0.001;0.263157894736842;"0";NULL
+Copper;17;Taiwan;TW;0.008;0.001;0.125;"National metal content";NULL
+Copper;17;Tanzania;TZ;1;0.001;0.001;"By-product of other ores";NULL
+Copper;17;Turkey;TR;0.016;0.001;0.0625;"National metal contents ";NULL
+Copper;17;Uganda;UG;0.0099;0.001;0.101010101010101;"Global average";
+Copper;17;"United Kingdom";GB;0.0074;0.001;0.135135135135135;"Regional average";NULL
+Copper;17;"United States of America";US;0.0038;0.001;0.263157894736842;"National metal contents";NULL
+Copper;17;USSR;SU;0.016;0.001;0.0625;"National metal contents Assumption: same as in Russian Federation ";NULL
+Copper;17;Uzbekistan;UZ;0.0045;0.001;0.222222222222222;"National metal contents";NULL
+Copper;17;"Viet Nam";VN;0.0052;0.001;0.192307692307692;"Regional average";NULL
+Copper;17;"Yugoslavia SFR";YU;0.00640625;0.001;0.15609756097561;"regional average";NULL
+Copper;17;Zambia;ZM;0.0099;0.001;0.101010101010101;"Global average ";NULL
+Copper;17;Zimbabwe;ZW;0.0099;0.001;0.101010101010101;"Global average ";NULL
+Germanium;19;Belgium;BE;1;0.001;0.001;"By-product of other ores";NULL
+Germanium;19;China;CN;1;0.001;0.001;"By-product of other ores";NULL
+Germanium;19;Japan;JP;1;0.001;0.001;"By-product of other ores";NULL
+Germanium;19;"Russian Federation";RU;1;0.001;0.001;"By-product of other ores";NULL
+Germanium;19;"United States of America";US;1;0.001;0.001;"By-product of other ores";NULL
+Germanium;19;USSR;SU;1;0.001;0.001;"By-product of zinc-containing ores";NULL
+Gold;20;Afghanistan;AF;4e-06;1e-06;0.25;"Global average";
+Gold;20;Algeria;DZ;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Angola;AO;4e-06;1e-06;0.25;"Global average";
+Gold;20;Argentina;AR;2.5e-06;1e-06;0.4;"National metal contents";NULL
+Gold;20;Armenia;AM;6.4e-06;1e-06;0.15625;"National metal contents ";NULL
+Gold;20;Australia;AU;1.7e-06;1e-06;0.588235294117647;"National metal contents ";NULL
+Gold;20;Azerbaijan;AZ;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Belize;BZ;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Benin;BJ;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Bolivia;BO;2.27e-06;1e-06;0.440528634361233;"National metal contents";NULL
+Gold;20;Botswana;BW;6.2e-06;1e-06;0.161290322580645;"National metal contents";NULL
+Gold;20;Brazil;BR;6.1e-06;1e-06;0.163934426229508;"National metal contents ";NULL
+Gold;20;Bulgaria;BG;2.86e-06;1e-06;0.34965034965035;"Regional average";NULL
+Gold;20;"Burkina Faso";BF;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Burundi;BI;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Cambodia;KH;4e-06;1e-06;0.25;"Global average";
+Gold;20;Cameroon;CM;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Canada;CA;2.6173e-06;1e-06;0.382073128796852;"National metal contents ";NULL
+Gold;20;"Central African Republic";CF;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Chad;TD;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Chile;CL;1e-05;1e-06;0.1;"National metal contents";NULL
+Gold;20;China;CN;8e-06;1e-06;0.125;"National metal contents ";NULL
+Gold;20;Colombia;CO;1.8e-06;1e-06;0.555555555555556;"National metal concentration";NULL
+Gold;20;"Costa Rica";CR;3.2e-06;1e-06;0.3125;"Assumption same as in Honduras and Nicaragua";NULL
+Gold;20;"Cote d'Ivoire";CI;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Cuba;CU;2.6e-06;1e-06;0.384615384615385;"National metal contents";NULL
+Gold;20;"Czech Republic";CZ;2.86e-06;1e-06;0.34965034965035;"Regional average";NULL
+Gold;20;Denmark;DK;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;"Dominican Republic";DO;3.2e-06;1e-06;0.3125;"Assumption: same as in Nicaragua and Honduras";NULL
+Gold;20;"DR Congo";CD;4e-06;1e-06;0.25;"Global average ";NULL
+Gold;20;Ecuador;EC;5.4e-06;1e-06;0.185185185185185;"National metal contents";NULL
+Gold;20;Egypt;EG;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;"El Salvador";SV;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;"Equatorial Guinea";GQ;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Eritrea;ER;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Ethiopia;ET;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;"Fiji Islands";FJ;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Finland;FI;2.86e-06;1e-06;0.34965034965035;"Regional average";NULL
+Gold;20;France;FR;2.86e-06;1e-06;0.34965034965035;"Regional average";NULL
+Gold;20;"French Guiana";GF;1.8e-06;1e-06;0.555555555555556;"National metal contents";NULL
+Gold;20;Gabon;GA;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Georgia;GE;6.4e-06;1e-06;0.15625;"National metal contents Assumption: same concentration as in Armenia";NULL
+Gold;20;Germany;DE;2.86e-06;1e-06;0.34965034965035;"Regional average";NULL
+Gold;20;Ghana;GH;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Greece;GR;2.86e-06;1e-06;0.34965034965035;"Regional average";NULL
+Gold;20;Greenland;GL;2.6173e-06;1e-06;0.382073128796852;"Assumption: same as in Canada";NULL
+Gold;20;Guatemala;GT;2.6e-06;1e-06;0.384615384615385;"National metal contents";NULL
+Gold;20;Guinea;GN;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Guyana;GY;1.35e-06;1e-06;0.740740740740741;"National metal contents";NULL
+Gold;20;Haiti;HT;4e-06;1e-06;0.25;"Global average";
+Gold;20;Honduras;HN;3.2e-06;1e-06;0.3125;"National metal contents";NULL
+Gold;20;Hungary;HU;5e-06;1e-06;0.2;"Regional average";NULL
+Gold;20;India;IN;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores ";NULL
+Gold;20;Indonesia;ID;5e-06;1e-06;0.2;"National metal contents";NULL
+Gold;20;Iran;IR;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores ";NULL
+Gold;20;Italy;IT;6e-05;1e-06;0.0166666666666667;"regional average";NULL
+Gold;20;Jamaica;JM;2.6e-06;1e-06;0.384615384615385;"National metal contents Assumption: same as in Brazil";NULL
+Gold;20;Japan;JP;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores";NULL
+Gold;20;Kazakhstan;KZ;9e-06;1e-06;0.111111111111111;"National metal contents";NULL
+Gold;20;Kenya;KE;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Kyrgyzstan;KG;5.5e-06;1e-06;0.181818181818182;"National metal contents";NULL
+Gold;20;Laos;LA;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Liberia;LR;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Macedonia;MK;6e-06;1e-06;0.166666666666667;"0";NULL
+Gold;20;Madagascar;MG;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Malaysia;MY;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores";NULL
+Gold;20;Mali;ML;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Mauritania;MR;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Mexico;MX;1.2e-06;1e-06;0.833333333333333;"National metal content";NULL
+Gold;20;Mongolia;MN;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores ";NULL
+Gold;20;Morocco;MA;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Mozambique;MZ;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Myanmar;MM;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores ";NULL
+Gold;20;Namibia;NA;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;"New Zealand";NZ;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Nicaragua;NI;3.2e-06;1e-06;0.3125;"0";NULL
+Gold;20;Niger;NE;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Nigeria;NG;4e-06;1e-06;0.25;"0";NULL
+Gold;20;"North Korea";KP;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores ";NULL
+Gold;20;Oman;OM;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores ";NULL
+Gold;20;Panama;PA;3.2e-06;1e-06;0.3125;"Assumption: same as in Honduras and Nicaragua";NULL
+Gold;20;"Papua New Guinea";PG;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores ";NULL
+Gold;20;Peru;PE;2.27e-06;1e-06;0.440528634361233;"National metal content";NULL
+Gold;20;Philippines;PH;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores ";NULL
+Gold;20;Poland;PL;4e-06;1e-06;0.25;"National metal contents Assumption: same as in Russian Federation";NULL
+Gold;20;Portugal;PT;2.86e-06;1e-06;0.34965034965035;"Regional average";NULL
+Gold;20;"Rep Congo";CG;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Romania;RO;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores ";NULL
+Gold;20;"Russian Federation";RU;4e-06;1e-06;0.25;"National metal contents";NULL
+Gold;20;Rwanda;RW;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;"Saudi Arabia";SA;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores";NULL
+Gold;20;Senegal;SN;4e-06;1e-06;0.25;"0";NULL
+Gold;20;"Serbia (and Montenegro)";RS;6e-06;1e-06;0.166666666666667;"National metal contents ";NULL
+Gold;20;"Serbia and Montenegro";XS;6e-06;1e-06;0.166666666666667;"Assumption: same as in Serbia";NULL
+Gold;20;"Sierra Leone";SL;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Slovakia;SK;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores ";NULL
+Gold;20;"Solomon Islands";SB;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;"South Africa";ZA;4.5187e-06;1e-06;0.221302587027242;"National metal contents";NULL
+Gold;20;"South Korea";KR;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores ";NULL
+Gold;20;"South Sudan";SS;4e-06;1e-06;0.25;"Global average";
+Gold;20;Spain;ES;2.86e-06;1e-06;0.34965034965035;"Regional average";NULL
+Gold;20;Sudan;SD;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Suriname;SR;7.5e-05;1e-06;0.0133333333333333;"National metal contents";NULL
+Gold;20;Sweden;SE;3e-06;1e-06;0.333333333333333;"0";NULL
+Gold;20;Taiwan;TW;8e-06;1e-06;0.125;"national metal contents ";NULL
+Gold;20;Tajikistan;TJ;3.2e-06;1e-06;0.3125;"National metal contents";NULL
+Gold;20;Tanzania;TZ;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Thailand;TH;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores ";NULL
+Gold;20;Togo;TG;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Turkey;TR;1e-05;1e-06;0.1;"global average data, upper concentration in middle range of Au ores ";NULL
+Gold;20;Uganda;UG;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Ukraine;UA;4e-06;1e-06;0.25;"National metal contents Assumption: same as in Russia";NULL
+Gold;20;"United Kingdom";GB;2.86e-06;1e-06;0.34965034965035;"average EU metal contents in gold ores";NULL
+Gold;20;"United States of America";US;1.1e-06;1e-06;0.909090909090909;"National metal contents ";NULL
+Gold;20;Uruguay;UY;2.6e-06;1e-06;0.384615384615385;"National metal contents Assumption: same as in Brazil";NULL
+Gold;20;USSR;SU;4e-06;1e-06;0.25;"National metal contents Assumption: same as in Russian Federation ";NULL
+Gold;20;Uzbekistan;UZ;7e-06;1e-06;0.142857142857143;"National metal contents";NULL
+Gold;20;Venezuela;VE;1.3e-06;1e-06;0.769230769230769;"National metal contents";NULL
+Gold;20;"Viet Nam";VN;1e-05;1e-06;0.1;"Global average data, upper concentration in middle range of Au ores ";NULL
+Gold;20;"Yugoslavia SFR";YU;6e-06;1e-06;0.166666666666667;"Regional average Assumption same as in Serbia";NULL
+Gold;20;Zambia;ZM;4e-06;1e-06;0.25;"Global average";NULL
+Gold;20;Zimbabwe;ZW;6.2e-06;1e-06;0.161290322580645;"National metal contents";NULL
+"Indium and Thallium";21;France;FR;1;1e-06;1e-06;"By-product of other ores";NULL
+"Iron ores";7;Albania;AL;0.46;0.001;0.001;"0";NULL
+"Iron ores";7;Algeria;DZ;0.5618;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Australia;AU;0.6;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Austria;AT;0.32;0.001;0.001;"0";NULL
+"Iron ores";7;Azerbaijan;AZ;0.29;0.001;0.001;"National metal contents Assumption: same content as in Armenia";NULL
+"Iron ores";7;Bhutan;BT;0.428888889;0.001;0.001;"Regional average";NULL
+"Iron ores";7;"Bosnia and Herzegovina";BA;0.365511111;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Brazil;BR;0.615;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Bulgaria;BG;0.3;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Canada;CA;0.28;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Chile;CL;0.48;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;China;CN;0.3;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Colombia;CO;0.503333333;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Cuba;CU;0.503333333;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Czechoslovakia;CS;0.365511111;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Egypt;EG;0.5;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;France;FR;0.365511111;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Germany;DE;0.365511111;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Greece;GR;0.3813;1;1;"National metal contents";NULL
+"Iron ores";7;Guatemala;GT;0.46;0.001;0.001;"Global average ";NULL
+"Iron ores";7;"Hong Kong";HK;0.3;0.001;0.001;"Assumption: same as in China";NULL
+"Iron ores";7;India;IN;0.53;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Indonesia;ID;0.428888889;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Iran;IR;0.428888889;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Iraq;IQ;0.428888889;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Japan;JP;0.46;0.001;0.001;"Global average";NULL
+"Iron ores";7;Kazakhstan;KZ;0.39;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Liberia;LR;0.5618;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Malaysia;MY;0.428888889;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Mauritania;MR;0.57;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Mexico;MX;0.6;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Mongolia;MN;0.53;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Morocco;MA;0.606;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;"New Zealand";NZ;0.297;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Nigeria;NG;0.5618;0.001;0.001;"Regional average";NULL
+"Iron ores";7;"North Korea";KP;0.428888889;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Norway;NO;0.33;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Pakistan;PK;0.428888889;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Peru;PE;0.605;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Philippines;PH;0.46;0.001;0.001;"Global average";NULL
+"Iron ores";7;Portugal;PT;0.3883;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Romania;RO;0.26;0.001;0.001;"National metal contents ";NULL
+"Iron ores";7;"Russian Federation";RU;0.36;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;"Sierra Leone";SL;0.46;0.001;0.001;"Global average";NULL
+"Iron ores";7;Slovakia;SK;0.365511111;0.001;0.001;"Regional average";NULL
+"Iron ores";7;"South Africa";ZA;0.633;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;"South Korea";KR;0.428888889;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Spain;ES;0.3848;0.001;0.001;"Regional average ";NULL
+"Iron ores";7;Sweden;SE;0.6;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Thailand;TH;0.46;0.001;0.001;"Global average";NULL
+"Iron ores";7;Tunisia;TN;0.5618;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Turkey;TR;0.54;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Uganda;UG;0.5618;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Ukraine;UA;0.25;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;"United Kingdom";GB;0.365511111;0.001;0.001;"Regional average";NULL
+"Iron ores";7;"United States of America";US;0.28;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;Uruguay;UY;0.4;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;USSR;SU;0.428888889;0.001;0.001;"Regional average";NULL
+"Iron ores";7;Venezuela;VE;0.46;0.001;0.001;"National metal contents";NULL
+"Iron ores";7;"Viet Nam";VN;0.428888889;0.001;0.001;"Regional average";NULL
+"Iron ores";7;"Yugoslavia SFR";YU;0.46;0.001;0.001;"Global average";NULL
+"Iron ores";7;Zimbabwe;ZW;0.5;0.001;0.001;"National metal contents";NULL
+Lead;22;Algeria;DZ;0.012;0.001;0.013961;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Argentina;AR;0.056;0.001;0.007554544;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Australia;AU;0.035613311;0.001;0.007463186;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Austria;AT;0.05325;0.001;0.001;"By-product of zinc extraction";
+Lead;22;Bolivia;BO;0.0339;0.001;0.00998379;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;"Bosnia and Herzegovina";BA;0.015;0.001;0.031037;"based on assumptions of lead/zinc coupled production";"based on national metal contents in crude Pb ores (1,5 %)"
+Lead;22;Brazil;BR;0.017361263;0.001;0.005781859;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Bulgaria;BG;0.0195;0.001;0.026138;"based on assumptions of lead/zinc coupled production";"based on national metal contents in crude Pb ores (1,955 %)"
+Lead;22;"Burkina Faso";BF;0.05325;0.001;0.001;"By-product of zinc extraction";
+Lead;22;Canada;CA;0.016408933;0.001;0.005579023;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Chile;CL;0.005229518;0.001;0.005618642;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;China;CN;0.04;0.001;0.010775038;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Colombia;CO;0.05325;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;Czechoslovakia;CS;0.0245;0.001;0.034529;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Denmark;DK;0.05325;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;Ecuador;EC;0.0245;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;Finland;FI;0.0092;0.001;0.030706;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;France;FR;0.05325;0.001;0.001;"By-product of zinc extraction";
+Lead;22;Georgia;GE;0.05325;0.001;0.001;"By-product of zinc extraction";
+Lead;22;Germany;DE;0.013;0.001;0.010789;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Greece;GR;0.042857143;0.001;0.010805899;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Greenland;GL;0.016408933;0.001;0.0609424147200796;"Assumption: same as in Canada";NULL
+Lead;22;Guatemala;GT;0.0245;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;Honduras;HN;0.04;0.001;0.008240171;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Hungary;HU;0.05325;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;India;IN;0.05325;0.001;0.015111;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Iran;IR;0.05325;0.001;0.01288;"based on assumptions of lead/zinc coupled production";"average global metal contents in lead ores (5,325%)"
+Lead;22;Ireland;IE;0.014590803;0.001;0.006984078;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Italy;IT;0.05325;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;Japan;JP;0.05325;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;Kazakhstan;KZ;0.0245;0.001;0.024060807;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Kenya;KE;0.05325;0.001;0.0187793427230047;;
+Lead;22;Kosovo;XK;0.024;0.001;0.0416666666666667;"Assumption: same as in Serbia";NULL
+Lead;22;Laos;LA;0.0245;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;Macedonia;MK;0.036;0.001;0.008522;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Mexico;MX;0.0371;0.001;0.023205585;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Montenegro;ME;0.024;0.001;0.0416666666666667;"Assumption: same as in Serbia";NULL
+Lead;22;Morocco;MA;0.05325;0.001;0.006437;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Myanmar;MM;0.05325;0.001;0.016142;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Namibia;NA;0.05325;0.001;0.031108303;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Nigeria;NG;0.05325;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;"North Korea";KP;0.05325;0.001;0.012692;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Norway;NO;0.024;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;Pakistan;PK;0.05325;0.001;0.001;"By-product of zinc extraction";
+Lead;22;Peru;PE;0.0329;0.001;0.07089812;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Philippines;PH;0.0245;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;Poland;PL;0.015732118;0.001;0.022395704;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Portugal;PT;0.013;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;"Rep Congo";CG;0.05325;0.001;0.0187793427230047;"Global average";NULL
+Lead;22;Romania;RO;0.007;0.001;0.052758714;"based on assumptions of lead/zinc coupled production";"based on national metal contents in crude Pb ores (0,7 %)"
+Lead;22;"Russian Federation";RU;0.0337;0.001;0.016736406;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;"Saudi Arabia";SA;0.05325;0.001;0.015286738;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;"Serbia (and Montenegro)";RS;0.024;0.001;0.022081625;"based on assumptions of lead/zinc coupled production";"based on national metal contents in crude Pb ores (2,4 %)"
+Lead;22;"Serbia and Montenegro";XS;0.024;0.001;0.0416666666666667;"Assumption: same as in Serbia";NULL
+Lead;22;Slovakia;SK;0.05325;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;Slovenia;SI;0.05325;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;"South Africa";ZA;0.05325;0.001;0.010011214;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;"South Korea";KR;0.0372;0.001;0.005622;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Spain;ES;0.05325;0.001;0.020149;"based on assumptions of lead/zinc coupled production";"average global metal contents in lead ores (5,325%)"
+Lead;22;Sweden;SE;0.05;0.001;0.012109881;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;Tajikistan;TJ;0.05325;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;Tanzania;TZ;0.05325;0.001;0.0187793427230047;;
+Lead;22;Thailand;TH;0.05325;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;Tunisia;TN;0.05325;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;Turkey;TR;0.040712468;0.001;0.007383736;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;"United Kingdom";GB;0.05;0.001;0.014307;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;"United States of America";US;0.059479214;0.001;0.005466747;"based on assumptions of lead/zinc coupled production";NULL
+Lead;22;USSR;SU;0.0245;0.001;0.016736406;"Assumption: same as in Russia - lead/zinc coupled production";NULL
+Lead;22;Uzbekistan;UZ;0.05325;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;"Viet Nam";VN;0.05325;0.001;0.001;"By-product of zinc extraction";NULL
+Lead;22;"Yugoslavia SFR";YU;0.024;0.001;0.001;"By-product of zinc extraction";"based on Serbian metal contents in crude Pb ores (2,4 %)"
+Lead;22;Zambia;ZM;0.05325;0.001;0.001;"By-product of zinc extraction";NULL
+Lithium;23;Argentina;AR;0.0014;0.001;0.001;"Regional average";NULL
+Lithium;23;Australia;AU;0.03;0.001;0.001;"National metal contents";NULL
+Lithium;23;Brazil;BR;0.0014;0.001;0.001;"Regional average";NULL
+Lithium;23;Canada;CA;0.07;0.001;0.001;"National metal contents";NULL
+Lithium;23;Chile;CL;0.0014;0.001;0.001;"National metal contents";NULL
+Lithium;23;China;CN;0.005;0.001;0.001;"Regional average";NULL
+Lithium;23;Portugal;PT;0.02;0.001;0.001;"Global average ";NULL
+Lithium;23;Spain;ES;0.02;0.001;0.001;"Global average";NULL
+Lithium;23;"United States of America";US;0.07;0.001;0.001;"National metal contents Assumption same as in Canada";NULL
+Lithium;23;USSR;SU;0.005;0.001;0.001;"National metal contents Assumpation: same concentration as in Uzbekistan";NULL
+Lithium;23;Zimbabwe;ZW;0.0135;0.001;0.001;"National metal contents";NULL
+Magnesium;24;Brazil;BR;1;0.001;0.001;"0";NULL
+Magnesium;24;Canada;CA;1;0.001;0.001;"0";NULL
+Magnesium;24;China;CN;1;0.001;0.001;"0";NULL
+Magnesium;24;France;FR;1;0.001;0.001;"0";NULL
+Magnesium;24;India;IN;1;0.001;0.001;"0";NULL
+Magnesium;24;Israel;IL;1;0.001;0.001;"0";NULL
+Magnesium;24;Kazakhstan;KZ;1;0.001;0.001;"0";NULL
+Magnesium;24;Norway;NO;1;0.001;0.001;"0";NULL
+Magnesium;24;"Russian Federation";RU;1;0.001;0.001;"0";NULL
+Magnesium;24;"Serbia (and Montenegro)";RS;1;0.001;0.001;"0";NULL
+Magnesium;24;"Serbia and Montenegro";XS;1;0.001;0.001;"Assumption: same as in Serbia";NULL
+Magnesium;24;Ukraine;UA;1;0.001;0.001;"0";NULL
+Magnesium;24;"United States of America";US;1;0.001;0.001;"0";NULL
+Magnesium;24;"Yugoslavia SFR";YU;1;0.001;0.001;"0";NULL
+Manganese;25;Australia;AU;0.4741;0.001;0.001;"National metal contents";NULL
+Manganese;25;Brazil;BR;0.43;0.001;0.001;"Global average";NULL
+Manganese;25;Bulgaria;BG;0.28;0.001;0.001;"National metal contents ";NULL
+Manganese;25;"Burkina Faso";BF;0.357;0.001;0.001;"Global average";NULL
+Manganese;25;Chile;CL;0.0096;0.001;0.001;"Mn";NULL
+Manganese;25;China;CN;0.2;0.001;0.001;"National metal contents ";NULL
+Manganese;25;"Cote d'Ivoire";CI;0.329183333;0.001;0.001;"Regional average";NULL
+Manganese;25;Czechoslovakia;CS;0.2896;0.001;0.001;"Regional average";NULL
+Manganese;25;Egypt;EG;0.297;0.001;0.001;"National metal contents ";NULL
+Manganese;25;Gabon;GA;0.297;0.001;0.001;"National metal contents";NULL
+Manganese;25;Georgia;GE;0.21;0.001;0.001;"National metal contents";NULL
+Manganese;25;Ghana;GH;0.3198;0.001;0.001;"National metal contents";NULL
+Manganese;25;Greece;GR;0.357;0.001;0.001;"Global average";NULL
+Manganese;25;Hungary;HU;0.215;0.001;0.001;"National metal contents Assumption: same concentration as in Russian Federation";NULL
+Manganese;25;India;IN;0.24;0.001;0.001;"National metal contents";NULL
+Manganese;25;Iran;IR;0.3573;0.001;0.001;"Global average";NULL
+Manganese;25;Italy;IT;0.2896;0.001;0.001;"Regional average";NULL
+Manganese;25;Kazakhstan;KZ;0.21;0.001;0.001;"Regional average";NULL
+Manganese;25;Malaysia;MY;0.357;0.001;0.001;"Global average";NULL
+Manganese;25;Mexico;MX;0.36;0.001;0.001;"National metal contents";NULL
+Manganese;25;Morocco;MA;0.297;0.001;0.001;"National metal contents";NULL
+Manganese;25;Myanmar;MM;0.4;0.001;0.001;0;NULL
+Manganese;25;Namibia;NA;0.329183333;0.001;0.001;"Regional average";NULL
+Manganese;25;Philippines;PH;0.357;0.001;0.001;"Global average";NULL
+Manganese;25;Romania;RO;0.357;0.001;0.001;"Global average";NULL
+Manganese;25;"Russian Federation";RU;0.215;0.001;0.001;"National metal contents";NULL
+Manganese;25;"South Africa";ZA;0.4393;0.001;0.001;"National metal contents";NULL
+Manganese;25;Sudan;SD;0.325;0.001;0.001;"Regional average";NULL
+Manganese;25;Thailand;TH;0.3573;0.001;0.001;"Global average";NULL
+Manganese;25;Turkey;TR;0.35;0.001;0.001;"National metal contents";NULL
+Manganese;25;Ukraine;UA;0.239;0.001;0.001;"National metal contents";NULL
+Manganese;25;"United States of America";US;0.225;0.001;0.001;"National metal contents";NULL
+Manganese;25;USSR;SU;0.215;0.001;0.001;"National metal contents Assumption: same as in Russian Federation ";NULL
+Manganese;25;"Yugoslavia SFR";YU;0.18;0.001;0.001;"Regional average assumption same as in Bosnia";NULL
+Mercury;26;Algeria;DZ;0.0105;1e-06;9.52380952380952e-05;"Global average";NULL
+Mercury;26;Argentina;AR;0.0105;1e-06;9.52380952380952e-05;"Global average";NULL
+Mercury;26;Australia;AU;0.0105;1e-06;9.52380952380952e-05;"Global average";
+Mercury;26;Canada;CA;0.0105;1e-06;9.52380952380952e-05;"Global average";
+Mercury;26;Chile;CL;0.0105;1e-06;9.52380952380952e-05;"Global average";NULL
+Mercury;26;China;CN;0.03;1e-06;3.33333333333333e-05;"Global average data, upper concentration in middle range of Hg ores (3 %)";NULL
+Mercury;26;Colombia;CO;0.0105;1e-06;9.52380952380952e-05;"Global average";
+Mercury;26;Czechoslovakia;CS;0.0105;1e-06;9.52380952380952e-05;"Global average";NULL
+Mercury;26;Finland;FI;0.0105;1e-06;9.52380952380952e-05;"Global average";NULL
+Mercury;26;Germany;DE;0.0105;1e-06;9.52380952380952e-05;"Global average, most economic ores contain over 1%";NULL
+Mercury;26;Ireland;IE;0.0105;1e-06;9.52380952380952e-05;"Global average";
+Mercury;26;Italy;IT;0.0105;1e-06;9.52380952380952e-05;"Global average, most economic ores contain over 1%";NULL
+Mercury;26;Japan;JP;0.0105;1e-06;9.52380952380952e-05;"Global average";
+Mercury;26;Kyrgyzstan;KG;1;1e-06;1e-06;"Assumption: by-product of Antimon extraction";NULL
+Mercury;26;Mexico;MX;0.0105;1e-06;9.52380952380952e-05;"Global average";NULL
+Mercury;26;Morocco;MA;0.0105;1e-06;9.52380952380952e-05;"Global average";NULL
+Mercury;26;Peru;PE;0.0105;1e-06;9.52380952380952e-05;"Global average";
+Mercury;26;Philippines;PH;0.0105;1e-06;9.52380952380952e-05;"Global average";
+Mercury;26;"Russian Federation";RU;1;1e-06;1e-06;"By-product of other ores";NULL
+Mercury;26;Slovakia;SK;0.0105;1e-06;9.52380952380952e-05;"Global average";
+Mercury;26;Slovenia;SI;0.0105;1e-06;9.52380952380952e-05;"Global average, most economic ores contain over 1%";NULL
+Mercury;26;Spain;ES;0.0105;1e-06;9.52380952380952e-05;"Global average";NULL
+Mercury;26;Tajikistan;TJ;0.0105;1e-06;9.52380952380952e-05;"Global average";NULL
+Mercury;26;Tunisia;TN;0.0105;1e-06;9.52380952380952e-05;"Global average";
+Mercury;26;Turkey;TR;0.03;1e-06;3.33333333333333e-05;"Global average, upper concentration in middle range of Hg ores (3 %)";NULL
+Mercury;26;Ukraine;UA;1;1e-06;1e-06;"By-product of other ores";NULL
+Mercury;26;"United States of America";US;0.0105;1e-06;9.52380952380952e-05;"Global average";NULL
+Mercury;26;USSR;SU;0.0105;1e-06;9.52380952380952e-05;"Global average";NULL
+Mercury;26;"Yugoslavia SFR";YU;0.03;1e-06;3.33333333333333e-05;"Global average upper concentration in middle range of Hg ores (3 %)";NULL
+Molybdenum;27;Argentina;AR;0.00019;0.001;5.26315789473684;"Global average";NULL
+Molybdenum;27;Armenia;AM;0.0005;0.001;2;"0";NULL
+Molybdenum;27;Australia;AU;0.00019;0.001;5.26315789473684;"Global average";
+Molybdenum;27;Brazil;BR;0.0019;0.001;0.526315789473684;"Global average";NULL
+Molybdenum;27;Bulgaria;BG;0.0019;0.001;0.526315789473684;"Global average";NULL
+Molybdenum;27;Canada;CA;1;0.001;0.001;"By-product of copper mining";NULL
+Molybdenum;27;Chile;CL;1;0.001;0.001;"By-product of copper extraction";NULL
+Molybdenum;27;China;CN;0.002;0.001;0.5;"National metal contents";NULL
+Molybdenum;27;Iran;IR;0.0019;0.001;0.526315789473684;"Global average";NULL
+Molybdenum;27;Japan;JP;0.0019;0.001;0.526315789473684;"Global average";NULL
+Molybdenum;27;Kazakhstan;KZ;0.00017;0.001;5.88235294117647;"National metal contents";NULL
+Molybdenum;27;Kyrgyzstan;KG;0.000811875;0.001;1.23171670515781;"Regional average";NULL
+Molybdenum;27;Mexico;MX;0.0003;0.001;3.33333333333333;"National metal contnets assumption: same as in Panama";NULL
+Molybdenum;27;Mongolia;MN;0.0005;0.001;2;"National metal contents ";NULL
+Molybdenum;27;Niger;NE;0.0019;0.001;0.526315789473684;"Global average";NULL
+Molybdenum;27;Norway;NO;1;0.001;0.001;"By-product of other ores";NULL
+Molybdenum;27;Peru;PE;1;0.001;0.001;"By-product of copper extraction";NULL
+Molybdenum;27;Philippines;PH;0.0019;0.001;0.526315789473684;"Global average";NULL
+Molybdenum;27;"Russian Federation";RU;0.00069;0.001;1.44927536231884;"National metal contents";NULL
+Molybdenum;27;"South Korea";KR;0.0019;0.001;0.526315789473684;"Global average";NULL
+Molybdenum;27;Turkey;TR;0.0019;0.001;0.526315789473684;"Global average";NULL
+Molybdenum;27;"United States of America";US;1;0.001;0.001;"By-product of copper extraction";NULL
+Molybdenum;27;USSR;SU;0.00069;0.001;1.44927536231884;"Assumption: same as in Russian Federation ";NULL
+Molybdenum;27;Uzbekistan;UZ;4.5e-05;0.001;22.2222222222222;"National metal contents";NULL
+Nickel;28;Albania;AL;0.014;0.001;0.0714285714285714;"0";NULL
+Nickel;28;Australia;AU;0.03;0.001;0.0333333333333333;"National metal contents";NULL
+Nickel;28;Botswana;BW;0.01;0.001;0.1;"National metal contents";NULL
+Nickel;28;Brazil;BR;0.0165;0.001;0.0606060606060606;"National metal contents";NULL
+Nickel;28;Canada;CA;1;0.001;0.001;"By-product of Co and Cu mining";NULL
+Nickel;28;China;CN;0.0177;0.001;0.0564971751412429;"National metal contents";NULL
+Nickel;28;Colombia;CO;0.0198;0.001;0.0505050505050505;"National metal contents";NULL
+Nickel;28;Cuba;CU;0.002;0.001;0.5;"National metal contents";NULL
+Nickel;28;"Dominican Republic";DO;0.0198;0.001;0.0505050505050505;"National metal contents";NULL
+Nickel;28;Finland;FI;0.0155;0.001;0.0645161290322581;"0";NULL
+Nickel;28;Germany;DE;0.03;0.001;0.0333333333333333;"Global average, upper concentration in middle range of Ni ores (3 %)";NULL
+Nickel;28;Greece;GR;1;0.001;0.001;"By-product of other ores";NULL
+Nickel;28;Guatemala;GT;0.03;0.001;0.0333333333333333;"Global average, upper concentration in middle range of Ni ores (3 %)";NULL
+Nickel;28;Indonesia;ID;0.002;0.001;0.5;"National metal contents";NULL
+Nickel;28;Kazakhstan;KZ;0.0075;0.001;0.133333333333333;"Regional average";NULL
+Nickel;28;Kosovo;XK;0.012;0.001;0.0833333333333333;"Assumption: same as in Serbia";NULL
+Nickel;28;Macedonia;MK;0.012;0.001;0.0833333333333333;"0";NULL
+Nickel;28;Madagascar;MG;1;0.001;0.001;"By-product of other ores";NULL
+Nickel;28;Morocco;MA;0.0135;0.001;0.0740740740740741;"Regional average";NULL
+Nickel;28;Myanmar;MM;0.03;0.001;0.0333333333333333;"Global average, upper concentration in middle range of Ni ores ";NULL
+Nickel;28;"New Caledonia";NC;0.025;0.001;0.04;"National metal contents";NULL
+Nickel;28;Norway;NO;1;0.001;0.001;"By-product of other ores";NULL
+Nickel;28;"Papua New Guinea";PG;0.03;0.001;0.0333333333333333;"Global average, upper concentration in middle range of Ni ores (3 %)";NULL
+Nickel;28;Philippines;PH;0.0125;0.001;0.08;"National metal contents ";NULL
+Nickel;28;Poland;PL;0.03;0.001;0.0333333333333333;"Global average, upper concentration in middle range of Ni ores (3 %)";NULL
+Nickel;28;"Russian Federation";RU;1;0.001;0.001;"By-product of other ores";NULL
+Nickel;28;"Serbia (and Montenegro)";RS;0.012;0.001;0.0833333333333333;"National metal contents";NULL
+Nickel;28;"Serbia and Montenegro";XS;0.012;0.001;0.0833333333333333;"Assumption: same as in Serbia";NULL
+Nickel;28;"South Africa";ZA;1;0.001;0.001;"By-product of PGM and Copper ores";NULL
+Nickel;28;"South Korea";KR;0.025;0.001;0.04;"Global average";NULL
+Nickel;28;Spain;ES;1;0.001;0.001;"By-product of other ores";NULL
+Nickel;28;Turkey;TR;0.015271429;0.001;0.0654817568152921;"Regional average";NULL
+Nickel;28;Ukraine;UA;0.008;0.001;0.125;"National metal contents";NULL
+Nickel;28;"United States of America";US;0.025;0.001;0.04;"Global average";NULL
+Nickel;28;USSR;SU;1;0.001;0.001;"By-product of copper and cobalt extraction";NULL
+Nickel;28;Venezuela;VE;0.0198;0.001;0.0505050505050505;"Assumption: same as in Colombia";NULL
+Nickel;28;"Viet Nam";VN;0.03;0.001;0.0333333333333333;"Global average, upper concentration in middle range of Ni ores (3 %)";
+Nickel;28;"Yugoslavia SFR";YU;1;0.001;0.001;"By-product of other ores";NULL
+Nickel;28;Zambia;ZM;0.0055;0.001;0.181818181818182;"National metal contents";NULL
+Nickel;28;Zimbabwe;ZW;0.0055;0.001;0.181818181818182;"National metal contents";NULL
+"Niobium + Tantalum";29;Australia;AU;1;0.001;0.001;"By-product of feldspar extraction";NULL
+"Niobium + Tantalum";29;Brazil;BR;1;0.001;0.001;"By-products of feldspar extraction";NULL
+"Niobium + Tantalum";29;Burundi;BI;1;0.001;0.001;"By-product of other ores";NULL
+"Niobium + Tantalum";29;Canada;CA;1;0.001;0.001;"By-product of other mining";NULL
+"Niobium + Tantalum";29;China;CN;1;0.001;0.001;"By-product of other ores";NULL
+"Niobium + Tantalum";29;"DR Congo";CD;1;0.001;0.001;"By-product of other ores";NULL
+"Niobium + Tantalum";29;Ethiopia;ET;1;0.001;0.001;"By-product of other ores";NULL
+"Niobium + Tantalum";29;Madagascar;MG;1;0.001;0.001;"By-product of other ores";NULL
+"Niobium + Tantalum";29;Malaysia;MY;1;0.001;0.001;"By-product of other mining";NULL
+"Niobium + Tantalum";29;Mozambique;MZ;1;0.001;0.001;"By-product of other ores";NULL
+"Niobium + Tantalum";29;Nigeria;NG;1;0.001;0.001;"By-product of other ores";NULL
+"Niobium + Tantalum";29;Rwanda;RW;1;0.001;0.001;"By-product of other ores";NULL
+"Niobium + Tantalum";29;Thailand;TH;1;0.001;0.001;"By-product of other mining";NULL
+"Niobium + Tantalum";29;Uganda;UG;1;0.001;0.001;"By-product of other ores";NULL
+"Niobium + Tantalum";29;Zimbabwe;ZW;1;0.001;0.001;"By-product of feldspar extraction";NULL
+"Platinum-group (PGM)";30;Australia;AU;1e-05;1e-06;0.1;"average metal content of PGM ores (10g/t)";NULL
+"Platinum-group (PGM)";30;Botswana;BW;1e-05;1e-06;0.1;"Global average, upper concentration in middle range of platinum-group ores (0,001 %)";NULL
+"Platinum-group (PGM)";30;Canada;CA;1e-05;1e-06;0.1;"based on global average data, upper concentration in middle range of platinum-group ores (0,001 %)";NULL
+"Platinum-group (PGM)";30;China;CN;1e-05;1e-06;0.1;"Global average, upper concentration in middle range of platinum-group ores (0,001 %)";NULL
+"Platinum-group (PGM)";30;Colombia;CO;1e-05;1e-06;0.1;"average metal content of PGM ores (10g/t)";NULL
+"Platinum-group (PGM)";30;Ethiopia;ET;1;1e-06;1e-06;"By-products of other ores (Copper and Nickel)";NULL
+"Platinum-group (PGM)";30;Finland;FI;1;1e-06;1e-06;"Assumption: same concentration as in Russian Federation";NULL
+"Platinum-group (PGM)";30;Germany;DE;1e-05;1e-06;0.1;"Global average, upper concentration in middle range of platinum-group ores (0,001 %)";NULL
+"Platinum-group (PGM)";30;Japan;JP;1e-05;1e-06;0.1;"Global average, upper concentration in middle range of platinum-group ores (0,001 %)";NULL
+"Platinum-group (PGM)";30;Philippines;PH;1e-05;1e-06;0.1;"Global average, upper concentration in middle range of platinum-group ores (0,001 %)";
+"Platinum-group (PGM)";30;Poland;PL;1e-05;1e-06;0.1;"Global average, upper concentration in middle range of platinum-group ores (0,001 %)";NULL
+"Platinum-group (PGM)";30;"Russian Federation";RU;1;1e-06;1e-06;"By-products of other ores (Copper and Nickel)";NULL
+"Platinum-group (PGM)";30;"Serbia (and Montenegro)";RS;1e-05;1e-06;0.1;"Global average, upper concentration in middle range of platinum-group ores (0,001 %)";NULL
+"Platinum-group (PGM)";30;"Serbia and Montenegro";XS;1e-05;1e-06;0.1;"Assumption: same as in Serbia";NULL
+"Platinum-group (PGM)";30;"South Africa";ZA;1e-05;1e-06;0.1;"metal content of PGM crude ores (0,001%)";NULL
+"Platinum-group (PGM)";30;"United States of America";US;2.4e-05;1e-06;0.0416666666666667;"National metal contents";NULL
+"Platinum-group (PGM)";30;USSR;SU;1e-05;1e-06;0.1;"Assumption: same as in Russian Federation ";NULL
+"Platinum-group (PGM)";30;"Yugoslavia SFR";YU;1;1e-06;1e-06;"By-products of other ores (Copper and Nickel)";NULL
+"Platinum-group (PGM)";30;Zimbabwe;ZW;1e-05;1e-06;0.1;"metal content of PGM crude ores (0,001%)";NULL
+"Rare Earths Minerals";31;Australia;AU;0.05;0.001;0.02;"Global average of concentrates with REO content of 60%";NULL
+"Rare Earths Minerals";31;Brazil;BR;0.05;0.001;0.02;"Global average of concentrates with REO content of 60%";NULL
+"Rare Earths Minerals";31;Burundi;BI;0.05;0.001;0.02;"Global average of concentrates with REO content of 60%";NULL
+"Rare Earths Minerals";31;China;CN;0.03;0.001;0.0333333333333333;"Global average";NULL
+"Rare Earths Minerals";31;"DR Congo";CD;0.05;0.001;0.02;"Global average of concentrates with REO content of 60%";NULL
+"Rare Earths Minerals";31;India;IN;0.05;0.001;0.02;"Global average of concentrates with REO content of 60%";NULL
+"Rare Earths Minerals";31;Kazakhstan;KZ;0.03;0.001;0.0333333333333333;"Global average";NULL
+"Rare Earths Minerals";31;Madagascar;MG;0.05;0.001;0.02;"Global average of concentrates with REO content of 60%";NULL
+"Rare Earths Minerals";31;Malaysia;MY;0.05;0.001;0.02;"Global average of concentrates with REO content of 60%";NULL
+"Rare Earths Minerals";31;Nigeria;NG;0.05;0.001;0.02;"Global average of concentrates with REO content of 60%";NULL
+"Rare Earths Minerals";31;"North Korea";KP;0.03;0.001;0.0333333333333333;"Global average";NULL
+"Rare Earths Minerals";31;"Russian Federation";RU;0.05;0.001;0.02;"Global average of concentrates with REO content of 60%";NULL
+"Rare Earths Minerals";31;"South Africa";ZA;0.05;0.001;0.02;"Global average of concentrates with REO content of 60%";NULL
+"Rare Earths Minerals";31;"Sri Lanka";LK;0.05;0.001;0.02;"Global average of concentrates with REO content of 60%";NULL
+"Rare Earths Minerals";31;Thailand;TH;0.05;0.001;0.02;"Global average of concentrates with REO content of 60%";NULL
+"Rare Earths Minerals";31;"United States of America";US;0.03;0.001;0.0333333333333333;"Global average";NULL
+"Rare Earths Minerals";31;USSR;SU;0.03;0.001;0.0333333333333333;"Global average";NULL
+"Rare Earths Minerals";31;"Viet Nam";VN;0.03;0.001;0.0333333333333333;"Global average";NULL
+Selenium;32;Belgium;BE;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;Canada;CA;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;Chile;CL;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;China;CN;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;Finland;FI;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;Germany;DE;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;India;IN;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;Japan;JP;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;Kazakhstan;KZ;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;Peru;PE;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;Philippines;PH;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;Poland;PL;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;"Russian Federation";RU;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;"Serbia (and Montenegro)";RS;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;"Serbia and Montenegro";XS;1;0.001;0.001;"Assumption: same as in Serbia";NULL
+Selenium;32;Sweden;SE;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;"United States of America";US;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;Uzbekistan;UZ;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;"Yugoslavia SFR";YU;1;0.001;0.001;"By-product of other ores";NULL
+Selenium;32;Zambia;ZM;1;0.001;0.001;"By-product of other ores";NULL
+Silver;34;Algeria;DZ;0.00031;1e-06;0.0032258064516129;"National metal contents";NULL
+Silver;34;Argentina;AR;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Armenia;AM;1;1e-06;1e-06;"By-products of other ores";NULL
+Silver;34;Australia;AU;1;1e-06;1e-06;"By-product of Lead&Zinc ores";NULL
+Silver;34;Austria;AT;0.0003;1e-06;0.00333333333333333;"Global average";
+Silver;34;Azerbaijan;AZ;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Bolivia;BO;0.000129;1e-06;0.00775193798449612;"National metal contents";NULL
+Silver;34;Botswana;BW;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Brazil;BR;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Bulgaria;BG;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"Burkina Faso";BF;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Canada;CA;0.00045;1e-06;0.00222222222222222;"National metal contents ";NULL
+Silver;34;Chile;CL;1;1e-06;1e-06;"By-product of copper and other ores";NULL
+Silver;34;China;CN;1;1e-06;1e-06;"By-product of lead and zinc mining";NULL
+Silver;34;Colombia;CO;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"Costa Rica";CR;0.000129;1e-06;0.00775193798449612;"Asumption same as in Bolivia";NULL
+Silver;34;"Cote d'Ivoire";CI;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Croatia;HR;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Czechoslovakia;CS;0.05;1e-06;2e-05;"0";NULL
+Silver;34;Denmark;DK;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"Dominican Republic";DO;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"DR Congo";CD;0.0003;1e-06;0.00333333333333333;"Global average ";NULL
+Silver;34;Ecuador;EC;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"El Salvador";SV;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Eritrea;ER;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Ethiopia;ET;1;1e-06;1e-06;"By-products of other ores";NULL
+Silver;34;"Fiji Islands";FJ;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Finland;FI;1;1e-06;1e-06;"By-products of other ores";NULL
+Silver;34;France;FR;0.00013;1e-06;0.00769230769230769;"Regional average";NULL
+Silver;34;Georgia;GE;0.0003;0.001;3.33333333333333;"Global average";NULL
+Silver;34;Germany;DE;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Ghana;GH;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Greece;GR;1;1e-06;1e-06;"By-products of other ores";NULL
+Silver;34;Greenland;GL;0.00045;1e-06;0.00222222222222222;"Assumption: same as in Canada";NULL
+Silver;34;Guatemala;GT;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Haiti;HT;0.0003;1e-06;0.00333333333333333;"Global average";
+Silver;34;Honduras;HN;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Hungary;HU;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;India;IN;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Indonesia;ID;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Iran;IR;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Ireland;IE;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Italy;IT;1;1e-06;1e-06;"By-products of other ores";NULL
+Silver;34;Japan;JP;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Kazakhstan;KZ;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Laos;LA;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Macedonia;MK;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Malaysia;MY;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Mali;ML;0.0003;0.001;3.33333333333333;"Global average";NULL
+Silver;34;Mexico;MX;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Mongolia;MN;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Morocco;MA;0.00031;1e-06;0.0032258064516129;"National metal contents";NULL
+Silver;34;Myanmar;MM;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Namibia;NA;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"New Zealand";NZ;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Nicaragua;NI;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Niger;NE;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"North Korea";KP;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Oman;OM;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Pakistan;PK;0.0003;0.001;3.33333333333333;"Global average";NULL
+Silver;34;Panama;PA;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"Papua New Guinea";PG;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Peru;PE;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Philippines;PH;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Poland;PL;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Portugal;PT;1;1e-06;1e-06;"By-products of other ores";NULL
+Silver;34;Romania;RO;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"Russian Federation";RU;0.000506;1e-06;0.00197628458498024;"National metal contents";NULL
+Silver;34;"Saudi Arabia";SA;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"Serbia (and Montenegro)";RS;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"Serbia and Montenegro";XS;0.0003;1e-06;0.00333333333333333;"Assumption: same as in Serbia";NULL
+Silver;34;Slovakia;SK;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"Solomon Islands";SB;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"South Africa";ZA;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"South Korea";KR;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Spain;ES;0.00013;1e-06;0.00769230769230769;"Regional average";NULL
+Silver;34;Sudan;SD;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Sweden;SE;1;1e-06;1e-06;"By-products of other ores";NULL
+Silver;34;Taiwan;TW;1;1e-06;1e-06;"By-product of lead and zinc mining";NULL
+Silver;34;Tajikistan;TJ;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Tanzania;TZ;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Thailand;TH;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Tunisia;TN;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Turkey;TR;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"United Kingdom";GB;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"United States of America";US;1;1e-06;1e-06;"By-product of lead and zinc mining";NULL
+Silver;34;USSR;SU;0.000506;1e-06;0.00197628458498024;"Assumption: same as in Russian Federation ";NULL
+Silver;34;Uzbekistan;UZ;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;"Yugoslavia SFR";YU;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Zambia;ZM;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Silver;34;Zimbabwe;ZW;0.0003;1e-06;0.00333333333333333;"Global average";NULL
+Tellurium;36;Canada;CA;1;0.001;0.001;"By-product of other ores";NULL
+Tellurium;36;Japan;JP;1;0.001;0.001;"By-product of other ores";NULL
+Tellurium;36;Peru;PE;1;0.001;0.001;"By-product of other ores";NULL
+Tellurium;36;"United States of America";US;1;0.001;0.001;"By-product of other ores";NULL
+Tin;37;Argentina;AR;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Australia;AU;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Bolivia;BO;0.00086;0.001;1.16279069767442;"National metal contents";NULL
+Tin;37;Brazil;BR;0.00086;0.001;1.16279069767442;"National metal contents";NULL
+Tin;37;Burundi;BI;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Cameroon;CM;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Canada;CA;0.002;0.001;0.5;"National metal content";NULL
+Tin;37;China;CN;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Czechoslovakia;CS;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;"DR Congo";CD;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Egypt;EG;0.015;0.001;0.0666666666666667;"Global average";
+Tin;37;France;FR;0.015;0.001;0.0666666666666667;"Global average";
+Tin;37;Germany;DE;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;India;IN;0.015;0.001;0.0666666666666667;"Global average";
+Tin;37;Indonesia;ID;0.00019;0.001;5.26315789473684;"National metal contents";NULL
+Tin;37;Japan;JP;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Kazakhstan;KZ;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Laos;LA;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Malaysia;MY;0.003;0.001;0.333333333333333;"Global average, lower concentration in middle range of Zn ores (0,3%) ";NULL
+Tin;37;Mexico;MX;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Mongolia;MN;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Morocco;MA;0.015;0.001;0.0666666666666667;"Global average";
+Tin;37;Myanmar;MM;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Namibia;NA;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Niger;NE;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Nigeria;NG;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Peru;PE;0.00238;0.001;0.420168067226891;"National metal contents";NULL
+Tin;37;Portugal;PT;0.0184;0.001;0.0543478260869565;"National metal contents";NULL
+Tin;37;"Rep Congo";CG;0.015;0.001;0.0666666666666667;"Global average";
+Tin;37;"Russian Federation";RU;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Rwanda;RW;0.015;0.001;0.0666666666666667;"0";NULL
+Tin;37;"South Africa";ZA;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;"South Korea";KR;0.015;0.001;0.0666666666666667;"Global average";
+Tin;37;Spain;ES;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Tanzania;TZ;0.015;0.001;0.0666666666666667;"Global average";
+Tin;37;Thailand;TH;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Uganda;UG;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;"United Kingdom";GB;0.00358;0.001;0.279329608938548;"National metal contents";NULL
+Tin;37;"United States of America";US;0.00151;0.001;0.662251655629139;"National metal contents";NULL
+Tin;37;USSR;SU;0.02;0.001;0.05;"Assumption: same as in Russian Federation ";NULL
+Tin;37;"Viet Nam";VN;0.015;0.001;0.0666666666666667;"Global average";NULL
+Tin;37;Zimbabwe;ZW;0.015;0.001;0.0666666666666667;"Global average";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;Australia;AU;1;0.001;0.001;"By-product of other ores";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;Brazil;BR;1;0.001;0.001;"By-product of other ores";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;Canada;CA;1;0.001;0.001;"By-product of other ores";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;China;CN;1;0.001;0.001;"By-product of other ores";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;Egypt;EG;1;0.001;0.001;"By-product of other ores";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;India;IN;1;0.001;0.001;"By-product of other mining";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;Kazakhstan;KZ;1;0.001;0.001;"By-product of other ores";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;Malaysia;MY;1;0.001;0.001;"By-product of other mining";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;Mozambique;MZ;1;0.001;0.001;"By-product of other ores";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;Norway;NO;1;0.001;0.001;"By-product of other ores";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;"Sierra Leone";SL;1;0.001;0.001;"By-product of other ores, Ilmenite + rutile";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;"South Africa";ZA;1;0.001;0.001;"By-product of other ores";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;"South Korea";KR;1;0.001;0.001;"By-product of other ores";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;"Sri Lanka";LK;1;0.001;0.001;"By-product of other ores";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;Ukraine;UA;1;0.001;0.001;"By-product of other ores";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;"United States of America";US;1;0.001;0.001;"By-product of other ores, Ilmenite + rutile";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;USSR;SU;1;0.001;0.001;"By-product of other ores";NULL
+"Titanium (incl/ Ilmenite and Rutile)";38;"Viet Nam";VN;1;0.001;0.001;"By-product of other mining";NULL
+Tungsten;39;Argentina;AR;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Australia;AU;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Austria;AT;0.0044;0.001;0.227272727272727;"0";NULL
+Tungsten;39;Bolivia;BO;0.0098;0.001;0.102040816326531;"Assumption: same concentraction as in Argentina";NULL
+Tungsten;39;Brazil;BR;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Burundi;BI;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Canada;CA;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;China;CN;0.00165;0.001;0.606060606060606;"National metal contents";NULL
+Tungsten;39;Czechoslovakia;CS;0.0044;0.001;0.227272727272727;"Assumption: same concentration as in Austria";NULL
+Tungsten;39;"DR Congo";CD;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;France;FR;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Guatemala;GT;0.00515;0.001;0.194174757281553;"Global average";
+Tungsten;39;"Hong Kong";HK;0.00165;0.001;0.606060606060606;"Assumption: same as in China";NULL
+Tungsten;39;India;IN;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Japan;JP;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Kazakhstan;KZ;0.00134;0.001;0.746268656716418;"National metal contents";NULL
+Tungsten;39;Kyrgyzstan;KG;0.00165;0.001;0.606060606060606;"Assumption: same as in Russia";NULL
+Tungsten;39;Malaysia;MY;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Mexico;MX;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Mongolia;MN;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Myanmar;MM;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Namibia;NA;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Netherlands;NL;0.00515;0.001;0.194174757281553;"Global average";
+Tungsten;39;"New Zealand";NZ;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Nigeria;NG;0.00515;0.001;0.194174757281553;"Global average";
+Tungsten;39;"North Korea";KP;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Peru;PE;0.0098;0.001;0.102040816326531;"Assumption: same concentration as in Argentina";NULL
+Tungsten;39;Portugal;PT;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;"Russian Federation";RU;0.00165;0.001;0.606060606060606;"National metal contents";NULL
+Tungsten;39;Rwanda;RW;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;"South Africa";ZA;0.00515;0.001;0.194174757281553;"Global average";
+Tungsten;39;"South Korea";KR;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Spain;ES;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Sweden;SE;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Tajikistan;TJ;0.0047;0.001;0.212765957446809;"Assumption: same concentration as in Uzbekistan";NULL
+Tungsten;39;Tanzania;TZ;0.00515;0.001;0.194174757281553;"Global average";
+Tungsten;39;Thailand;TH;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Turkey;TR;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Uganda;UG;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;"United Kingdom";GB;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;"United States of America";US;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;USSR;SU;0.00165;0.001;0.606060606060606;"Assumption: same as in Russian Federation ";NULL
+Tungsten;39;Uzbekistan;UZ;0.0047;0.001;0.212765957446809;"National metal contents";NULL
+Tungsten;39;"Viet Nam";VN;0.00515;0.001;0.194174757281553;"Global average";NULL
+Tungsten;39;Zimbabwe;ZW;0.00515;0.001;0.194174757281553;"Global average";NULL
+Uranium;40;Argentina;AR;0.002;0.001;0.5;"Global average";NULL
+Uranium;40;Australia;AU;0.002;0.001;0.5;"Global average";NULL
+Uranium;40;Belgium;BE;0.00012;0.001;8.33333333333333;"Regional average";NULL
+Uranium;40;Brazil;BR;0.002;0.001;0.5;"Global average";NULL
+Uranium;40;Bulgaria;BG;0.002;1;500;"Global average";NULL
+Uranium;40;Canada;CA;0.002;0.001;0.5;"Global average";NULL
+Uranium;40;China;CN;0.002;0.001;0.5;"Global average";NULL
+Uranium;40;"Czech Republic";CZ;0.00012;0.001;8.33333333333333;"Regional average";NULL
+Uranium;40;Czechoslovakia;CS;0.00012;0.001;8.33333333333333;"Regional average";NULL
+Uranium;40;France;FR;0.00012;0.001;8.33333333333333;"Regional average";NULL
+Uranium;40;Gabon;GA;0.002;0.001;0.5;"Global average";NULL
+Uranium;40;Germany;DE;0.0024;0.001;0.416666666666667;"Assumption: same concentration as in Russia";NULL
+Uranium;40;Hungary;HU;0.00012;0.001;8.33333333333333;"Regional average";NULL
+Uranium;40;India;IN;0.002;0.001;0.5;"Global average";NULL
+Uranium;40;Kazakhstan;KZ;0.0012;0.001;0.833333333333333;"National metal contents";NULL
+Uranium;40;Malawi;MW;0.002;0.001;0.5;"Global average";NULL
+Uranium;40;Namibia;NA;0.002;0.001;0.5;"Global average";NULL
+Uranium;40;Niger;NE;0.002;0.001;0.5;"Global average";NULL
+Uranium;40;Pakistan;PK;0.002;0.001;0.5;"Global average";NULL
+Uranium;40;Portugal;PT;0.00012;0.001;8.33333333333333;"Regional average";NULL
+Uranium;40;Romania;RO;0.002;0.001;0.5;"Global average";NULL
+Uranium;40;"Russian Federation";RU;0.0024;0.001;0.416666666666667;"National metal contents";NULL
+Uranium;40;"South Africa";ZA;0.002;0.001;0.5;"Global average";NULL
+Uranium;40;Spain;ES;0.00012;0.001;8.33333333333333;"Regional average";NULL
+Uranium;40;Ukraine;UA;0.0024;0.001;0.416666666666667;"National metal content";NULL
+Uranium;40;"United States of America";US;0.002;0.001;0.5;"average global metal contents in uranium ores (0,2%)";NULL
+Uranium;40;USSR;SU;0.0024;0.001;0.416666666666667;"Assumption: same as in Russian Federation ";NULL
+Uranium;40;Uzbekistan;UZ;0.0012;0.001;0.833333333333333;"Assumption: same concentration as in Kazakhstan";NULL
+Uranium;40;"Yugoslavia SFR";YU;0.002;0.001;0.5;"Global average";NULL
+Vanadium;41;Australia;AU;1;0.001;0.001;"By-product of other ores";NULL
+Vanadium;41;Brazil;BR;1;0.001;0.001;"By-product of other ores";
+Vanadium;41;Chile;CL;1;0.001;0.001;"By-product of other ores";NULL
+Vanadium;41;China;CN;0.56;0.001;0.001;"By-product of other mining";NULL
+Vanadium;41;Finland;FI;1;0.001;0.001;"By-product of other ores";NULL
+Vanadium;41;Hungary;HU;1;0.001;0.001;"By-product of other ores";NULL
+Vanadium;41;Japan;JP;1;0.001;0.001;"By-product of other ores";NULL
+Vanadium;41;Kazakhstan;KZ;1;0.001;0.001;"By-product of other ores";NULL
+Vanadium;41;Namibia;NA;1;0.001;0.001;"By-product of other ores";
+Vanadium;41;Norway;NO;1;0.001;0.001;"By-product of other ores";NULL
+Vanadium;41;"Russian Federation";RU;1;0.001;0.001;"By-product of other ores";NULL
+Vanadium;41;"South Africa";ZA;1;0.001;0.001;"By-product of other ores";NULL
+Vanadium;41;"United States of America";US;1;0.001;0.001;"By-product of other mining";NULL
+Vanadium;41;USSR;SU;1;0.001;0.001;"By-product of other ores";NULL
+Zinc;42;Algeria;DZ;0.05;0.001;0.01651;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Argentina;AR;0.073;0.001;0.008933886;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Armenia;AM;0.05;0.001;0.02;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Australia;AU;0.083433279;0.001;0.008825848;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Austria;AT;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Bolivia;BO;0.0777;0.001;0.011806676;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;"Bosnia and Herzegovina";BA;0.015;0.001;0.036704;"based on assumptions of lead/zinc coupled production";"based on national metal contents in crude Zn ores (1,5 %)"
+Zinc;42;Brazil;BR;0.137;0.001;0.006838;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Bulgaria;BG;0.0668;0.001;0.030911;"based on assumptions of lead/zinc coupled production";"based on national metal contents in crude Zn ores (1,68 %)"
+Zinc;42;"Burkina Faso";BF;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Canada;CA;0.1376933;0.001;0.006597666;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Chile;CL;0.146077862;0.001;0.00664452;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;China;CN;0.0565;0.001;0.012742;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Colombia;CO;0.0483;0.001;0.020703933747412;"Global average";
+Zinc;42;"Czech Republic";CZ;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Czechoslovakia;CS;0.018;0.001;0.040834;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Denmark;DK;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;"DR Congo";CD;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Ecuador;EC;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Finland;FI;0.027;0.001;0.036312;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;France;FR;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Georgia;GE;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Germany;DE;0.0653;0.001;0.012759315;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Greece;GR;0.050571429;0.001;0.012778888;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Greenland;GL;0.1376933;0.001;0.00726251749358901;"Assumption: same as in Canada";NULL
+Zinc;42;Guatemala;GT;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Honduras;HN;0.0792;0.001;0.009745;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Hungary;HU;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;India;IN;0.05;0.001;0.017869711;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Iran;IR;0.0483;0.001;0.015232;"based on assumptions of lead/zinc coupled production";"based on global metal contents in crude Zn ores (4,83 %)"
+Zinc;42;Ireland;IE;0.108122433;0.001;0.008259262;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Italy;IT;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Japan;JP;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Kazakhstan;KZ;0.0323;0.001;0.028454;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Kosovo;XK;0.023;0.001;0.0434782608695652;"Assumption: same as in Serbia";NULL
+Zinc;42;Laos;LA;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Macedonia;MK;0.05;0.001;0.010078;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Mexico;MX;0.029;0.001;0.027443;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Mongolia;MN;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Montenegro;ME;0.023;0.001;0.0434782608695652;"Assumption: same as in Serbia";NULL
+Zinc;42;Morocco;MA;0.0483;0.001;0.007612;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Myanmar;MM;0.0483;0.001;0.01909;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Namibia;NA;0.026;0.001;0.036788197;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Nicaragua;NI;0.0483;0.001;0.020703933747412;"Global average";
+Zinc;42;Nigeria;NG;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;"North Korea";KP;0.0483;0.001;0.015009;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Norway;NO;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Pakistan;PK;0.0483;0.001;0.020703933747412;"Global average";
+Zinc;42;Peru;PE;0.01;0.001;0.083843019;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Philippines;PH;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Poland;PL;0.026966515;0.001;0.026484813;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Portugal;PT;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;"Rep Congo";CG;0.0483;0.001;0.020703933747412;"Global average";
+Zinc;42;Romania;RO;0.009;0.001;0.062391639;"based on assumptions of lead/zinc coupled production";"based on nationalmetal contents in crude Zn ores (0,9 %)"
+Zinc;42;"Russian Federation";RU;0.0411;0.001;0.019792214;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;"Saudi Arabia";SA;0.0483;0.001;0.01807786;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;"Serbia (and Montenegro)";RS;0.023;0.001;0.026113388;"based on assumptions of lead/zinc coupled production";"based on national metal contents in crude Zn ores (2,3 %)"
+Zinc;42;"Serbia and Montenegro";XS;0.023;0.001;0.0434782608695652;"Assumption: same as in Serbia";NULL
+Zinc;42;Slovakia;SK;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Slovenia;SI;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;"South Africa";ZA;0.0225;0.001;0.011839107;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;"South Korea";KR;0.149668793;0.001;0.006648;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Spain;ES;0.0345;0.001;0.023828;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Sweden;SE;0.0559;0.001;0.014320957;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;Tajikistan;TJ;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Thailand;TH;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Tunisia;TN;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;Turkey;TR;0.10178117;0.001;0.008731892;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;"United Kingdom";GB;0.05;0.001;0.016919;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;"United States of America";US;0.105390589;0.001;0.006464891;"based on assumptions of lead/zinc coupled production";NULL
+Zinc;42;USSR;SU;0.0411;0.001;0.019792214;"Assumption: same as in Russia - lead/zinc coupled production";NULL
+Zinc;42;Uzbekistan;UZ;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;"Viet Nam";VN;0.0483;0.001;0.020703933747412;"Global average";NULL
+Zinc;42;"Yugoslavia SFR";YU;0.023;0.001;0.0434782608695652;"Global average";"based on Serbian metal contents in crude Zn ores (2,3 %)"
+Zinc;42;Zambia;ZM;0.0483;0.001;0.020703933747412;"Global average";NULL
+"Zirconium and Hafnium";43;Australia;AU;1;0.001;0.001;"By-product of other heavy-metal containing ores";NULL
+"Zirconium and Hafnium";43;Brazil;BR;1;0.001;0.001;"By-product of other ores";NULL
+"Zirconium and Hafnium";43;China;CN;1;0.001;0.001;"By-product of other ores";NULL
+"Zirconium and Hafnium";43;Gambia;GM;1;0.001;0.001;"By-product of other ores";NULL
+"Zirconium and Hafnium";43;India;IN;1;0.001;0.001;"By-product of other ores";NULL
+"Zirconium and Hafnium";43;Indonesia;ID;1;0.001;0.001;"By-product of other ores";NULL
+"Zirconium and Hafnium";43;Malaysia;MY;1;0.001;0.001;"By-product of other ores";NULL
+"Zirconium and Hafnium";43;Mozambique;MZ;1;0.001;0.001;"By-product of other ores";NULL
+"Zirconium and Hafnium";43;"Russian Federation";RU;1;0.001;0.001;"By-product of other ores";NULL
+"Zirconium and Hafnium";43;"South Africa";ZA;1;0.001;0.001;"By-product of other ores";NULL
+"Zirconium and Hafnium";43;"Sri Lanka";LK;1;0.001;0.001;"By-product of other ores";NULL
+"Zirconium and Hafnium";43;Thailand;TH;1;0.001;0.001;"By-product of other ores";NULL
+"Zirconium and Hafnium";43;Ukraine;UA;1;0.001;0.001;"By-product of other heavy metals";NULL
+"Zirconium and Hafnium";43;"United States of America";US;1;0.001;0.001;"By-product of other ores";NULL
+"Zirconium and Hafnium";43;USSR;SU;1;0.001;0.001;"By-product of other ores";NULL
+"Zirconium and Hafnium";43;"Viet Nam";VN;1;0.001;0.001;"By-product of other ores";NULL
