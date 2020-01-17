@@ -1,1 +1,3 @@
-WorkingDirectory4R.mat
+# raw data folders containing large (>100MB) files
+BACI/**
+EXIOWasteMFAIO/**
