@@ -70,6 +70,8 @@ if(dir.exists(path_set)) unlink(path_set,recursive = TRUE)
 # Create new folder  
 dir.create(path_set)
 
+
+
 # Write data frame with ALANG commands as tab-delimited txt-file to root and working directory (mother)
 # Note HP: This is probably not the normal procedure, meaning no IE ALANG's in the root
 filename <-  paste0(path_set,"/",gsub("-","",Sys.Date()),
