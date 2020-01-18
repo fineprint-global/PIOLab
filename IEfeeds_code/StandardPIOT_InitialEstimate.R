@@ -45,14 +45,16 @@ path <- list("Subroutines" = paste0(root_folder,"IEfeeds_code/Rscript/StandardPI
              "Raw" = paste0(root_folder,"RawDataRepository"),
              "Processed" = paste0(root_folder,"ProcessedData/StandardPIOT"),
              "Concordance" = paste0(root_folder,"ConcordanceLibrary"),
+             "ALANG" = paste0(root_folder,"ALANGfiles"),
              "root" = root_folder,
              "mother" = mother)
 
 
-# Check whether folder for processed data exists, if yes delete it
+# Check whether output folders for processed data and ALANGs exists, if yes delete them
 if(dir.exists(path$Processed)) unlink(path$Processed,recursive = TRUE) 
-# Create new folder  
+if(dir.exists(path$ALANG)) unlink(path$ALANG,recursive = TRUE) 
 dir.create(path$Processed)
+dir.create(path$ALANG)
 
 ################################################################################
 # 2. Load functions
