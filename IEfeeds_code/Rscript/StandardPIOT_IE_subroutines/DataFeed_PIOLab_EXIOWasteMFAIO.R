@@ -7,9 +7,9 @@
 #################################################
 
 
-DataFeed_EXIOWasteMFAIO <- function(year,path)
+DataFeed_PIOLab_EXIOWasteMFAIO <- function(year,path)
 {
-  print("DataFeed_EXIOWasteMFAIO initiated.")
+  print("DataFeed_PIOLab_EXIOWasteMFAIO initiated.")
   # Function for aggregating the IOT
   Agg <- function(x)
   {
@@ -140,4 +140,7 @@ DataFeed_EXIOWasteMFAIO <- function(year,path)
   write.table(x,file = paste0(path_set,"/",year,"_x.csv"),row.names = FALSE,col.names = FALSE,sep = ",")
   save(IO.codes,file = paste0(path_set,"/IO.codes.RData"))
   save(Y.codes,file = paste0(path_set,"/Y.codes.RData"))
+  
+  print("DataFeed_PIOLab_EXIOWasteMFAIO finished.")
+  
 }

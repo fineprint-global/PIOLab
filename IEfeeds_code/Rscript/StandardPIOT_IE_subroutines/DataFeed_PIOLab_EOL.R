@@ -7,9 +7,9 @@
 
 # Note that krausmann is only needed now for 2009+
 
-DataFeed_EOL <- function(year,path)
+DataFeed_PIOLab_EOL <- function(year,path)
 {
-  print("DataFeed_EOL initiated.")
+  print("DataFeed_PIOLab_EOL initiated.")
   # Import raw data from Pauiuk and filter for years selected
   data <- read.xlsx(paste0(path$Raw,"/EOL/1_F_steel_200R_F_13_14_inflow_waste_mgt.xlsx"),
                     sheet = 2)[,c("aspect.6.:.destination_region","aspect.7.:.time","value")]
@@ -51,6 +51,9 @@ DataFeed_EOL <- function(year,path)
   write.csv(data_clean,
             file = paste0(path_set,"/EOL_",year,".csv"),
             row.names = FALSE)
+  
+  print("DataFeed_PIOLab_EOL finished.")
+  
 }
 
 

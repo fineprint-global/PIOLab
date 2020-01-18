@@ -5,9 +5,9 @@
 #                                                 #
 ###################################################
 
-DataFeed_Grades <- function(path)
+DataFeed_PIOLab_Grades <- function(path)
 {
-  print("DataFeed_Grades initiated.")
+  print("DataFeed_PIOLab_Grades initiated.")
   # Load raw data and filter for iron ore grades
   data <- read.csv(paste0(path$Raw,"/Grades/WU_metal_concentrations_unitf_usedf_20180622.csv"),
                    sep = ";") %>% select(Commodity.Name,ISOAlpha.2,Concentration) %>% 
@@ -44,4 +44,6 @@ DataFeed_Grades <- function(path)
   write.csv(data_clean,
             file = paste0(path_set,"/IronOreGrades.csv"),
             row.names = FALSE)
+  
+  print("DataFeed_PIOLab_Grades finished.")
 }

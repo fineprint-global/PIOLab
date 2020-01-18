@@ -8,9 +8,9 @@
 #                                         #  
 ###########################################
 
-DataProcessing_AligningData <- function(year,path)
+DataProcessing_PIOLab_AligningData <- function(year,path)
 {
-  print("DataProcessing_AligningData initiated.")
+  print("DataProcessing_PIOLab_AligningData initiated.")
   ##############################################################################
   # 1. Loading data
   # Loading processed WSA production numbers
@@ -135,4 +135,7 @@ DataProcessing_AligningData <- function(year,path)
   write.csv(BOF,file = paste0(path$Processed,"/WSA/WSA_",year,"_SteelOxygenBlownConverters.csv"),row.names = FALSE)
   write.csv(EAF,file = paste0(path$Processed,"/WSA/WSA_",year,"_SteelElectricFurnaces.csv"),row.names = FALSE)
   write.csv(IronOre_Trade,file = paste0(path$Processed,"/BACI/BACI_",year,"_IronOre.csv"),row.names = FALSE)
+  
+  print("DataProcessing_PIOLab_AligningData finished.")
+  
 }

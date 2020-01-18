@@ -8,9 +8,9 @@
 ###############################################
 
 
-DataProcessing_WasteMFAIOExtension <- function(year,path)
+DataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
 {
-  print("DataProcessing_WasteMFAIOExtension initiated.")
+  print("DataProcessing_PIOLab_WasteMFAIOExtension initiated.")
   #############################################################################
   
   # Load IO codes of aggregated EXIOBASE data
@@ -125,4 +125,7 @@ DataProcessing_WasteMFAIOExtension <- function(year,path)
   
   # Write to folder
   write.csv(Scrap,file = paste0(path_set,"/FabricationScrap_",year,".csv"),row.names = FALSE)
+  
+  print("DataProcessing_PIOLab_WasteMFAIOExtension finished.")
+  
 }

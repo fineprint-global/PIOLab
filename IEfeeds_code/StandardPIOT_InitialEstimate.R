@@ -56,55 +56,55 @@ dir.create(path$Processed)
 
 ################################################################################
 # 2. Load functions
-source(paste0(path$Subroutines,"/DataFeed_BACI.R"))
-source(paste0(path$Subroutines,"/DataFeed_IRP.R"))
-source(paste0(path$Subroutines,"/DataFeed_Grades.R"))
-source(paste0(path$Subroutines,"/DataFeed_WSA.R"))
-source(paste0(path$Subroutines,"/DataFeed_SteelIndustryYields.R"))
-source(paste0(path$Subroutines,"/DataFeed_EOL.R"))
-source(paste0(path$Subroutines,"/DataFeed_IEA.R"))
-source(paste0(path$Subroutines,"/DataFeed_EXIOWasteMFAIO.R"))
-source(paste0(path$Subroutines,"/DataFeed_Cullen.R"))
-source(paste0(path$Subroutines,"/DataProcessing_AligningData.R"))
-source(paste0(path$Subroutines,"/DataProcessing_WasteMFAIOExtension.R"))
-source(paste0(path$Subroutines,"/DataProcessing_WasteMFAIOModelRun.R"))
-source(paste0(path$Subroutines,"/DataProcessing_BuildingDomesticTables.R"))
-source(paste0(path$Subroutines,"/DataProcessing_BuildingTradeBlocks.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_BACI.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_IRP.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_Grades.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_WSA.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_SteelIndustryYields.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_EOL.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_IEA.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_EXIOWasteMFAIO.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_Cullen.R"))
+source(paste0(path$Subroutines,"/DataProcessing_PIOLab_AligningData.R"))
+source(paste0(path$Subroutines,"/DataProcessing_PIOLab_WasteMFAIOExtension.R"))
+source(paste0(path$Subroutines,"/DataProcessing_PIOLab_WasteMFAIOModelRun.R"))
+source(paste0(path$Subroutines,"/DataProcessing_PIOLab_BuildingDomesticTables.R"))
+source(paste0(path$Subroutines,"/DataProcessing_PIOLab_BuildingTradeBlocks.R"))
 
 ################################################################################
 # 3. Commencing data feeds
 
 # Loading the trade data
-DataFeed_BACI(year,path)
+DataFeed_PIOLab_BACI(year,path)
 # The extraction and ore grade feed
-DataFeed_IRP(year,path)
-DataFeed_Grades(path)
+DataFeed_PIOLab_IRP(year,path)
+DataFeed_PIOLab_Grades(path)
 # Loading production values for semi- and finished steel + information on yields
-DataFeed_WSA(year,path)
-DataFeed_SteelIndustryYields(path)
+DataFeed_PIOLab_WSA(year,path)
+DataFeed_PIOLab_SteelIndustryYields(path)
 # Loading end-of-life steel scrap
-DataFeed_EOL(year,path)
+DataFeed_PIOLab_EOL(year,path)
 # Loading energy data
-DataFeed_IEA(year,path)
+DataFeed_PIOLab_IEA(year,path)
 # Loading and aggregating EXIOBASE Waste-MFA IO version
-DataFeed_EXIOWasteMFAIO(year,path)
+DataFeed_PIOLab_EXIOWasteMFAIO(year,path)
 # Loading fabrication yields taken from Cullen et al 2012
-DataFeed_Cullen(path)
+DataFeed_PIOLab_Cullen(path)
 
 ################################################################################
 # 4. Commencing data processing
 
 # Aligning WSA and IEA data and filling gaps in WSA accounts. 
 # Moreover, remove BACI trade flows of iron ores for regions where IRP reports no extraction
-DataProcessing_AligningData(year,path)
+DataProcessing_PIOLab_AligningData(year,path)
 # Compile extension for the MFA-Waste IO Model and estimate fabrication scrap
-DataProcessing_WasteMFAIOExtension(year,path)
+DataProcessing_PIOLab_WasteMFAIOExtension(year,path)
 # Run Waste-IO Model calculation
-DataProcessing_WasteMFAIOModelRun(year,path)
+DataProcessing_PIOLab_WasteMFAIOModelRun(year,path)
 # Compile national SUTs
-DataProcessing_BuildingDomesticTables(year,path)
+DataProcessing_PIOLab_BuildingDomesticTables(year,path)
 # Compiling trade blocks
-DataProcessing_BuildingTradeBlocks(year,path)
+DataProcessing_PIOLab_BuildingTradeBlocks(year,path)
 
 ################################################################################
 # 5. Write ALANG commands
