@@ -1,2 +1,2 @@
 # PIOLab
-This repo features the folder structure and all functions that are required to operate the physical input-output laboratory.
+This repo features all functions that are required to operate the physical input-output laboratory.
