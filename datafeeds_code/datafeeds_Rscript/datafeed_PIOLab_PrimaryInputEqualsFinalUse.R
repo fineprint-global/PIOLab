@@ -1,7 +1,6 @@
 ########################################################################
 # datafeed_PIOLab_PrimaryInputEqualsFinalUse
 #
-# Hallo Hey Hansi aber das muss jetzt funktionieren.
 # This data feed formulates ALANG commands so that the sum of the primary inputs 
 # (inputs from nature and EoL scrap) equals the sum of the final use (incl. flows to the environment) 
 
