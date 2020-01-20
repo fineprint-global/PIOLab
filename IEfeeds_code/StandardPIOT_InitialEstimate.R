@@ -11,8 +11,10 @@ print("Start of StandardPIOT InitialEstimate.")
 #tryCatch({library(dlyr)},error = function(e) 
 #  {install.packages('dplyr')})
 
+Check_Server <- Sys.info()[1] == "Linux"
+
 # Set library path when running on suphys server
-if(Sys.info()[1] == "Linux") .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
+if(Check_Server) .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
 
 library(dplyr)
 library(tidyr)
@@ -32,14 +34,23 @@ year <- 2008
 n_reg <- 35
 
 # Define location for root directory
-root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"
-# when working on the IELab server root folder will be set to the following
-if(!dir.exists(root_folder)) root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"
+if(Check_Server) {root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"} else
+  {root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
+
 # Note for HP: Insert code to read root folder from HANDLER variable here
 
-# Read current export (aka working or mother) directory  
-mother <- readMat(paste0(root_folder,"IEfeeds_code/WorkingDirectory4R.mat"))
-mother <- c(mother$out)
+# Read current export (aka working or mother) directory, for debugging we have the following if-else  
+if(Check_Server)
+{
+  mother <- readMat(paste0(root_folder,"IEfeeds_code/WorkingDirectory4R.mat"))
+  mother <- c(mother$out)
+  # Delete the file
+  unlink(paste0(root_folder,"IEfeeds_code/WorkingDirectory4R.mat"))
+} else
+{
+  mother <- readMat("C:/Users/hwieland/Documents/PIOLab_FilesForDebuggingR/WorkingDirectory4R.mat")
+  mother <- c(mother$out)
+}
 
 path <- list("Subroutines" = paste0(root_folder,"IEfeeds_code/Rscript/StandardPIOT_IE_subroutines"),
              "Raw" = paste0(root_folder,"RawDataRepository"),
@@ -50,11 +61,9 @@ path <- list("Subroutines" = paste0(root_folder,"IEfeeds_code/Rscript/StandardPI
              "mother" = mother)
 
 
-# Check whether output folders for processed data and ALANGs exists, if yes delete them
+# Check whether output folder for processed data exists, if yes delete them
 if(dir.exists(path$Processed)) unlink(path$Processed,recursive = TRUE) 
-if(dir.exists(path$ALANG)) unlink(path$ALANG,recursive = TRUE) 
 dir.create(path$Processed)
-dir.create(path$ALANG)
 
 ################################################################################
 # 2. Load functions
@@ -194,7 +203,7 @@ filename <-  paste0(path$root,"ALANGfiles/",gsub("-","",Sys.Date()),
 
 write.table(ALANG,file = filename,row.names = FALSE, quote = F,sep = "\t")
 # Check if the mother directory really exists
-if(dir.exists(path$mother))
+if(Check_Server)
 { 
   filename <-  paste0(path$mother,gsub("-","",Sys.Date()),
                       "_PIOLab_SUT_000_InitialEstimate-",
