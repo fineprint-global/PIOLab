@@ -3,9 +3,9 @@
 #     from BACI and writes it into a csv file for AISHA     #
 #############################################################
 
-DataFeed_BACI <- function(year,path)
+DataFeed_PIOLab_BACI <- function(year,path)
 {
-  print("DataFeed_BACI initiated.")
+  print("DataFeed_PIOLab_BACI initiated.")
   # Creat list that links the PIOT commodities to HS-codes and the BACI dataset
   # Warning: Do not mix 4- and 6-digit numbers under one product, can cause trouble.
   # Note that this list-object will be substituted by the sector aggregator matrix
@@ -134,6 +134,7 @@ DataFeed_BACI <- function(year,path)
     
     # Note that trade flows are measured in metric tons of material 
   }
+  print("DataFeed_PIOLab_BACI finished.")
 }
 
 

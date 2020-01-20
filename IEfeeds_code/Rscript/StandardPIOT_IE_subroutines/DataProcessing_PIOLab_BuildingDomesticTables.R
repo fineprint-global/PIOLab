@@ -8,9 +8,9 @@
 #####################################
 
 
-DataProcessing_BuildingDomesticTables <- function(year,path)
+DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
 {
-  print("DataProcessing_BuildingDomesticTables initiated.")
+  print("DataProcessing_PIOLab_BuildingDomesticTables initiated.")
   # Load the base codes for products
   base_product <- read.xlsx(paste0(path$Concordance,"/StandardPIOT_RootClassification.xlsx"),sheet = 7)
   # Load the base codes for industries
@@ -379,5 +379,5 @@ DataProcessing_BuildingDomesticTables <- function(year,path)
     #print(paste0("Region ",i," of ",n_reg))
     #print(paste0("Minimum value: ",min(SUT)))
   }
-  print("End of SUT compilation.")
+  print("DataProcessing_PIOLab_BuildingDomesticTables finished.")
 }

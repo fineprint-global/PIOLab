@@ -5,9 +5,9 @@
 #                                 #  
 ###################################
 
-DataProcessing_BuildingTradeBlocks <- function(year,path)
+DataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
 {
-  print("DataProcessing_BuildingTradeBlocks initiated.")
+  print("DataProcessing_PIOLab_BuildingTradeBlocks initiated.")
   
   # Load function to create allocation map
   source(paste0(path$Subroutines,"/makeEndUseMap.R"))
@@ -209,5 +209,5 @@ DataProcessing_BuildingTradeBlocks <- function(year,path)
       } 
     }
   }
-  print("End of DataProcessing_BuildingTradeBlocks.")
+  print("End of DataProcessing_PIOLab_BuildingTradeBlocks.")
 }

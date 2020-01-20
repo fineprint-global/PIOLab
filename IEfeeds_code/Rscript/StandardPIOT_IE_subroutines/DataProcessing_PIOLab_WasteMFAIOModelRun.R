@@ -6,9 +6,9 @@
 #                                       #
 #########################################
 
-DataProcessing_WasteMFAIOModelRun <- function(year,path)
+DataProcessing_PIOLab_WasteMFAIOModelRun <- function(year,path)
 {
-  print("DataProcessing_WasteMFAIOModelRun initiated.")
+  print("DataProcessing_PIOLab_WasteMFAIOModelRun initiated.")
   # Load the base codes for products
   base_product <- read.xlsx(paste0(path$Concordance,"/StandardPIOT_RootClassification.xlsx"),sheet = 7)
   
@@ -73,4 +73,5 @@ DataProcessing_WasteMFAIOModelRun <- function(year,path)
   write.csv(FabricationToFinal,file = paste0(path$Processed,"/EXIOWasteMFAIO/",year,"_FabricationToFinalDemand.csv"),row.names = FALSE)
   write.csv(SteelInFinalDemand,file = paste0(path$Processed,"/EXIOWasteMFAIO/",year,"_SteelInFinalDemand.csv"),row.names = FALSE)
   
+  print("DataProcessing_PIOLab_WasteMFAIOModelRun finished.")
 }

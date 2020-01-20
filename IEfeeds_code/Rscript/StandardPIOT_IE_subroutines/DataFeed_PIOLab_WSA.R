@@ -6,9 +6,9 @@
 #########################################
 
 
-DataFeed_WSA <- function(year,path)
+DataFeed_PIOLab_WSA <- function(year,path)
 {
-  print("DataFeed_WSA initiated.")
+  print("DataFeed_PIOLab_WSA initiated.")
   # Depending on the year that is processed, the data feed either sources numbers 
   # from the 2018 or the 2005 yearbook
   if(year >= 2008)
@@ -154,4 +154,5 @@ DataFeed_WSA <- function(year,path)
               file = paste0(path_set,"/WSA_",year,"_",item_name,".csv"),
               row.names = FALSE)
   }
+  print("DataFeed_PIOLab_WSA finished.")
 }

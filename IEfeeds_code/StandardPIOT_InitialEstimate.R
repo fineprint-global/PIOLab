@@ -11,8 +11,10 @@ print("Start of StandardPIOT InitialEstimate.")
 #tryCatch({library(dlyr)},error = function(e) 
 #  {install.packages('dplyr')})
 
+Check_Server <- Sys.info()[1] == "Linux"
+
 # Set library path when running on suphys server
-if(Sys.info()[1] == "Linux") .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
+if(Check_Server) .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
 
 library(dplyr)
 library(tidyr)
@@ -32,79 +34,88 @@ year <- 2008
 n_reg <- 35
 
 # Define location for root directory
-root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"
-# when working on the IELab server root folder will be set to the following
-if(!dir.exists(root_folder)) root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"
+if(Check_Server) {root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"} else
+  {root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
+
 # Note for HP: Insert code to read root folder from HANDLER variable here
 
-# Read current export (aka working or mother) directory  
-mother <- readMat(paste0(root_folder,"IEfeeds_code/WorkingDirectory4R.mat"))
-mother <- c(mother$out)
+# Read current export (aka working or mother) directory, for debugging we have the following if-else  
+if(Check_Server)
+{
+  mother <- readMat(paste0(root_folder,"IEfeeds_code/WorkingDirectory4R.mat"))
+  mother <- c(mother$out)
+  # Delete the file
+  unlink(paste0(root_folder,"IEfeeds_code/WorkingDirectory4R.mat"))
+} else
+{
+  mother <- readMat("C:/Users/hwieland/Documents/PIOLab_FilesForDebuggingR/WorkingDirectory4R.mat")
+  mother <- c(mother$out)
+}
 
 path <- list("Subroutines" = paste0(root_folder,"IEfeeds_code/Rscript/StandardPIOT_IE_subroutines"),
              "Raw" = paste0(root_folder,"RawDataRepository"),
              "Processed" = paste0(root_folder,"ProcessedData/StandardPIOT"),
              "Concordance" = paste0(root_folder,"ConcordanceLibrary"),
+             "ALANG" = paste0(root_folder,"ALANGfiles"),
              "root" = root_folder,
              "mother" = mother)
 
 
-# Check whether folder for processed data exists, if yes delete it
+# Check whether output folder for processed data exists, if yes delete them
 if(dir.exists(path$Processed)) unlink(path$Processed,recursive = TRUE) 
-# Create new folder  
 dir.create(path$Processed)
 
 ################################################################################
 # 2. Load functions
-source(paste0(path$Subroutines,"/DataFeed_BACI.R"))
-source(paste0(path$Subroutines,"/DataFeed_IRP.R"))
-source(paste0(path$Subroutines,"/DataFeed_Grades.R"))
-source(paste0(path$Subroutines,"/DataFeed_WSA.R"))
-source(paste0(path$Subroutines,"/DataFeed_SteelIndustryYields.R"))
-source(paste0(path$Subroutines,"/DataFeed_EOL.R"))
-source(paste0(path$Subroutines,"/DataFeed_IEA.R"))
-source(paste0(path$Subroutines,"/DataFeed_EXIOWasteMFAIO.R"))
-source(paste0(path$Subroutines,"/DataFeed_Cullen.R"))
-source(paste0(path$Subroutines,"/DataProcessing_AligningData.R"))
-source(paste0(path$Subroutines,"/DataProcessing_WasteMFAIOExtension.R"))
-source(paste0(path$Subroutines,"/DataProcessing_WasteMFAIOModelRun.R"))
-source(paste0(path$Subroutines,"/DataProcessing_BuildingDomesticTables.R"))
-source(paste0(path$Subroutines,"/DataProcessing_BuildingTradeBlocks.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_BACI.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_IRP.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_Grades.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_WSA.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_SteelIndustryYields.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_EOL.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_IEA.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_EXIOWasteMFAIO.R"))
+source(paste0(path$Subroutines,"/DataFeed_PIOLab_Cullen.R"))
+source(paste0(path$Subroutines,"/DataProcessing_PIOLab_AligningData.R"))
+source(paste0(path$Subroutines,"/DataProcessing_PIOLab_WasteMFAIOExtension.R"))
+source(paste0(path$Subroutines,"/DataProcessing_PIOLab_WasteMFAIOModelRun.R"))
+source(paste0(path$Subroutines,"/DataProcessing_PIOLab_BuildingDomesticTables.R"))
+source(paste0(path$Subroutines,"/DataProcessing_PIOLab_BuildingTradeBlocks.R"))
 
 ################################################################################
 # 3. Commencing data feeds
 
 # Loading the trade data
-DataFeed_BACI(year,path)
+DataFeed_PIOLab_BACI(year,path)
 # The extraction and ore grade feed
-DataFeed_IRP(year,path)
-DataFeed_Grades(path)
+DataFeed_PIOLab_IRP(year,path)
+DataFeed_PIOLab_Grades(path)
 # Loading production values for semi- and finished steel + information on yields
-DataFeed_WSA(year,path)
-DataFeed_SteelIndustryYields(path)
+DataFeed_PIOLab_WSA(year,path)
+DataFeed_PIOLab_SteelIndustryYields(path)
 # Loading end-of-life steel scrap
-DataFeed_EOL(year,path)
+DataFeed_PIOLab_EOL(year,path)
 # Loading energy data
-DataFeed_IEA(year,path)
+DataFeed_PIOLab_IEA(year,path)
 # Loading and aggregating EXIOBASE Waste-MFA IO version
-DataFeed_EXIOWasteMFAIO(year,path)
+DataFeed_PIOLab_EXIOWasteMFAIO(year,path)
 # Loading fabrication yields taken from Cullen et al 2012
-DataFeed_Cullen(path)
+DataFeed_PIOLab_Cullen(path)
 
 ################################################################################
 # 4. Commencing data processing
 
 # Aligning WSA and IEA data and filling gaps in WSA accounts. 
 # Moreover, remove BACI trade flows of iron ores for regions where IRP reports no extraction
-DataProcessing_AligningData(year,path)
+DataProcessing_PIOLab_AligningData(year,path)
 # Compile extension for the MFA-Waste IO Model and estimate fabrication scrap
-DataProcessing_WasteMFAIOExtension(year,path)
+DataProcessing_PIOLab_WasteMFAIOExtension(year,path)
 # Run Waste-IO Model calculation
-DataProcessing_WasteMFAIOModelRun(year,path)
+DataProcessing_PIOLab_WasteMFAIOModelRun(year,path)
 # Compile national SUTs
-DataProcessing_BuildingDomesticTables(year,path)
+DataProcessing_PIOLab_BuildingDomesticTables(year,path)
 # Compiling trade blocks
-DataProcessing_BuildingTradeBlocks(year,path)
+DataProcessing_PIOLab_BuildingTradeBlocks(year,path)
 
 ################################################################################
 # 5. Write ALANG commands
@@ -192,7 +203,7 @@ filename <-  paste0(path$root,"ALANGfiles/",gsub("-","",Sys.Date()),
 
 write.table(ALANG,file = filename,row.names = FALSE, quote = F,sep = "\t")
 # Check if the mother directory really exists
-if(dir.exists(path$mother))
+if(Check_Server)
 { 
   filename <-  paste0(path$mother,gsub("-","",Sys.Date()),
                       "_PIOLab_SUT_000_InitialEstimate-",

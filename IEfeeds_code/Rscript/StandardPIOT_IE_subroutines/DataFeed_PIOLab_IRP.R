@@ -4,9 +4,9 @@
 #############################################################
 
 
-DataFeed_IRP <- function(year,path)
+DataFeed_PIOLab_IRP <- function(year,path)
 {
-  print("DataFeed_IRP initiated.")
+  print("DataFeed_PIOLab_IRP initiated.")
   # Load data and filter for iron ores
   data <- read.csv(paste0(path$Raw,"/IRP/DE_CCC_ResearchDB.csv"),stringsAsFactors=FALSE)
   colnames(data)[7:50] <- 1970:2013
@@ -41,4 +41,6 @@ DataFeed_IRP <- function(year,path)
   write.csv(data_clean,
             file = paste0(path_set,"/IRP_",year,".csv"),
             row.names = FALSE)
+  
+  print("DataFeed_PIOLab_IRP finished")
 }

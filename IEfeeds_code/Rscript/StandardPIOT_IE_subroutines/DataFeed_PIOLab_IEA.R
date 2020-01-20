@@ -6,9 +6,9 @@
 #########################################
 
 
-DataFeed_IEA <- function(year,path)
+DataFeed_PIOLab_IEA <- function(year,path)
 {
-  print("DataFeed_IEA initiated.")
+  print("DataFeed_PIOLab_IEA initiated.")
   # Important note: Data from IEA (which includes all years), due to download threshold, 
   # can not be stored in one file. Therefore before processing, download respective 
   # raw data csv sheet for each year and add appropriate name to the file that includes the year.   
@@ -76,5 +76,7 @@ DataFeed_IEA <- function(year,path)
   write.csv(Energy_Con,
             file = paste0(path_set,"/IEA_",year,"_SteelIndustryEnergyConsumption.csv"),
             row.names = FALSE)
+  
+  print("DataFeed_PIOLab_IEA finished.")
   
 }
