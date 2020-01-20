@@ -28,16 +28,11 @@ root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"
 if(!dir.exists(root_folder)) root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"
 # Note for HP: Insert code to read root folder from HANDLER variable here
   
-# Read current export (aka working or mother) directory  
-mother <- readMat(paste0(root_folder,"IEfeeds_code/WorkingDirectory4R.mat"))
-mother <- c(mother$out)
-  
 path <- list("Subroutines" = paste0(root_folder,"IEfeeds_code/Rscript/StandardPIOT_IE_subroutines"),
                "Raw" = paste0(root_folder,"RawDataRepository"),
                "Processed" = paste0(root_folder,"ProcessedData/StandardPIOT"),
                "Concordance" = paste0(root_folder,"ConcordanceLibrary"),
-               "root" = root_folder,
-               "mother" = mother)
+               "root" = root_folder)
 
 base_regions <- read.xlsx(paste0(path$Concordance,"/StandardPIOT_RootClassification.xlsx"),sheet = 9)
 n_reg <- nrow(base_regions)  
@@ -92,12 +87,17 @@ filename <-  paste0(path_set,"/",gsub("-","",Sys.Date()),
 write.table(ALANG,file = filename,row.names = FALSE, quote = F,sep = "\t")
   
 # Check if the mother directory really exists
-if(dir.exists(path$mother))
+if(Sys.info()[1] == "Linux")
 { 
-    filename <-  paste0(path$mother,gsub("-","",Sys.Date()),
-                        "_PIOLab_Balancing_000_Constraints-",year,"_000_RoWexcluded.txt")
+  # Read current export (aka working or mother) directory  
+  mother <- readMat(paste0(root_folder,"IEfeeds_code/WorkingDirectory4R.mat"))
+  mother <- c(mother$out)
+  
+  filename <-  paste0(path$mother,gsub("-","",Sys.Date()),
+                      "_PIOLab_Balancing_000_Constraints-",year,"_000_RoWexcluded.txt")
     
-    write.table(ALANG,file = filename,row.names = FALSE, quote = F,sep = "\t") 
+  write.table(ALANG,file = filename,row.names = FALSE, quote = F,sep = "\t") 
+  
 }
   
 print("datafeed_PIOLab_balancing finished.")
