@@ -5,61 +5,20 @@
 #                                             #
 ###############################################
 
-print("Start of StandardPIOT InitialEstimate.")
-# 0. Initialize R packages
-# Note HP: Insert code to check available R packages here and install if required.
-#tryCatch({library(dlyr)},error = function(e) 
-#  {install.packages('dplyr')})
-
-Check_Server <- Sys.info()[1] == "Linux"
-
-# Set library path when running on suphys server
-if(Check_Server) .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
-
-library(dplyr)
-library(tidyr)
-# Because the data.table package is not available for the R version currently running on the USYD server
-# use the forerunner version of it, that is the reshape2 package, to use its functionalities
-#library(data.table)
-library(reshape2)
-library(openxlsx)
-library(stringr)
-library(R.matlab)
+IEdatafeed_name <- "StandardPIOT" 
+print(paste0("Start of ",IEdatafeed_name," InitialEstimate."))
 
 ################################################################################
-# 1. Set global variables and paths
-# Set the year(s)
-year <- 2008
-# Number of regions
-n_reg <- 35
+# Set library path when running on suphys server
+if(Sys.info()[1] == "Linux"){
+  .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
+  # Define location for root directory
+  root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
+  root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
+################################################################################
 
-# Define location for root directory
-if(Check_Server) {root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"} else
-  {root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
-
-# Note for HP: Insert code to read root folder from HANDLER variable here
-
-# Read current export (aka working or mother) directory, for debugging we have the following if-else  
-if(Check_Server)
-{
-  mother <- readMat(paste0(root_folder,"IEfeeds_code/WorkingDirectory4R.mat"))
-  mother <- c(mother$out)
-  # Delete the file
-  unlink(paste0(root_folder,"IEfeeds_code/WorkingDirectory4R.mat"))
-} else
-{
-  mother <- readMat("C:/Users/hwieland/Documents/PIOLab_FilesForDebuggingR/WorkingDirectory4R.mat")
-  mother <- c(mother$out)
-}
-
-path <- list("Subroutines" = paste0(root_folder,"IEfeeds_code/Rscript/StandardPIOT_IE_subroutines"),
-             "Raw" = paste0(root_folder,"RawDataRepository"),
-             "Processed" = paste0(root_folder,"ProcessedData/StandardPIOT"),
-             "Concordance" = paste0(root_folder,"ConcordanceLibrary"),
-             "ALANG" = paste0(root_folder,"ALANGfiles"),
-             "root" = root_folder,
-             "mother" = mother)
-
+# Initializing R script (load R packages and set paths to folders etc.)
+source(paste0(root_folder,"Rscripts/InitializationR.R"))
 
 # Check whether output folder for processed data exists, if yes delete them
 if(dir.exists(path$Processed)) unlink(path$Processed,recursive = TRUE) 
@@ -203,7 +162,7 @@ filename <-  paste0(path$root,"ALANGfiles/",gsub("-","",Sys.Date()),
 
 write.table(ALANG,file = filename,row.names = FALSE, quote = F,sep = "\t")
 # Check if the mother directory really exists
-if(Check_Server)
+if(file.exists(path$mother))
 { 
   filename <-  paste0(path$mother,gsub("-","",Sys.Date()),
                       "_PIOLab_SUT_000_InitialEstimate-",
@@ -213,5 +172,6 @@ if(Check_Server)
 }
   
 
-print("End of StandardPIOT InitialEstimate.")
+print(paste0("End of ",IEdatafeed_name," InitialEstimate."))
+
 

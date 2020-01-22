@@ -4,7 +4,7 @@
 # DMC is used as a constraint for the PIOT.
 #
 
-datafeed_PIOLab_DMC <- function(path,year)
+datafeed_PIOLab_DomesticExtractionIRP <- function(path,year)
 {
   # Set library path when running on suphys server
   if(Sys.info()[1] == "Linux") .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
