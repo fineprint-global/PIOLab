@@ -5,9 +5,9 @@
 #                                 #  
 ###################################
 
-DataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
+IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
 {
-  print("DataProcessing_PIOLab_BuildingTradeBlocks initiated.")
+  print("IEDataProcessing_PIOLab_BuildingTradeBlocks initiated.")
   
   # Load function to create allocation map
   source(paste0(path$Subroutines,"/makeEndUseMap.R"))
@@ -31,17 +31,17 @@ DataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   ##############################################################################
   # 1. Load data on traded commodities
   # Load BACI trade data
-  FlatRolled <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_FlatRolledProducts.csv"))
-  LongRolled <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_LongRolledProducts.csv"))
-  BilletBloom <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_Billet&Bloom.csv"))
-  IronOre <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_IronOre.csv"))
-  Ingot <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_Ingot.csv"))
-  PigIron <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_PigIron.csv"))
-  Slab <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_Slab.csv"))
-  SpongeIron <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_SpongeIron.csv"))
-  Scrap <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_ScrapAfterTreatment.csv"))
+  FlatRolled <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_FlatRolledProducts.csv"))
+  LongRolled <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_LongRolledProducts.csv"))
+  BilletBloom <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_Billet&Bloom.csv"))
+  IronOre <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_IronOre.csv"))
+  Ingot <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_Ingot.csv"))
+  PigIron <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_PigIron.csv"))
+  Slab <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_Slab.csv"))
+  SpongeIron <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_SpongeIron.csv"))
+  Scrap <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_ScrapAfterTreatment.csv"))
   # Load steel in final demand
-  FinalDemand <- read.csv(paste0(path$Processed,"/EXIOWasteMFAIO/",year,"_SteelInFinalDemand.csv")) 
+  FinalDemand <- read.csv(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_SteelInFinalDemand.csv")) 
   
   # Define function to create empty Use table
   CreateIntermediateUse <- function() {
@@ -92,9 +92,9 @@ DataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       
       # Read out the production of pig and sponge iron and calculate shares
       Share <- data.frame("Pig" = 0,"Sponge" = 0)
-      Pig <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_PigIron.csv")) 
+      Pig <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_PigIron.csv")) 
       if(j %in% Pig$base) Share$Pig <- Pig$Quantity[Pig$base == j] * 0.85
-      Sponge <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_SpongeIron.csv")) 
+      Sponge <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SpongeIron.csv")) 
       if(j %in% Sponge$base) Share$Sponge <- Sponge$Quantity[Sponge$base == j] 
       Share <- Share/sum(Share)
       
@@ -119,9 +119,9 @@ DataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       # Read out the production of liquid steel in order to divide scrap input 
       # to oxygen blown and electric furnace
       Share <- data.frame("BOF" = 0,"EAF" = 0)
-      BOF <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_SteelOxygenBlownConverters.csv")) 
+      BOF <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelOxygenBlownConverters.csv")) 
       if(j %in% BOF$base) Share$BOF <- BOF$Quantity[BOF$base == j] * 0.10
-      EAF <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_SteelElectricFurnaces.csv")) 
+      EAF <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelElectricFurnaces.csv")) 
       if(j %in% EAF$base) Share$EAF <- EAF$Quantity[EAF$base == j] * 0.5 
       Share <- Share/sum(Share)
       
@@ -184,12 +184,12 @@ DataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       rownames(FD) <- NULL
       
       # Write table to file
-      write.table(Use,file = paste0(path$Processed,"/SUT/",year,"_IntermediateTrade_",i,"_",j,".csv"),
+      write.table(Use,file = paste0(path$IE_Processed,"/SUT/",year,"_IntermediateTrade_",i,"_",j,".csv"),
                   col.names = FALSE,
                   row.names = FALSE,
                   sep = ",")
       
-      write.table(FD,file = paste0(path$Processed,"/SUT/",year,"_FinalTrade_",i,"_",j,".csv"),
+      write.table(FD,file = paste0(path$IE_Processed,"/SUT/",year,"_FinalTrade_",i,"_",j,".csv"),
                   col.names = FALSE,
                   row.names = FALSE,
                   sep = ",")
@@ -209,5 +209,5 @@ DataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       } 
     }
   }
-  print("End of DataProcessing_PIOLab_BuildingTradeBlocks.")
+  print("End of IEDataProcessing_PIOLab_BuildingTradeBlocks.")
 }

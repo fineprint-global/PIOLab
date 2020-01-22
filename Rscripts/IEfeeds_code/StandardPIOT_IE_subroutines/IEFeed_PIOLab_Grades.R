@@ -5,9 +5,9 @@
 #                                                 #
 ###################################################
 
-DataFeed_PIOLab_Grades <- function(path)
+IEFeed_PIOLab_Grades <- function(path)
 {
-  print("DataFeed_PIOLab_Grades initiated.")
+  print("IEFeed_PIOLab_Grades initiated.")
   # Load raw data and filter for iron ore grades
   data <- read.csv(paste0(path$Raw,"/Grades/WU_metal_concentrations_unitf_usedf_20180622.csv"),
                    sep = ";") %>% select(Commodity.Name,ISOAlpha.2,Concentration) %>% 
@@ -38,12 +38,12 @@ DataFeed_PIOLab_Grades <- function(path)
   data_clean <- add_row(data_clean,base = 35,Concentration = global_average)
   
   # Check if subfolder in processed data exists and if not create it
-  path_set <- paste0(path$Processed,"/Grades")
+  path_set <- paste0(path$IE_Processed,"/Grades")
   if(!dir.exists(path_set)) dir.create(path_set)
   
   write.csv(data_clean,
             file = paste0(path_set,"/IronOreGrades.csv"),
             row.names = FALSE)
   
-  print("DataFeed_PIOLab_Grades finished.")
+  print("IEFeed_PIOLab_Grades finished.")
 }

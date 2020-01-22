@@ -18,63 +18,63 @@ if(Sys.info()[1] == "Linux"){
 ################################################################################
 
 # Initializing R script (load R packages and set paths to folders etc.)
-source(paste0(root_folder,"Rscripts/InitializationR.R"))
+source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
 # Check whether output folder for processed data exists, if yes delete them
-if(dir.exists(path$Processed)) unlink(path$Processed,recursive = TRUE) 
-dir.create(path$Processed)
+if(dir.exists(path$IE_Processed)) unlink(path$IE_Processed,recursive = TRUE) 
+dir.create(path$IE_Processed)
 
 ################################################################################
 # 2. Load functions
-source(paste0(path$Subroutines,"/DataFeed_PIOLab_BACI.R"))
-source(paste0(path$Subroutines,"/DataFeed_PIOLab_IRP.R"))
-source(paste0(path$Subroutines,"/DataFeed_PIOLab_Grades.R"))
-source(paste0(path$Subroutines,"/DataFeed_PIOLab_WSA.R"))
-source(paste0(path$Subroutines,"/DataFeed_PIOLab_SteelIndustryYields.R"))
-source(paste0(path$Subroutines,"/DataFeed_PIOLab_EOL.R"))
-source(paste0(path$Subroutines,"/DataFeed_PIOLab_IEA.R"))
-source(paste0(path$Subroutines,"/DataFeed_PIOLab_EXIOWasteMFAIO.R"))
-source(paste0(path$Subroutines,"/DataFeed_PIOLab_Cullen.R"))
-source(paste0(path$Subroutines,"/DataProcessing_PIOLab_AligningData.R"))
-source(paste0(path$Subroutines,"/DataProcessing_PIOLab_WasteMFAIOExtension.R"))
-source(paste0(path$Subroutines,"/DataProcessing_PIOLab_WasteMFAIOModelRun.R"))
-source(paste0(path$Subroutines,"/DataProcessing_PIOLab_BuildingDomesticTables.R"))
-source(paste0(path$Subroutines,"/DataProcessing_PIOLab_BuildingTradeBlocks.R"))
+source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_WSA.R"))
+source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_SteelIndustryYields.R"))
+source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_BACI.R"))
+source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_IRP.R"))
+source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_Grades.R"))
+source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_EOL.R"))
+source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_IEA.R"))
+source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_EXIOWasteMFAIO.R"))
+source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_Cullen.R"))
+source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_AligningData.R"))
+source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_WasteMFAIOExtension.R"))
+source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_WasteMFAIOModelRun.R"))
+source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_BuildingDomesticTables.R"))
+source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_BuildingTradeBlocks.R"))
 
 ################################################################################
 # 3. Commencing data feeds
 
-# Loading the trade data
-DataFeed_PIOLab_BACI(year,path)
-# The extraction and ore grade feed
-DataFeed_PIOLab_IRP(year,path)
-DataFeed_PIOLab_Grades(path)
 # Loading production values for semi- and finished steel + information on yields
-DataFeed_PIOLab_WSA(year,path)
-DataFeed_PIOLab_SteelIndustryYields(path)
+IEFeed_PIOLab_WSA(year,path)
+IEFeed_PIOLab_SteelIndustryYields(path)
+# Loading the trade data
+IEFeed_PIOLab_BACI(year,path)
+# The extraction and ore grade feed
+IEFeed_PIOLab_IRP(year,path)
+IEFeed_PIOLab_Grades(path)
 # Loading end-of-life steel scrap
-DataFeed_PIOLab_EOL(year,path)
+IEFeed_PIOLab_EOL(year,path)
 # Loading energy data
-DataFeed_PIOLab_IEA(year,path)
+IEFeed_PIOLab_IEA(year,path)
 # Loading and aggregating EXIOBASE Waste-MFA IO version
-DataFeed_PIOLab_EXIOWasteMFAIO(year,path)
+IEFeed_PIOLab_EXIOWasteMFAIO(year,path)
 # Loading fabrication yields taken from Cullen et al 2012
-DataFeed_PIOLab_Cullen(path)
+IEFeed_PIOLab_Cullen(path)
 
 ################################################################################
 # 4. Commencing data processing
 
 # Aligning WSA and IEA data and filling gaps in WSA accounts. 
 # Moreover, remove BACI trade flows of iron ores for regions where IRP reports no extraction
-DataProcessing_PIOLab_AligningData(year,path)
+IEDataProcessing_PIOLab_AligningData(year,path)
 # Compile extension for the MFA-Waste IO Model and estimate fabrication scrap
-DataProcessing_PIOLab_WasteMFAIOExtension(year,path)
+IEDataProcessing_PIOLab_WasteMFAIOExtension(year,path)
 # Run Waste-IO Model calculation
-DataProcessing_PIOLab_WasteMFAIOModelRun(year,path)
+IEDataProcessing_PIOLab_WasteMFAIOModelRun(year,path)
 # Compile national SUTs
-DataProcessing_PIOLab_BuildingDomesticTables(year,path)
+IEDataProcessing_PIOLab_BuildingDomesticTables(year,path)
 # Compiling trade blocks
-DataProcessing_PIOLab_BuildingTradeBlocks(year,path)
+IEDataProcessing_PIOLab_BuildingTradeBlocks(year,path)
 
 ################################################################################
 # 5. Write ALANG commands
@@ -84,7 +84,6 @@ print("Start writing ALANG commands.")
 
 # Create empty file with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
-ALANG <- makeALANGheadline()
 
 # Standard error for all blocks that don't have a specific S.E.
 SE_value <- "E MX1;MN10;CN1e+3;"

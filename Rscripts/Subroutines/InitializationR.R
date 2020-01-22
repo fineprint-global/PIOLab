@@ -47,11 +47,13 @@ if(file.exists(OnServer))
 }
 
 # Set paths to folders
-path <- list("Subroutines" = paste0(root_folder,"Rscripts/IEfeeds_code/StandardPIOT_IE_subroutines"),
+path <- list("IE_Subroutines" = paste0(root_folder,"Rscripts/IEfeeds_code/StandardPIOT_IE_subroutines"),
+             "IE_Processed" = paste0(root_folder,"ProcessedData/StandardPIOT"),
              "Raw" = paste0(root_folder,"RawDataRepository"),
-             "Processed" = paste0(root_folder,"ProcessedData/StandardPIOT"),
              "Concordance" = paste0(root_folder,"ConcordanceLibrary"),
              "ALANG" = paste0(root_folder,"ALANGfiles"),
+             "Rscripts" = paste0(root_folder,"Rscripts"),
+             "Subroutines" = paste0(root_folder,"Rscripts/Subroutines"),
              "root" = root_folder,
              "mother" = mother)
 

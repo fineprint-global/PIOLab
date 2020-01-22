@@ -6,9 +6,9 @@
 #########################################
 
 
-DataFeed_PIOLab_WSA <- function(year,path)
+IEFeed_PIOLab_WSA <- function(year,path)
 {
-  print("DataFeed_PIOLab_WSA initiated.")
+  print("IEFeed_PIOLab_WSA initiated.")
   # Depending on the year that is processed, the data feed either sources numbers 
   # from the 2018 or the 2005 yearbook
   if(year >= 2008)
@@ -146,7 +146,7 @@ DataFeed_PIOLab_WSA <- function(year,path)
     data_clean <- data_clean %>% group_by(base) %>% summarise(Quantity = sum(Quantity))
     
     # Check if subfolder in processed data exists and if not create it
-    path_set <- paste0(path$Processed,"/WSA")
+    path_set <- paste0(path$IE_Processed,"/WSA")
     if(!dir.exists(path_set)) dir.create(path_set)
     
     # Export data to folder (note that the unit is metric tons)
@@ -154,5 +154,5 @@ DataFeed_PIOLab_WSA <- function(year,path)
               file = paste0(path_set,"/WSA_",year,"_",item_name,".csv"),
               row.names = FALSE)
   }
-  print("DataFeed_PIOLab_WSA finished.")
+  print("IEFeed_PIOLab_WSA finished.")
 }

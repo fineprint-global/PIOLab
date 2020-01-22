@@ -8,9 +8,9 @@
 #####################################
 
 
-DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
+IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
 {
-  print("DataProcessing_PIOLab_BuildingDomesticTables initiated.")
+  print("IEDataProcessing_PIOLab_BuildingDomesticTables initiated.")
   # Load the base codes for products
   base_product <- read.xlsx(paste0(path$Concordance,"/StandardPIOT_RootClassification.xlsx"),sheet = 7)
   # Load the base codes for industries
@@ -20,7 +20,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
   reg_agg <- Root2Base_RegionAggregator(paste0(path$Concordance,"/Region Aggregators/StandardPIOT_RegionAggregator.csv"))
   
   # Load slag rate of blast furnace and coefficient per ton of pig iron output
-  WSA_yield <- read.csv(paste0(path$Processed,"/WSA/SteelIndustryYields.csv")) %>%
+  WSA_yield <- read.csv(paste0(path$IE_Processed,"/WSA/SteelIndustryYields.csv")) %>%
     select(Process,Average)
   
   # Define general variables
@@ -44,13 +44,13 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     # 1. Writing boundary inputs of iron ore extraction and end-of-life scrap to table
     
     # 1.1 EoL scrap 
-    data <- read.csv(paste0(path$Processed,"/EOL/EOL_",year,".csv"))
+    data <- read.csv(paste0(path$IE_Processed,"/EOL/EOL_",year,".csv"))
     if(i %in% data$base) {
       value <- data$Quantity[data$base == i]
       SUT["EOLScrap","Scrap preparation"] <- value }
     
     # 1.2 IRP iron ore extraction i.e. inputs from nature
-    data <- read.csv(paste0(path$Processed,"/IRP/IRP_",year,".csv"))
+    data <- read.csv(paste0(path$IE_Processed,"/IRP/IRP_",year,".csv"))
     if(i %in% data$base) {
       value <- data$Quantity[data$base == i]
       SUT["InputsFromNature","Mining"] <- value }
@@ -60,7 +60,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     
     # 2.1 Waste (gangue) output of mining
     # Read iron ore grades and assume beneficiation to 60% of ore grade
-    data <- read.csv(paste0(path$Processed,"/Grades/IronOreGrades.csv"))  
+    data <- read.csv(paste0(path$IE_Processed,"/Grades/IronOreGrades.csv"))  
     
     # if no ore grades are available for a region, assume 0.6
     if(i %in% data$base) 
@@ -80,7 +80,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     SUT["Mining","Waste"] <- waste }
     
     # 2.2 Write pig iron production and use yields to estimate waste/slag flows
-    data <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_PigIron.csv"))
+    data <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_PigIron.csv"))
     
     if(i %in% data$base) {
       value <- data$Quantity[data$base == i]
@@ -92,7 +92,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
       SUT["Blast furnace","Waste"] <- waste }
     
     # 2.3 Sponge iron
-    data <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_SpongeIron.csv"))
+    data <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SpongeIron.csv"))
     if(i %in% data$base) {
       value <- data$Quantity[data$base == i]
       SUT["Direct reduction","Sponge iron"] <- value
@@ -102,8 +102,8 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
       SUT["Direct reduction","Waste"] <- waste }
       
     # 2.4 Write steel production of BOF & OHF
-    data_1 <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_SteelOxygenBlownConverters.csv"))
-    data_2 <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_SteelOpenHearthFurnaces.csv"))
+    data_1 <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelOxygenBlownConverters.csv"))
+    data_2 <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelOpenHearthFurnaces.csv"))
     data <- rbind(data_1,data_2) %>% group_by(base) %>% summarise(Quantity = sum(Quantity))
     remove(data_1,data_2)
     
@@ -116,7 +116,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
       SUT["Oxygen blown & open hearth furnace","Waste"] <- waste }
     
     # 2.5 Write steel production of EAF
-    data <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_SteelElectricFurnaces.csv"))
+    data <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelElectricFurnaces.csv"))
     
     if(i %in% data$base) {
       value <- data$Quantity[data$base == i]
@@ -127,7 +127,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
       SUT["Electric arc furnace","Waste"] <- waste }
     
     # 2.6 Write flat rolling production and forming scrap
-    data <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_FlatRolledProducts.csv"))
+    data <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_FlatRolledProducts.csv"))
     
     if(i %in% data$base) {
       value <- data$Quantity[data$base == i]
@@ -138,7 +138,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
       SUT["Flat rolling","Forming & fabrication scrap"] <- waste }
     
     # 2.7 Write long rolling production and forming scrap
-    data <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_LongRolledProducts.csv"))
+    data <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_LongRolledProducts.csv"))
     
     if(i %in% data$base) {
       value <- data$Quantity[data$base == i]
@@ -150,7 +150,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     
     # 2.8 Write production of ingots and subsequently fill the gap of the casting
     # process with slabs (because all feeds into flat rolling)
-    data <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_Ingots.csv"))
+    data <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_Ingots.csv"))
     
     if(i %in% data$base) {
       value <- data$Quantity[data$base == i]
@@ -171,7 +171,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
       SUT["Casting of billets & blooms","Forming & fabrication scrap"] <- waste 
       
     # 2.10 Fabrication i.e. manufacturing output
-    data <- read.csv(paste0(path$Processed,"/EXIOWasteMFAIO/",year,"_FabricationToFinalDemand.csv")) %>%
+    data <- read.csv(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_FabricationToFinalDemand.csv")) %>%
       filter(From.Region == i) %>% select(From.Product,Quantity) %>% group_by(From.Product) %>%
       summarise(Quantity = sum(Quantity))
     # Set up index to write values directly into cells
@@ -179,7 +179,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     SUT[index] <- data$Quantity
       
     # 2.11 Fabrication scarp
-    data <- read.csv(paste0(path$Processed,"/FabricationScrap/FabricationScrap_",year,".csv")) %>%
+    data <- read.csv(paste0(path$IE_Processed,"/FabricationScrap/FabricationScrap_",year,".csv")) %>%
       filter(base == i)
     data <- data.frame("commodity" = as.character(data$commodity),
                        "Quantity" = data$Quantity,
@@ -204,7 +204,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     # for domestic use, we assume that inputs are 50% from foreign source
     
     # 3.1 Steel in final demand
-    data <- read.csv(paste0(path$Processed,"/EXIOWasteMFAIO/",year,"_SteelInFinalDemand.csv")) %>%
+    data <- read.csv(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_SteelInFinalDemand.csv")) %>%
       filter(From.Region == i & To.Region == i)
     index <- base_product$BaseProductName[base_product$BaseProductCode %in% data$Product]
     SUT[index,"FinalConsumption"] <- data$Quantity
@@ -213,8 +213,8 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     SUT["Waste","Environment"] <- sum(SUT[,"Waste"])
     
     # Rolled products used in fabrication i.e. the extension of the Waste-IO model
-    load(paste0(path$Processed,"/EXIOWasteMFAIO/",year,"_Q.RData"))
-    load(paste0(path$Processed,"/EXIOWasteMFAIO/IO.codes.RData"))
+    load(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_Q.RData"))
+    load(paste0(path$IE_Processed,"/EXIOWasteMFAIO/IO.codes.RData"))
     data <- as.data.frame(t(Q[,IO.codes$index[IO.codes$base == i]]))
     
     SUT["Flat rolled products",base_industry$BaseIndustryName[11:20]] <- data$Flat 
@@ -225,7 +225,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     
     # 3.4 Use of billets and blooms by long rolling
     # Load number for exports of billets and blooms 
-    export <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_Billet&Bloom.csv")) %>%
+    export <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_Billet&Bloom.csv")) %>%
       filter(From == i) 
     value <- SUT["Casting of billets & blooms","Billets & blooms"] - sum(export$quantity)
     if(value > 0) {SUT["Billets & blooms","Long rolling"] <- value} else
@@ -233,7 +233,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     
     # 3.5 Use of ingots and slabs by flat rolling
     # 3.5.1 Ingots
-    export <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_Ingot.csv")) %>%
+    export <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_Ingot.csv")) %>%
       filter(From == i) 
     value <- SUT["Casting of ingots & slabs","Ingots"] - sum(export$quantity)
     # In case value is negative, assume that 5% of inputs is coming from domestic ingots
@@ -241,7 +241,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     {SUT["Ingots","Flat rolling"] <- sum(SUT["Flat rolling",]) * 0.05}
     
     # 3.5.2 Slabs
-    export <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_Slab.csv")) %>%
+    export <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_Slab.csv")) %>%
       filter(From == i) 
     # Domestic production of slabs minus exports = domestic use
     value <- SUT["Casting of ingots & slabs","Slabs"] - sum(export$quantity)
@@ -255,7 +255,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     SUT["Liquid steel","Casting of ingots & slabs"] <- sum(SUT["Casting of ingots & slabs",])
     
     # 3.7 Sponge iron used by EAF
-    export <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_SpongeIron.csv")) %>%
+    export <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_SpongeIron.csv")) %>%
       filter(From == i) 
     
     if(SUT["Direct reduction","Sponge iron"] != 0) 
@@ -269,14 +269,14 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     SUT["Iron ore","Direct reduction"] <- sum(SUT["Direct reduction",])
     
     # 3.9 Allocate iron ores used by Blast furnace 
-    export <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_IronOre.csv")) %>%
+    export <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_IronOre.csv")) %>%
       filter(From == i) 
     value <- SUT["Mining","Iron ore"] - sum(export$quantity)
     if(value > 0) {SUT["Iron ore","Blast furnace"] <- value} else
     {SUT["Iron ore","Blast furnace"] <- sum(SUT["Blast furnace",])/2}
     
     # 3.10 Allocating pig iron to BOF
-    export <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_PigIron.csv")) %>%
+    export <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_PigIron.csv")) %>%
       filter(From == i) 
     value <- SUT["Blast furnace","Pig iron"] - sum(export$quantity)
     if(value > 0) {SUT["Pig iron","Oxygen blown & open hearth furnace"] <- value} else
@@ -289,7 +289,7 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     
     # 4. Save SUT
     # Check if subfolder in processed data exists and if not create it
-    path_set <- paste0(path$Processed,"/SUT")
+    path_set <- paste0(path$IE_Processed,"/SUT")
     if(!dir.exists(path_set)) dir.create(path_set)
     # Setting decimals to two digits
     SUT <- round(SUT,2)
@@ -379,5 +379,5 @@ DataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     #print(paste0("Region ",i," of ",n_reg))
     #print(paste0("Minimum value: ",min(SUT)))
   }
-  print("DataProcessing_PIOLab_BuildingDomesticTables finished.")
+  print("IEDataProcessing_PIOLab_BuildingDomesticTables finished.")
 }

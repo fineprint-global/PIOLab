@@ -7,9 +7,9 @@
 #################################################
 
 
-DataFeed_PIOLab_EXIOWasteMFAIO <- function(year,path)
+IEFeed_PIOLab_EXIOWasteMFAIO <- function(year,path)
 {
-  print("DataFeed_PIOLab_EXIOWasteMFAIO initiated.")
+  print("IEFeed_PIOLab_EXIOWasteMFAIO initiated.")
   # Function for aggregating the IOT
   Agg <- function(x)
   {
@@ -132,7 +132,7 @@ DataFeed_PIOLab_EXIOWasteMFAIO <- function(year,path)
   IO.codes$index <- 1:nrow(IO.codes)
   
   # Check if subfolder in processed data exists and if not create it
-  path_set <- paste0(path$Processed,"/EXIOWasteMFAIO")
+  path_set <- paste0(path$IE_Processed,"/EXIOWasteMFAIO")
   if(!dir.exists(path_set)) dir.create(path_set)
   
   write.table(L,file = paste0(path_set,"/",year,"_L.csv"),row.names = FALSE,col.names = FALSE,sep = ",")
@@ -141,6 +141,6 @@ DataFeed_PIOLab_EXIOWasteMFAIO <- function(year,path)
   save(IO.codes,file = paste0(path_set,"/IO.codes.RData"))
   save(Y.codes,file = paste0(path_set,"/Y.codes.RData"))
   
-  print("DataFeed_PIOLab_EXIOWasteMFAIO finished.")
+  print("IEFeed_PIOLab_EXIOWasteMFAIO finished.")
   
 }

@@ -3,9 +3,9 @@
 #     from BACI and writes it into a csv file for AISHA     #
 #############################################################
 
-DataFeed_PIOLab_BACI <- function(year,path)
+IEFeed_PIOLab_BACI <- function(year,path)
 {
-  print("DataFeed_PIOLab_BACI initiated.")
+  print("IEFeed_PIOLab_BACI initiated.")
   # Creat list that links the PIOT commodities to HS-codes and the BACI dataset
   # Warning: Do not mix 4- and 6-digit numbers under one product, can cause trouble.
   # Note that this list-object will be substituted by the sector aggregator matrix
@@ -124,7 +124,7 @@ DataFeed_PIOLab_BACI <- function(year,path)
     trade_data_clean <- trade_data_clean %>% filter(From != To)
     
     # Check if subfolder in processed data exists and if not create it
-    path_set <- paste0(path$Processed,"/BACI/")
+    path_set <- paste0(path$IE_Processed,"/BACI/")
     if(!dir.exists(path_set)) dir.create(path_set)
   
     # Write clean data to target folder
@@ -134,7 +134,7 @@ DataFeed_PIOLab_BACI <- function(year,path)
     
     # Note that trade flows are measured in metric tons of material 
   }
-  print("DataFeed_PIOLab_BACI finished.")
+  print("IEFeed_PIOLab_BACI finished.")
 }
 
 

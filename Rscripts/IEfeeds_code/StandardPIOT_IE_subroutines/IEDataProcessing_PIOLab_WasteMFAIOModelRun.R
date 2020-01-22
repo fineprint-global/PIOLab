@@ -6,26 +6,26 @@
 #                                       #
 #########################################
 
-DataProcessing_PIOLab_WasteMFAIOModelRun <- function(year,path)
+IEDataProcessing_PIOLab_WasteMFAIOModelRun <- function(year,path)
 {
-  print("DataProcessing_PIOLab_WasteMFAIOModelRun initiated.")
+  print("IEDataProcessing_PIOLab_WasteMFAIOModelRun initiated.")
   # Load the base codes for products
   base_product <- read.xlsx(paste0(path$Concordance,"/StandardPIOT_RootClassification.xlsx"),sheet = 7)
   
   # Load Waste IO Model variables
-  load(paste0(path$Processed,"/EXIOWasteMFAIO/IO.codes.RData"))    
+  load(paste0(path$IE_Processed,"/EXIOWasteMFAIO/IO.codes.RData"))    
   IO.codes <- select(IO.codes,base,commodity,Key)
-  load(paste0(path$Processed,"/EXIOWasteMFAIO/Y.codes.RData"))
+  load(paste0(path$IE_Processed,"/EXIOWasteMFAIO/Y.codes.RData"))
   
-  x <- read.table(paste0(path$Processed,"/EXIOWasteMFAIO/",year,"_x.csv"),col.names = FALSE,sep = ",")
+  x <- read.table(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_x.csv"),col.names = FALSE,sep = ",")
   x <- x[,1] 
-  L <- read.csv(paste0(path$Processed,"/EXIOWasteMFAIO/",year,"_L.csv"),header = FALSE)
+  L <- read.csv(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_L.csv"),header = FALSE)
   colnames(L) <- IO.codes$Key
   rownames(L) <- IO.codes$Key
-  Y <- read.csv(paste0(path$Processed,"/EXIOWasteMFAIO/",year,"_Y.csv"),header = FALSE)
+  Y <- read.csv(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_Y.csv"),header = FALSE)
   rownames(Y) <- IO.codes$Key 
   colnames(Y) <- Y.codes$base
-  load(paste0(path$Processed,"/EXIOWasteMFAIO/",year,"_Q.RData"))
+  load(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_Q.RData"))
   
   # 1. Calculate multipliers
   E <- colSums(Q)/x
@@ -70,8 +70,8 @@ DataProcessing_PIOLab_WasteMFAIOModelRun <- function(year,path)
   colnames(SteelInFinalDemand)[3] <- "Product"
   
   # 4. Save results to folder 
-  write.csv(FabricationToFinal,file = paste0(path$Processed,"/EXIOWasteMFAIO/",year,"_FabricationToFinalDemand.csv"),row.names = FALSE)
-  write.csv(SteelInFinalDemand,file = paste0(path$Processed,"/EXIOWasteMFAIO/",year,"_SteelInFinalDemand.csv"),row.names = FALSE)
+  write.csv(FabricationToFinal,file = paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_FabricationToFinalDemand.csv"),row.names = FALSE)
+  write.csv(SteelInFinalDemand,file = paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_SteelInFinalDemand.csv"),row.names = FALSE)
   
   print("DataProcessing_PIOLab_WasteMFAIOModelRun finished.")
 }

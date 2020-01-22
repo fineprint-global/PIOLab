@@ -7,9 +7,9 @@
 #                                               #
 #################################################
 
-DataFeed_PIOLab_Cullen <- function(path)
+IEFeed_PIOLab_Cullen <- function(path)
 {
-  print("DataFeed_PIOLab_Cullen initiated.")
+  print("IEFeed_PIOLab_Cullen initiated.")
   # 1. Importing data on fabrication yields
   raw_data <- read.xlsx(paste0(path$Raw,"/Cullen/4_PY_FabricationYield_Cullen2012.xlsx"),
                         sheet = 2)
@@ -21,7 +21,7 @@ DataFeed_PIOLab_Cullen <- function(path)
   data <- as.data.frame(data)
   
   # Check if subfolder in processed data exists and if not create it
-  path_set <- paste0(path$Processed,"/Cullen")
+  path_set <- paste0(path$IE_Processed,"/Cullen")
   if(!dir.exists(path_set)) dir.create(path_set)
 
   # Write to file
@@ -57,5 +57,5 @@ DataFeed_PIOLab_Cullen <- function(path)
   # Write to file
   write.csv(data,file = paste0(path_set,"/ProductsToEndUse.csv"),row.names = FALSE)
   
-  print("DataFeed_PIOLab_Cullen finished.")
+  print("IEFeed_PIOLab_Cullen finished.")
 }
