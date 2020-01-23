@@ -40,6 +40,9 @@ source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_WasteMFAIOExtension.
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_WasteMFAIOModelRun.R"))
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_BuildingDomesticTables.R"))
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_BuildingTradeBlocks.R"))
+source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_StandardErrorsForTy.R"))
+
+
 
 ################################################################################
 # 3. Commencing data feeds
@@ -76,6 +79,8 @@ IEDataProcessing_PIOLab_BuildingDomesticTables(year,path)
 # Compiling trade blocks
 IEDataProcessing_PIOLab_BuildingTradeBlocks(year,path)
 
+IEDataProcessing_PIOLab_StandardErrorsForTy(year,path)
+
 ################################################################################
 # 5. Write ALANG commands
 print("Start writing ALANG commands.")
@@ -86,7 +91,8 @@ print("Start writing ALANG commands.")
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
 
 # Standard error for all blocks that don't have a specific S.E.
-SE_value <- "E MX1;MN10;CN1e+3;"
+#SE_value <- "E MX1;MN10;CN1e+3;"
+SE_value <- ""
 
 # Write commands for the domestic SUTs and the trade blocks
 
@@ -120,7 +126,7 @@ for(i in 1:n_reg)
   ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_StandardPIOT_EolScrap_Region",i),
                    Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_EolScrap_Region",i,".csv"),
                    'Row parent' = i,'Row child' = 3,'Row grandchild' = 2,
-                   'Column parent' = i,'Column child' = 1,'Column grandchild' = "1:e",S.E. = SE_value)
+                   'Column parent' = i,'Column child' = 1,'Column grandchild' = "1:e",S.E. = 0)
   
   # Write trade blocks
   for(j in (1:n_reg)[-i])
@@ -139,17 +145,26 @@ for(i in 1:n_reg)
     
   }
 }
+
 # Add other variables
+ALANG$Value <- "I"
+ALANG$Years <- 1
+ALANG$Margin <- 1
+
+# Write command for the standard errors
+ALANG <- add_row(ALANG,'1' = "Standard deviation estimator",
+                 Coef1 = paste0("S8 ",path$IE_Processed,"/StandardErrorsForTy/",gsub("-","",Sys.Date()),
+                                "_PIOLab_AllCountries_000_StandardErrorsForTy_000_S8FileFor",year,".csv"),
+                Value = "S", 'Row parent' = "",'Row child' = "",'Row grandchild' = "",'Column parent' = "",
+                'Column child' = "",'Column grandchild' = "",Years = "",Margin = "",S.E. = "E MX1;MN10;CN1")
+
 ALANG$`#` <- as.character(1:nrow(ALANG))
 ALANG$Incl <- "Y"
 ALANG$Parts <- 1
-ALANG$Value <- "I"
 ALANG$`Pre-map` <- ""
 ALANG$`Post-map` <- ""
 ALANG$`Pre-Map` <- ""
 ALANG$`Post-Map` <- ""
-ALANG$Years <- 1
-ALANG$Margin <- 1
 
 #ALANG$S.E. <- "E MX1;MN10;CN1e+3;"
 #ALANG$S.E. <- "E LG;CN100;"

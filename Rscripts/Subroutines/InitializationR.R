@@ -50,6 +50,7 @@ if(file.exists(OnServer))
 path <- list("IE_Subroutines" = paste0(root_folder,"Rscripts/IEfeeds_code/StandardPIOT_IE_subroutines"),
              "IE_Processed" = paste0(root_folder,"ProcessedData/StandardPIOT"),
              "Raw" = paste0(root_folder,"RawDataRepository"),
+             "Processed" = paste0(root_folder,"ProcessedData"),
              "Concordance" = paste0(root_folder,"ConcordanceLibrary"),
              "ALANG" = paste0(root_folder,"ALANGfiles"),
              "Rscripts" = paste0(root_folder,"Rscripts"),
