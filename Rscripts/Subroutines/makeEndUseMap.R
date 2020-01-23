@@ -2,13 +2,13 @@
 
 makeEndUseMap <- function(reg,name)
 {
-  EndUse <- read.csv(paste0(path$Processed,"/Cullen/ProductsToEndUse.csv"))
+  EndUse <- read.csv(paste0(path$IE_Processed,"/Cullen/ProductsToEndUse.csv"))
   # For StandardPIOT Castings are not considered
   EndUse <- EndUse[EndUse$Commodity.Group != "Castings",]
   
   # Load IO codes of aggregated EXIOBASE data
-  load(paste0(path$Processed,"/EXIOWasteMFAIO/IO.codes.RData"))    
-  x <- read.table(paste0(path$Processed,"/EXIOWasteMFAIO/",year,"_x.csv"),col.names = FALSE)
+  load(paste0(path$IE_Processed,"/EXIOWasteMFAIO/IO.codes.RData"))    
+  x <- read.table(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_x.csv"),col.names = FALSE)
   x <- x[,1]
   
   ##############################################################################

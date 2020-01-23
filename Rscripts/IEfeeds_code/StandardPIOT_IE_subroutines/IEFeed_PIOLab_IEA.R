@@ -6,9 +6,9 @@
 #########################################
 
 
-DataFeed_PIOLab_IEA <- function(year,path)
+IEFeed_PIOLab_IEA <- function(year,path)
 {
-  print("DataFeed_PIOLab_IEA initiated.")
+  print("IEFeed_PIOLab_IEA initiated.")
   # Important note: Data from IEA (which includes all years), due to download threshold, 
   # can not be stored in one file. Therefore before processing, download respective 
   # raw data csv sheet for each year and add appropriate name to the file that includes the year.   
@@ -61,7 +61,7 @@ DataFeed_PIOLab_IEA <- function(year,path)
   Energy_Con$Value <- Energy_Con$Value * 1000
   
   # Check if subfolder in processed data exists and if not create it
-  path_set <- paste0(path$Processed,"/IEA")
+  path_set <- paste0(path$IE_Processed,"/IEA")
   if(!dir.exists(path_set)) dir.create(path_set)
   
   # Export data to folder (note that all is measured in GJ)
@@ -77,6 +77,6 @@ DataFeed_PIOLab_IEA <- function(year,path)
             file = paste0(path_set,"/IEA_",year,"_SteelIndustryEnergyConsumption.csv"),
             row.names = FALSE)
   
-  print("DataFeed_PIOLab_IEA finished.")
+  print("IEFeed_PIOLab_IEA finished.")
   
 }

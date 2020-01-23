@@ -7,9 +7,9 @@
 
 # Note that krausmann is only needed now for 2009+
 
-DataFeed_PIOLab_EOL <- function(year,path)
+IEFeed_PIOLab_EOL <- function(year,path)
 {
-  print("DataFeed_PIOLab_EOL initiated.")
+  print("IEFeed_PIOLab_EOL initiated.")
   # Import raw data from Pauiuk and filter for years selected
   data <- read.xlsx(paste0(path$Raw,"/EOL/1_F_steel_200R_F_13_14_inflow_waste_mgt.xlsx"),
                     sheet = 2)[,c("aspect.6.:.destination_region","aspect.7.:.time","value")]
@@ -45,14 +45,14 @@ DataFeed_PIOLab_EOL <- function(year,path)
   data_clean <- data %>% select(base,Quantity) %>% group_by(base) %>% summarise(Quantity = sum(Quantity))
   
   # Check if subfolder in processed data exists and if not create it
-  path_set <- paste0(path$Processed,"/EOL")
+  path_set <- paste0(path$IE_Processed,"/EOL")
   if(!dir.exists(path_set)) dir.create(path_set)
   
   write.csv(data_clean,
             file = paste0(path_set,"/EOL_",year,".csv"),
             row.names = FALSE)
   
-  print("DataFeed_PIOLab_EOL finished.")
+  print("IEFeed_PIOLab_EOL finished.")
   
 }
 

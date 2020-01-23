@@ -8,31 +8,31 @@
 #                                         #  
 ###########################################
 
-DataProcessing_PIOLab_AligningData <- function(year,path)
+IEDataProcessing_PIOLab_AligningData <- function(year,path)
 {
-  print("DataProcessing_PIOLab_AligningData initiated.")
+  print("IEDataProcessing_PIOLab_AligningData initiated.")
   ##############################################################################
   # 1. Loading data
   # Loading processed WSA production numbers
-  Pig <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_PigIron.csv"))
-  Flat <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_FlatRolledProducts.csv"))
+  Pig <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_PigIron.csv"))
+  Flat <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_FlatRolledProducts.csv"))
   colnames(Flat)[2] <- "Flat"
-  Long <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_LongRolledProducts.csv"))
+  Long <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_LongRolledProducts.csv"))
   colnames(Long)[2] <- "Long"
-  BOF_steel <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_SteelOxygenBlownConverters.csv"))
-  EAF_steel <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_SteelElectricFurnaces.csv"))
+  BOF_steel <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelOxygenBlownConverters.csv"))
+  EAF_steel <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelElectricFurnaces.csv"))
   colnames(EAF_steel)[2] <- "EAF"
   
-  # Loading processed IEA energy data
-  BF_gas <- read.csv(paste0(path$Processed,"/IEA/IEA_",year,"_BlastFurnaceGas.csv"))
+  # Loading IE_Processed IEA energy data
+  BF_gas <- read.csv(paste0(path$IE_Processed,"/IEA/IEA_",year,"_BlastFurnaceGas.csv"))
   colnames(BF_gas)[2] <- "Energy"
-  BOF_gas <- read.csv(paste0(path$Processed,"/IEA/IEA_",year,"_BlastOxygenFurnaceGas.csv"))
+  BOF_gas <- read.csv(paste0(path$IE_Processed,"/IEA/IEA_",year,"_BlastOxygenFurnaceGas.csv"))
   colnames(BOF_gas)[2] <- "Energy"
-  Energy_con <- read.csv(paste0(path$Processed,"/IEA/IEA_",year,"_SteelIndustryEnergyConsumption.csv"))
+  Energy_con <- read.csv(paste0(path$IE_Processed,"/IEA/IEA_",year,"_SteelIndustryEnergyConsumption.csv"))
   
   # Loading BACI trade data on iron ores and IRP extraction accounts
-  IronOre_Trade <- read.csv(file = paste0(path$Processed,"/BACI/BACI_",year,"_IronOre.csv"))
-  IronOre_Extraction <- read.csv(file = paste0(path$Processed,"/IRP/IRP_",year,".csv"))
+  IronOre_Trade <- read.csv(file = paste0(path$IE_Processed,"/BACI/BACI_",year,"_IronOre.csv"))
+  IronOre_Extraction <- read.csv(file = paste0(path$IE_Processed,"/IRP/IRP_",year,".csv"))
   
   ##############################################################################
   # 2. Filling gaps in WSA production accounts by checking IEA energy data
@@ -51,7 +51,7 @@ DataProcessing_PIOLab_AligningData <- function(year,path)
   if(length(Pig_vs_BF_gap) > 0) {
     Pig_vs_BF$Quantity[Pig_vs_BF$base %in% Pig_vs_BF_gap$base] <- Pig_vs_BF_gap$Energy / 5.7 
     Pig <- Pig_vs_BF %>% select(base,Quantity) 
-    write.csv(Pig, file = paste0(path$Processed,"/WSA/WSA_",year,"_PigIron.csv"),row.names = FALSE)}
+    write.csv(Pig, file = paste0(path$IE_Processed,"/WSA/WSA_",year,"_PigIron.csv"),row.names = FALSE)}
   
   remove(Pig_vs_BF,Pig_vs_BF_gap,Pig,BF_gas)
   
@@ -69,7 +69,7 @@ DataProcessing_PIOLab_AligningData <- function(year,path)
   if(nrow(Steel_vs_BOF_gap) > 0) {
     Steel_vs_BOF$Quantity[Steel_vs_BOF$base %in% Steel_vs_BOF_gap$base] <- Steel_vs_BOF_gap$Energy / 0.234 
     BOF_steel <- Steel_vs_BOF %>% select(base,Quantity) 
-    write.csv(BOF_steel, file = paste0(path$Processed,"/WSA/WSA_",year,"_SteelOxygenBlownConverters.csv"),row.names = FALSE)}
+    write.csv(BOF_steel, file = paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelOxygenBlownConverters.csv"),row.names = FALSE)}
   
   remove(Steel_vs_BOF,Steel_vs_BOF_gap,BOF_gas)
   colnames(BOF_steel)[2] <- "BOF"
@@ -130,12 +130,12 @@ DataProcessing_PIOLab_AligningData <- function(year,path)
   EAF <- select(Steel_vs_energy,base,EAF)
   colnames(Flat)[2] <- colnames(Long)[2] <- colnames(BOF)[2] <- colnames(EAF)[2] <- "Quantity"
   
-  write.csv(Flat,file = paste0(path$Processed,"/WSA/WSA_",year,"_FlatRolledProducts.csv"),row.names = FALSE)
-  write.csv(Long,file = paste0(path$Processed,"/WSA/WSA_",year,"_LongRolledProducts.csv"),row.names = FALSE)
-  write.csv(BOF,file = paste0(path$Processed,"/WSA/WSA_",year,"_SteelOxygenBlownConverters.csv"),row.names = FALSE)
-  write.csv(EAF,file = paste0(path$Processed,"/WSA/WSA_",year,"_SteelElectricFurnaces.csv"),row.names = FALSE)
-  write.csv(IronOre_Trade,file = paste0(path$Processed,"/BACI/BACI_",year,"_IronOre.csv"),row.names = FALSE)
+  write.csv(Flat,file = paste0(path$IE_Processed,"/WSA/WSA_",year,"_FlatRolledProducts.csv"),row.names = FALSE)
+  write.csv(Long,file = paste0(path$IE_Processed,"/WSA/WSA_",year,"_LongRolledProducts.csv"),row.names = FALSE)
+  write.csv(BOF,file = paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelOxygenBlownConverters.csv"),row.names = FALSE)
+  write.csv(EAF,file = paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelElectricFurnaces.csv"),row.names = FALSE)
+  write.csv(IronOre_Trade,file = paste0(path$IE_Processed,"/BACI/BACI_",year,"_IronOre.csv"),row.names = FALSE)
   
-  print("DataProcessing_PIOLab_AligningData finished.")
+  print("IEDataProcessing_PIOLab_AligningData finished.")
   
 }

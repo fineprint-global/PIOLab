@@ -8,13 +8,13 @@
 ###############################################
 
 
-DataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
+IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
 {
-  print("DataProcessing_PIOLab_WasteMFAIOExtension initiated.")
+  print("IEDataProcessing_PIOLab_WasteMFAIOExtension initiated.")
   #############################################################################
   
   # Load IO codes of aggregated EXIOBASE data
-  load(paste0(path$Processed,"/EXIOWasteMFAIO/IO.codes.RData"))
+  load(paste0(path$IE_Processed,"/EXIOWasteMFAIO/IO.codes.RData"))
   
   # Load function to create allocation map
   source(paste0(path$Subroutines,"/makeEndUseMap.R"))
@@ -60,18 +60,18 @@ DataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
   }
   
   # Load processed data from Cullen et al 2012
-  Yields <- read.csv(paste0(path$Processed,"/Cullen/FabricationYields.csv"))
+  Yields <- read.csv(paste0(path$IE_Processed,"/Cullen/FabricationYields.csv"))
 
     ##############################################################################
   # 1. The first section calculates the net use of rolled steel products in regions
   # by adding imports and subtracting exports from the WSA production values
   
   # Load finished steel production
-  Flat <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_FlatRolledProducts.csv"))
-  Long <- read.csv(paste0(path$Processed,"/WSA/WSA_",year,"_LongRolledProducts.csv"))
+  Flat <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_FlatRolledProducts.csv"))
+  Long <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_LongRolledProducts.csv"))
   # Load BACI trade flows 
-  Flat_trade <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_FlatRolledProducts.csv"))
-  Long_trade <- read.csv(paste0(path$Processed,"/BACI/BACI_",year,"_LongRolledProducts.csv"))
+  Flat_trade <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_FlatRolledProducts.csv"))
+  Long_trade <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_LongRolledProducts.csv"))
   
   # Estimate the net-use of products in countries
   Flat_import <- Flat_trade %>% group_by(To) %>% summarise(Quantity = sum(quantity))
@@ -111,7 +111,7 @@ DataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
   options(warn = 0)
 
   # Save extension of the MFA-Waste-IO Model
-  save(Q,file = paste0(path$Processed,"/EXIOWasteMFAIO/",year,"_Q.RData"))
+  save(Q,file = paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_Q.RData"))
   
   # Prepate fabrication scrap data for export
   Scrap <- colSums(Scrap)
@@ -120,12 +120,12 @@ DataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
                      stringsAsFactors = FALSE)
   
   # Check if subfolder in processed data exists and if not create it
-  path_set <- paste0(path$Processed,"/FabricationScrap")
+  path_set <- paste0(path$IE_Processed,"/FabricationScrap")
   if(!dir.exists(path_set)) dir.create(path_set)
   
   # Write to folder
   write.csv(Scrap,file = paste0(path_set,"/FabricationScrap_",year,".csv"),row.names = FALSE)
   
-  print("DataProcessing_PIOLab_WasteMFAIOExtension finished.")
+  print("IEDataProcessing_PIOLab_WasteMFAIOExtension finished.")
   
 }
