@@ -76,11 +76,8 @@ IEDataProcessing_PIOLab_StandardErrorsForTy <- function(year,path)
       S8_fd$t[S8_fd$x3 == s & S8_fd$x6 == r] <- FD$value
     }
   }
-                          
-  # Filter rows mit values in it and combine in one object
-  #S8_use <- S8_use[S8_use$t > 0,]
-  #S8_sup <- S8_sup[S8_sup$t > 0,]
-  #S8_fd <- S8_fd[S8_fd$t > 0,]
+  
+  # Combine frames and select columns                        
   S8 <- bind_rows(S8_use,S8_sup,S8_fd)
   S8 <- S8[,2:10]
   
