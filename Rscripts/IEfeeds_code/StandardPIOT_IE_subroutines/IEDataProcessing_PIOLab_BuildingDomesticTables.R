@@ -18,10 +18,17 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
   # Load region aggregator
   source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
   reg_agg <- Root2Base_RegionAggregator(paste0(path$Concordance,"/Region Aggregators/StandardPIOT_RegionAggregator.csv"))
-  
+  # Load function to compile end use map
+  source(paste0(path$Subroutines,"/makeEndUseMap.R"))
   # Load slag rate of blast furnace and coefficient per ton of pig iron output
   WSA_yield <- read.csv(paste0(path$IE_Processed,"/WSA/SteelIndustryYields.csv")) %>%
     select(Process,Average)
+  # Load extension of the WasteMFAIO model and IO codes
+  load(paste0(path$Processed,"/StandardPIOT/EXIOWasteMFAIO/",year,"_Q.RData"))
+  load(paste0(path$Processed,"/StandardPIOT/EXIOWasteMFAIO/IO.codes.RData"))
+  
+  # Load allocation function
+  source(paste0(path$Subroutines,"/AllocateSupply2Use.R"))
   
   # Define general variables
   n_pro <- nrow(base_product)
@@ -33,6 +40,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     
   for(i in 1:n_reg)
   {
+    print(i)
     # Create empty SUT
     SUT <- data.frame(matrix(0,(n_pro+n_ind+n_va),(n_pro+n_ind+n_fd)))
     colnames(SUT) <- c(base_industry$BaseIndustryName,base_product$BaseProductName,
@@ -212,27 +220,57 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     # 3.2 waste discarded back to the environment
     SUT["Waste","Environment"] <- sum(SUT[,"Waste"])
     
-    # Rolled products used in fabrication i.e. the extension of the Waste-IO model
-    load(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_Q.RData"))
-    load(paste0(path$IE_Processed,"/EXIOWasteMFAIO/IO.codes.RData"))
-    data <- as.data.frame(t(Q[,IO.codes$index[IO.codes$base == i]]))
+    # 3.3.1 Flat Rolled products used in fabrication
+    item <- "Flat rolled products"
+    # Load map to allocate to end use (fabrication)
+    map <- makeEndUseMap(i,"Flat")
+    map <- map[order(map$index),]
+    share <- map$Share
+    users <- base_industry$BaseIndustryCode[11:20][map$index]
+    # Load trade data 
+    data <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_FlatRolledProducts.csv"))
+    # Read domestic production
+    pro <- SUT["Flat rolling","Flat rolled products"]
+    # Read domestic use
+    use <- sum(Q["Flat",IO.codes$index[IO.codes$base == i]])
     
-    SUT["Flat rolled products",base_industry$BaseIndustryName[11:20]] <- data$Flat 
-    SUT["Long rolled products",base_industry$BaseIndustryName[11:20]] <- data$Long
+    # Execute function for estimation script to write values
+    SUT <- AllocateSupply2Use(SUT,item,share,users,data,pro,use,i)
     
-    # 3.3 Use of forming and fabrication scrap by scrap preparation
+    # 3.3.2 Long Rolled products used in fabrication
+    item <- "Long rolled products"
+    # Load map to allocate to end use (fabrication)
+    map <- makeEndUseMap(i,"Long")
+    map <- map[order(map$index),]
+    share <- map$Share
+    users <- base_industry$BaseIndustryCode[11:20][map$index]
+    # Load trade data 
+    data <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_LongRolledProducts.csv"))
+    # Read domestic production
+    pro <- SUT["Long rolling",item]
+    # Read domestic use
+    use <- sum(Q["Long",IO.codes$index[IO.codes$base == i]])
+    
+    # Execute function for estimation script to write values
+    SUT <- AllocateSupply2Use(SUT,item,share,users,data,pro,use,i)
+    
+    # 3.4 Use of forming and fabrication scrap by scrap preparation
     SUT["Forming & fabrication scrap","Scrap preparation"] <- sum(SUT[,"Forming & fabrication scrap"])
     
-    # 3.4 Use of billets and blooms by long rolling
+    # 3.5 Use of billets and blooms by long rolling
     # Load number for exports of billets and blooms 
-    export <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_Billet&Bloom.csv")) %>%
-      filter(From == i) 
-    value <- SUT["Casting of billets & blooms","Billets & blooms"] - sum(export$quantity)
-    if(value > 0) {SUT["Billets & blooms","Long rolling"] <- value} else
-    {SUT["Billets & blooms","Long rolling"] <- sum(SUT["Long rolling",])/2}
+    item <- "Billets & blooms"
+    users <- "Long rolling"
+    share <- 1
+    data <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_Billet&Bloom.csv")) 
+    pro <- SUT["Casting of billets & blooms",item]
+    use <- sum(SUT[users,])
     
-    # 3.5 Use of ingots and slabs by flat rolling
-    # 3.5.1 Ingots
+    # Execute function for estimation script to write values
+    SUT <- AllocateSupply2Use(SUT,item,share,users,data,pro,use,i)
+    
+    # 3.6 Use of ingots and slabs by flat rolling
+    # 3.6.1 Ingots
     export <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_Ingot.csv")) %>%
       filter(From == i) 
     value <- SUT["Casting of ingots & slabs","Ingots"] - sum(export$quantity)
@@ -240,7 +278,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     if(value > 0) {SUT["Ingots","Flat rolling"] <- value} else
     {SUT["Ingots","Flat rolling"] <- sum(SUT["Flat rolling",]) * 0.05}
     
-    # 3.5.2 Slabs
+    # 3.6.2 Slabs
     export <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_Slab.csv")) %>%
       filter(From == i) 
     # Domestic production of slabs minus exports = domestic use
@@ -248,13 +286,13 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     if(value > 0) {SUT["Slabs","Flat rolling"] <- value} else
     {SUT["Slabs","Flat rolling"] <-  sum(SUT["Flat rolling",]) * 0.45}
     
-    # 3.6 Casting of billets and blooms and casting of ingots and slabs
+    # 3.7 Casting of billets and blooms and casting of ingots and slabs
     # The only input to casting is liquid steel which is not a traded commodity, 
     # The inputs to casting are therefor estimated by using the production/output value
     SUT["Liquid steel","Casting of billets & blooms"] <- sum(SUT["Casting of billets & blooms",])
     SUT["Liquid steel","Casting of ingots & slabs"] <- sum(SUT["Casting of ingots & slabs",])
     
-    # 3.7 Sponge iron used by EAF
+    # 3.8 Sponge iron used by EAF
     export <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_SpongeIron.csv")) %>%
       filter(From == i) 
     
@@ -265,24 +303,24 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
       {SUT["Sponge iron","Electric arc furnace"] <- sum(SUT["Direct reduction","Sponge iron"])/2}
     }
     
-    # 3.8 Allocating iron ores used by direct reduction
+    # 3.9 Allocating iron ores used by direct reduction
     SUT["Iron ore","Direct reduction"] <- sum(SUT["Direct reduction",])
     
-    # 3.9 Allocate iron ores used by Blast furnace 
+    # 3.10 Allocate iron ores used by Blast furnace 
     export <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_IronOre.csv")) %>%
       filter(From == i) 
     value <- SUT["Mining","Iron ore"] - sum(export$quantity)
     if(value > 0) {SUT["Iron ore","Blast furnace"] <- value} else
     {SUT["Iron ore","Blast furnace"] <- sum(SUT["Blast furnace",])/2}
     
-    # 3.10 Allocating pig iron to BOF
+    # 3.11 Allocating pig iron to BOF
     export <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_PigIron.csv")) %>%
       filter(From == i) 
     value <- SUT["Blast furnace","Pig iron"] - sum(export$quantity)
     if(value > 0) {SUT["Pig iron","Oxygen blown & open hearth furnace"] <- value} else
     {SUT["Pig iron","Oxygen blown & open hearth furnace"] <- sum(SUT["Oxygen blown & open hearth furnace",])*0.4}
     
-    # 3.11 Allocate Scrap steel to BOF and EAF
+    # 3.12 Allocate Scrap steel to BOF and EAF
     
     SUT["Scrap steel","Oxygen blown & open hearth furnace"] <- sum(SUT["Oxygen blown & open hearth furnace",])*0.15
     SUT["Scrap steel","Electric arc furnace"] <- sum(SUT["Electric arc furnace",]) - SUT["Direct reduction","Electric arc furnace"]
@@ -293,7 +331,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     if(!dir.exists(path_set)) dir.create(path_set)
     # Setting decimals to two digits
     SUT <- round(SUT,2)
-    
+    print(min(SUT))
     # Decompose SUT into single elements, that is supply, use, final demand, inputs from nature and eol scrap
     Use <- SUT[base_product$BaseProductName,base_industry$BaseIndustryName]
     Supply <- SUT[base_industry$BaseIndustryName,base_product$BaseProductName]

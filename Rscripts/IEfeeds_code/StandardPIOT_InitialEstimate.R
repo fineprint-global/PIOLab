@@ -156,7 +156,7 @@ ALANG <- add_row(ALANG,'1' = "Standard deviation estimator",
                  Coef1 = paste0("S8 ",path$IE_Processed,"/StandardErrorsForTy/",gsub("-","",Sys.Date()),
                                 "_PIOLab_AllCountries_000_StandardErrorsForTy_000_S8FileFor",year,".csv"),
                 Value = "S", 'Row parent' = "",'Row child' = "",'Row grandchild' = "",'Column parent' = "",
-                'Column child' = "",'Column grandchild' = "",Years = "",Margin = "",S.E. = "E MX1;MN10;CN1")
+                'Column child' = "",'Column grandchild' = "",Years = "",Margin = "",S.E. = "E MX10;MN100;CN1000")
 
 ALANG$`#` <- as.character(1:nrow(ALANG))
 ALANG$Incl <- "Y"

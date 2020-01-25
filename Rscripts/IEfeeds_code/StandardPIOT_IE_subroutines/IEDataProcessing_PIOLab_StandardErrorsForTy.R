@@ -47,7 +47,7 @@ IEDataProcessing_PIOLab_StandardErrorsForTy <- function(year,path)
   for(r in 1:n_reg)
   {
     print(r)
-    # Loead and write domestic supply tables
+    # Load and write domestic supply tables
     SUP <- read.table(file = paste0(path_set,year,"_DomesticSupply_Region",r,".csv"),sep = ",")
     SUP <- melt(SUP)
     S8_sup$t[S8_sup$x3 == r] <- SUP$value            
