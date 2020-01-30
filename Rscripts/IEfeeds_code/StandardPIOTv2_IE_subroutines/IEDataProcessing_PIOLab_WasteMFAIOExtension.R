@@ -83,9 +83,15 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
   # Regional production + imports - exports = net-use
   Flat <- full_join(Flat,Flat_trade,c("base"),copy = FALSE) 
   Flat[is.na(Flat)] <- 0
-  Flat <- Flat %>% mutate(NetUse = Quantity + import - export) %>%
-    select(base,NetUse)
+  
+  Flat <- Flat %>% mutate(NetUse = Quantity + import - export) 
+  
+  #####################################
+  # When negatives: set net use to import value
+  Flat$NetUse[Flat$NetUse < 0] <- Flat$import[Flat$NetUse < 0] 
+  Flat <- Flat %>% select(base,NetUse)
   colnames(Flat)[2] <- "Quantity"
+  #####################################
   
   Long_import <- Long_trade %>% group_by(To) %>% summarise(Quantity = sum(quantity))
   Long_export <- Long_trade %>% group_by(From) %>% summarise(Quantity = sum(quantity))
@@ -94,8 +100,13 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
   # Regional production + imports - exports = net-use
   Long <- full_join(Long,Long_trade,c("base"),copy = FALSE) 
   Long[is.na(Long)] <- 0
-  Long <- Long %>% mutate(NetUse = Quantity + import - export) %>%
-    select(base,NetUse)
+  
+  Long <- Long %>% mutate(NetUse = Quantity + import - export) 
+  #####################################
+  # When negatives: set net use to import value
+  Long$NetUse[Long$NetUse < 0] <- Long$import[Long$NetUse < 0] 
+  #####################################
+  Long <- Long %>% select(base,NetUse)
   colnames(Long)[2] <- "Quantity"
   
   ##############################################################################

@@ -5,7 +5,7 @@
 #                                             #
 ###############################################
 
-IEdatafeed_name <- "StandardPIOT" 
+IEdatafeed_name <- "StandardPIOTv2" 
 print(paste0("Start of ",IEdatafeed_name," InitialEstimate."))
 
 ################################################################################
@@ -30,7 +30,7 @@ base <- list("region" = read.xlsx(paste0(path$Concordance,"/",IEdatafeed_name,"_
 # Check whether output folder for processed data exists, if yes delete it
 if(dir.exists(path$IE_Processed)) unlink(path$IE_Processed,recursive = TRUE) 
 dir.create(path$IE_Processed)
-# Check if ALANG files of old initial estimateexist and delete
+# Check if ALANG files of old initial estimate exist and delete
 source(paste0(path$Subroutines,"/DeleteALANGfilesOfOldIEfeeds.R"))
 
 ################################################################################
@@ -44,14 +44,12 @@ source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_EOL.R"))
 source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_IEA.R"))
 source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_EXIOWasteMFAIO.R"))
 source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_Cullen.R"))
-
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_AligningData.R"))
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_WasteMFAIOExtension.R"))
-
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_WasteMFAIOModelRun.R"))
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_BuildingDomesticTables.R"))
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_BuildingTradeBlocks.R"))
-source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_StandardErrorsForTy.R"))
+source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_BuildS8forTy.R"))
 
 ################################################################################
 # 3. Commencing data feeds
@@ -87,7 +85,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables(year,path)
 # Compiling trade blocks
 IEDataProcessing_PIOLab_BuildingTradeBlocks(year,path)
 
-IEDataProcessing_PIOLab_StandardErrorsForTy(year,path)
+IEDataProcessing_PIOLab_BuildS8forTy(year,path)
 
 ################################################################################
 # 5. Write ALANG commands
@@ -107,69 +105,87 @@ SE_value <- ""
 
 for(i in 1:n_reg)
 {  
-  # Add command for domestic Use table
-  ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_StandardPIOT_DomesticUse_Region",i),
-                   Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_DomesticUse_Region",i,".csv"),
-                   'Row parent' = i,'Row child' = 2,'Row grandchild' = "1:e",
-                   'Column parent' = i,'Column child' = 1,'Column grandchild' = "1:e",S.E. = SE_value)
+  # # Add command for domestic Use table
+  # ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_",IEdatafeed_name,"_DomesticUse_Region",i),
+  #                  Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_DomesticUse_Region",i,".csv"),
+  #                  'Row parent' = as.character(i),'Row child' = "2",'Row grandchild' = "1:e",
+  #                  'Column parent' = as.character(i),'Column child' = "1",'Column grandchild' = "1:e",S.E. = SE_value)
+  # 
+  # # Add command for domestic Supply table
+  # ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_",IEdatafeed_name,"_DomesticSupply_Region",i),
+  #                  Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_DomesticSupply_Region",i,".csv"),
+  #                  'Row parent' = as.character(i),'Row child' = "1",'Row grandchild' = "1:e",
+  #                  'Column parent' = as.character(i),'Column child' = "2",'Column grandchild' = "1:e",S.E. = SE_value)
+  # 
+  # # Add command for domestic BoundaryOutput (domestic final use block, that is final demand and wastes to the environment)
+  # ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_",IEdatafeed_name,"_BoundaryOutput_region",i),
+  #                  Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_BoundaryOutput_Region",i,".csv"),
+  #                  'Row parent' = as.character(i),'Row child' = "1:2",'Row grandchild' = "1:e",
+  #                  'Column parent' = as.character(i),'Column child' = "3",'Column grandchild' = "1:3",S.E. = SE_value)
   
-  # Add command for domestic Supply table
-  ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_StandardPIOT_DomesticSupply_Region",i),
-                   Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_DomesticSupply_Region",i,".csv"),
-                   'Row parent' = i,'Row child' = 1,'Row grandchild' = "1:e",
-                   'Column parent' = i,'Column child' = 2,'Column grandchild' = "1:e",S.E. = SE_value)
-  
-  # Add command for domestic BoundaryOutput (domestic final use block, that is final demand and wastes to the environment)
-  ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_StandardPIOT_BoundaryOutput_region",i),
-                   Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_BoundaryOutput_Region",i,".csv"),
-                   'Row parent' = i,'Row child' = 2,'Row grandchild' = "1:e",
-                   'Column parent' = i,'Column child' = 3,'Column grandchild' = "1:2",S.E. = SE_value)
-  
-  # Inputs from nature (primary inputs)
-  ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_StandardPIOT_InputsFromNature_Region",i),
+  # Inputs from nature (iron ore)
+  ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_",IEdatafeed_name,"_InputsFromNature_Region",i),
                    Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_InputsFromNature_Region",i,".csv"),
-                   'Row parent' = i,'Row child' = 3,'Row grandchild' = 1,
-                   'Column parent' = i,'Column child' = 1,'Column grandchild' = "1:e",S.E. = 0)
+                   'Row parent' = as.character(i),'Row child' = "3",'Row grandchild' = "1",
+                   'Column parent' = as.character(i),'Column child' = "1",'Column grandchild' = "1:e",S.E. = "0")
   
   # EOL scrap (primary inputs)
-  ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_StandardPIOT_EolScrap_Region",i),
+  ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_",IEdatafeed_name,"_EolScrap_Region",i),
                    Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_EolScrap_Region",i,".csv"),
-                   'Row parent' = i,'Row child' = 3,'Row grandchild' = 2,
-                   'Column parent' = i,'Column child' = 1,'Column grandchild' = "1:e",S.E. = 0)
+                   'Row parent' = as.character(i),'Row child' = "3",'Row grandchild' = "2",
+                   'Column parent' = as.character(i),'Column child' = "1",'Column grandchild' = "1:e",S.E. = "0")
   
-  # Write trade blocks
-  for(j in (1:n_reg)[-i])
-  {
-    # For intermediate trade
-    ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_StandardPIOT_IntermediateTrade_region ",i," to ",j),
-                     Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_IntermediateTrade_",i,"_",j,".csv"),
-                     'Row parent' = i,'Row child' = 2,'Row grandchild' = "1:e",
-                     'Column parent' = j,'Column child' = 1,'Column grandchild' = "1:e",S.E. = SE_value)
-    
-    # For final trade
-    ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_StandardPIOT_FinalTrade_region ",i," to ",j),
-                     Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_FinalTrade_",i,"_",j,".csv"),
-                     'Row parent' = i,'Row child' = 2,'Row grandchild' = "1:e",
-                     'Column parent' = j,'Column child' = 3,'Column grandchild' = "1:2",S.E. = SE_value)
-    
-  }
+  # Limestone
+  ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_",IEdatafeed_name,"_Limestone_Region",i),
+                   Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_Limestone_Region",i,".csv"),
+                   'Row parent' = as.character(i),'Row child' = "3",'Row grandchild' = "3",
+                   'Column parent' = as.character(i),'Column child' = "1",'Column grandchild' = "1:e",S.E. = "0")
+  
+  # Coke
+  ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_",IEdatafeed_name,"_Coke_Region",i),
+                   Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_Coke_Region",i,".csv"),
+                   'Row parent' = as.character(i),'Row child' = "3",'Row grandchild' = "4",
+                   'Column parent' = as.character(i),'Column child' = "1",'Column grandchild' = "1:e",S.E. = "0")
+  
+  # Air
+  ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_",IEdatafeed_name,"_Air_Region",i),
+                   Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_Air_Region",i,".csv"),
+                   'Row parent' = as.character(i),'Row child' = "3",'Row grandchild' = "5",
+                   'Column parent' = as.character(i),'Column child' = "1",'Column grandchild' = "1:e",S.E. = "0")
+  
+  
+  # # Write trade blocks
+  # for(j in (1:n_reg)[-i])
+  # {
+  #   # For intermediate trade
+  #   ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_",IEdatafeed_name,"_IntermediateTrade_region ",i," to ",j),
+  #                    Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_IntermediateTrade_",i,"_",j,".csv"),
+  #                    'Row parent' = as.character(i),'Row child' = "2",'Row grandchild' = "1:e",
+  #                    'Column parent' = as.character(j),'Column child' = "1",'Column grandchild' = "1:e",S.E. = SE_value)
+  #   
+  #   # For final trade
+  #   ALANG <- add_row(ALANG,'1' = paste0("InitialEstimate_",IEdatafeed_name,"_FinalTrade_region ",i," to ",j),
+  #                    Coef1 = paste0("A ",path$mother,"Data/IE/",year,"_FinalTrade_",i,"_",j,".csv"),
+  #                    'Row parent' = as.character(i),'Row child' = "1:2",'Row grandchild' = "1:e",
+  #                    'Column parent' = as.character(j),'Column child' = "3",'Column grandchild' = "1:3",S.E. = SE_value)
+  # }
 }
 
 # Add other variables
-ALANG$Value <- "I"
-ALANG$Years <- 1
-ALANG$Margin <- 1
+ALANG$Years <- "1"
+ALANG$Margin <- "1"
 
 # Write command for the standard errors
-ALANG <- add_row(ALANG,'1' = "Standard deviation estimator",
-                 Coef1 = paste0("S8 ",path$IE_Processed,"/StandardErrorsForTy/",gsub("-","",Sys.Date()),
-                                "_PIOLab_AllCountries_000_StandardErrorsForTy_000_S8FileFor",year,".csv"),
-                Value = "S", 'Row parent' = "",'Row child' = "",'Row grandchild' = "",'Column parent' = "",
-                'Column child' = "",'Column grandchild' = "",Years = "",Margin = "",S.E. = "E MX100;MN1000;CN1000")
+ALANG <- add_row(ALANG,'1' = "Ty from S8 file",
+                 Coef1 = paste0("S8 ",path$IE_Processed,"/BuildS8forTy/",gsub("-","",Sys.Date()),
+                                "_PIOLab_AllCountries_000_BuildS8forTy_000_S8FileFor",year,".csv"),
+                'Row parent' = "",'Row child' = "",'Row grandchild' = "",'Column parent' = "",
+                'Column child' = "",'Column grandchild' = "",Years = "",Margin = "",S.E. = "E MX1;MN100;CN100;")
 
+ALANG$Value <- "I"
 ALANG$`#` <- as.character(1:nrow(ALANG))
 ALANG$Incl <- "Y"
-ALANG$Parts <- 1
+ALANG$Parts <- "1"
 ALANG$`Pre-map` <- ""
 ALANG$`Post-map` <- ""
 ALANG$`Pre-Map` <- ""

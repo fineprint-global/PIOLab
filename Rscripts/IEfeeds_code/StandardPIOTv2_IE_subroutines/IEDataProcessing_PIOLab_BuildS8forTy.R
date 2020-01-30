@@ -6,14 +6,15 @@
 # Information is stored in a S8 AISHA format. 
 #
 
-IEDataProcessing_PIOLab_StandardErrorsForTy <- function(year,path)
+IEDataProcessing_PIOLab_BuildS8forTy <- function(year,path)
 {
-  print(paste0("IEDataProcessing_PIOLab_StandardErrorsForTy initiated."))
+  print(paste0("IEDataProcessing_PIOLab_BuildS8forTy initiated."))
   
   # Path to folder where processed SUTs are stored
   path_set <- paste0(path$IE_Processed,"/SUT/")
   
   # Set base products and industries
+  n_reg <- nrow(base$region)
   n_pro <- nrow(base$product)
   n_ind <- nrow(base$industry)
   
@@ -27,7 +28,7 @@ IEDataProcessing_PIOLab_StandardErrorsForTy <- function(year,path)
   n_use <- n_reg^2 * n_pro * n_ind
   
   # Number of 8-tuples in final demand block (domestic + trade)
-  n_fd <- n_reg^2 * n_pro * 2
+  n_fd <- n_reg^2 * (n_pro + n_ind) * 3
   
   S8_sup <- data.frame("index" = 1:n_sup,"x1" = 1,"x2" = 1,"x3" = rep(1:n_reg,each = n_pro*n_ind),
                               "x4" = 1, "x5" = 1:n_ind, "x6" = rep(1:n_reg,each = n_pro*n_ind), 
@@ -37,11 +38,11 @@ IEDataProcessing_PIOLab_StandardErrorsForTy <- function(year,path)
                               "x4" = 2,"x5" = 1:n_pro, "x6" = rep(1:n_reg,each = n_reg*n_pro*n_ind), 
                               "x7" = 1, "x8" = rep(1:n_ind,each = n_pro),"t" = NA,"SD" = NA)
   
-  S8_fd <- data.frame("index" = 1:n_fd,"x1" = 1, "x2" = 1, "x3" = rep(1:n_reg,each = n_pro*2),
-                          "x4" = 2, "x5" = 1:n_pro, "x6" = rep(1:n_reg,each = n_reg*n_pro*2), 
-                          "x7" = 3, "x8" = rep(1:2,each = n_pro),"t" = NA,"SD" = NA)
+  S8_fd <- data.frame("index" = 1:n_fd,"x1" = 1, "x2" = 1, "x3" = rep(1:n_reg,each = ((n_pro+n_ind)*3)),
+                          "x4" = c(rep(1,n_ind),rep(2,n_pro)), "x5" = c(1:n_ind,1:n_pro), "x6" = rep(1:n_reg,each = n_reg*(n_pro+n_ind)*3), 
+                          "x7" = 3, "x8" = rep(1:3,each = (n_pro+n_ind)),"t" = NA,"SD" = NA)
   
-  # Note HP: Try to remove the message that follows here. Doesnn't mean anything.
+  # Note HP: Try to remove the message that follows here. Doesn't mean anything.
   for(r in 1:n_reg)
   {
     print(r)
@@ -79,18 +80,18 @@ IEDataProcessing_PIOLab_StandardErrorsForTy <- function(year,path)
   S8 <- bind_rows(S8_use,S8_sup,S8_fd)
   S8 <- S8[,2:10]
   
-  path_set <- paste0(path$IE_Processed,"/StandardErrorsForTy")
+  path_set <- paste0(path$IE_Processed,"/BuildS8forTy")
   
   # Check whether output folder for processed data exists, if yes delete them
   if(dir.exists(path_set)) unlink(path_set,recursive = TRUE) 
   dir.create(path_set)
   
   filename <-  paste0(path_set,"/",gsub("-","",Sys.Date()),
-                      "_PIOLab_AllCountries_000_StandardErrorsForTy_000_S8FileFor",year,".csv")
+                      "_PIOLab_AllCountries_000_BuildS8forTy_000_S8FileFor",year,".csv")
   
   write.table(S8,file = filename,row.names = FALSE,col.names = FALSE,sep = ",")
   
-  print(paste0("IEDataProcessing_PIOLab_StandardErrorsForTy finished"))
+  print(paste0("IEDataProcessing_PIOLab_BuildS8forTy finished"))
   
 }
 

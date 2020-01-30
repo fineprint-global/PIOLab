@@ -22,8 +22,8 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   # Define general variables
   n_pro <- nrow(base$product)
   n_ind <- nrow(base$industry)
-  n_va <- 2
-  n_fd <- 2
+  n_va <- 5
+  n_fd <- 3
   # Read number of base regions
   n_reg <- max(reg_agg$base)
 
@@ -51,9 +51,9 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
     return(Use)}
   
   CreateFinalUse <- function() {
-    FinalUse <- data.frame(matrix(0,n_pro,n_fd))
-    colnames(FinalUse) <- c("FinalConsumption","Environment")
-    rownames(FinalUse) <- base$product$Name
+    FinalUse <- data.frame(matrix(0,(n_pro+n_ind),n_fd))
+    colnames(FinalUse) <- c("FinalConsumption","Landfill","Atmosphere")
+    rownames(FinalUse) <- c(base$industry$Name,base$product$Name)
     FinalUse <- as.matrix(FinalUse)
     return(FinalUse)}
   
@@ -71,10 +71,11 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   # j refers to the column and i to the row view. j loops through all country codes
   for(j in 1:n_reg)
   {
-    #print(paste0("Imports of region ",j))
+    print(paste0("Imports of region ",j))
     # i loops only over the regions where i != j
     for(i in (1:n_reg)[-j])
     {
+      print(i)
       #Create empty use table
       Use <- CreateIntermediateUse()
       
@@ -170,7 +171,7 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       data.sel <- FinalDemand %>% filter(From.Region == i, To.Region == j) %>%
         select(Product, Quantity)
       # Write into table
-      FD[data.sel$Product,"FinalConsumption"] <- data.sel$Quantity
+      FD[n_ind+data.sel$Product,"FinalConsumption"] <- data.sel$Quantity
       
       ##########################################################################
       # Delete column and row names

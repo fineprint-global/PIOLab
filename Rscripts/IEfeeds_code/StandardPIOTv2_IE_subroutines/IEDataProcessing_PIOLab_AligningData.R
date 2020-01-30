@@ -39,7 +39,7 @@ IEDataProcessing_PIOLab_AligningData <- function(year,path)
   # 2.1 WSA pig iron production vs. production of (IEA) blast furnace gas
   
   # Following the WSA publication "Energy use in the steel industry" (p98) between 
-  # 4.314 and 7.17 GJ of blast furnace gas is produced per ton of pig iron.
+  # 4.3 and 7.2 GJ of blast furnace gas is produced per ton of pig iron.
   # In the following we fill the gaps assuming an average intensity of 5.7 GJ/t
   
   # Merge the two data sets and filter for missing production values

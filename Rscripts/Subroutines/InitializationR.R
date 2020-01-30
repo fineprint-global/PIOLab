@@ -47,9 +47,7 @@ if(file.exists(OnServer))
 }
 
 # Set paths to folders
-path <- list("IE_Subroutines" = paste0(root_folder,"Rscripts/IEfeeds_code/StandardPIOT_IE_subroutines"),
-             "IE_Processed" = paste0(root_folder,"ProcessedData/StandardPIOT"),
-             "Raw" = paste0(root_folder,"RawDataRepository"),
+path <- list("Raw" = paste0(root_folder,"RawDataRepository"),
              "Processed" = paste0(root_folder,"ProcessedData"),
              "Concordance" = paste0(root_folder,"ConcordanceLibrary"),
              "ALANG" = paste0(root_folder,"ALANGfiles"),
@@ -60,10 +58,9 @@ path <- list("IE_Subroutines" = paste0(root_folder,"Rscripts/IEfeeds_code/Standa
 
 # Set the year
 year <- 2008
-# Set base regions
-base_regions <- read.xlsx(paste0(path$Concordance,"/StandardPIOT_RootClassification.xlsx"),sheet = 9)
-n_reg <- nrow(base_regions)  
 
-
-
+# Read root region, industry and products
+root <- list("region" = read.xlsx(paste0(path$Concordance,"/PIOLab_RootClassification.xlsx"),sheet = 1),
+             "industry" = read.xlsx(paste0(path$Concordance,"/PIOLab_RootClassification.xlsx"),sheet = 2)[,1:2],
+             "product" = read.xlsx(paste0(path$Concordance,"/PIOLab_RootClassification.xlsx"),sheet = 3)[,1:2])
 
