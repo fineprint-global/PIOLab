@@ -23,7 +23,7 @@ IEFeed_PIOLab_WSA <- function(year,path)
     item_name <- items[[i]]$name
     
     # Read values and align with root classification
-    data_clean <- Read_ProductionWSA(path,year,item_page,yb,concordance)
+    data_clean <- Read_ProductionWSA(path,year,item_page,yb,concord)
       
     # Load region aggregator and look up base table codes
     source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))

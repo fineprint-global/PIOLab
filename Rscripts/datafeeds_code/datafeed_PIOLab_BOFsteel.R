@@ -1,8 +1,8 @@
 ################################################################################
-# datafeed_PIOLab_IRPextraction
+# datafeed_PIOLab_BOFsteel
 # 
 #
-datafeed_name <- "IRPextraction"
+datafeed_name <- "BOFsteel"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 
 ################################################################################
@@ -17,8 +17,15 @@ if(Sys.info()[1] == "Linux"){
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
   
 # Loading raw data
-source(paste0(path$Subroutines,"/Read_ExtractionIRP.R"))
-  
+# Load specific yearbook
+source(paste0(path$Subroutines,"/Load_YearbookWSA.R"))
+# Load function to align data with root classification
+source(paste0(path$Subroutines,"/Read_ProductionWSA.R"))
+# Select BOF steel production
+item_page <- items[[4]]$page
+# Read values and align with root classification
+data <- Read_ProductionWSA(path,year,item_page,yb,concord)
+
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
 # Extend table with additional columns
@@ -31,16 +38,15 @@ for(i in 1:nrow(data))
   reg_num <- as.character(reg_num)
   # Read extraction value
   value <- data$Quantity[i]
-  # Set SE to 5%
-  SE <- round(value * 0.05) 
+  # Set SE to 10%
+  SE <- round(value * 0.10) 
   SE <- as.character(SE)
-  # SE <- "E LN0.05"
   value <- as.character(value)
   
-  # Add command for domestic Use table
-  ALANG <- add_row(ALANG,'1' = paste0("DataFeed IRP Extraction ",reg_name),
-                   Value = value,'Row parent' = reg_num,'Row child' = "3",'Row grandchild' = "1",
-                   'Column parent' = reg_num,'Column child' = "1",'Column grandchild' = "1",S.E. = SE)
+  # Add command for domestic supply table
+  ALANG <- add_row(ALANG,'1' = paste0("DataFeed WSA Liquid steel from BOF ",reg_name),
+                   Value = value,'Row parent' = reg_num,'Row child' = "1",'Row grandchild' = "20",
+                   'Column parent' = reg_num,'Column child' = "2",'Column grandchild' = "30",S.E. = SE)
 }
 # Add other variables
 ALANG$`#` <- as.character(1:nrow(ALANG))

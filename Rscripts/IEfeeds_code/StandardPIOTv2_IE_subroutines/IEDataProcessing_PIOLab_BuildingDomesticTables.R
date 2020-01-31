@@ -354,12 +354,8 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     BoundaryOutput <- SUT[c(base$industry$Name,base$product$Name),c("FinalConsumption","Landfill","Atmosphere")]
     
     # What is value added in monetary IO is called hereafter boundary input
-    
-    Nature <- matrix(SUT["FerrousMinerals",base$industry$Name],1,nrow(base$industry))
-    EolScrap <- matrix(SUT["EOLScrap",base$industry$Name],1,nrow(base$industry))
-    Air <- matrix(SUT["Air",base$industry$Name],1,nrow(base$industry))
-    Limestone <- matrix(SUT["Limestone",base$industry$Name],1,nrow(base$industry))
-    Coke <- matrix(SUT["Coke",base$industry$Name],1,nrow(base$industry))
+    pi <- c("FerrousMinerals","EOLScrap","Air","Limestone","Coke")
+    BoundaryInput <- matrix(SUT[pi,base$industry$Name],length(pi),nrow(base$industry))
     
     # Remove all column and row names
     colnames(Use) <- NULL
@@ -368,16 +364,8 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     rownames(Supply) <- NULL
     colnames(BoundaryOutput) <- NULL
     rownames(BoundaryOutput) <- NULL
-    colnames(Nature) <- NULL
-    rownames(Nature) <- NULL
-    colnames(EolScrap) <- NULL
-    rownames(EolScrap) <- NULL
-    colnames(Air) <- NULL
-    rownames(Air) <- NULL
-    colnames(Limestone) <- NULL
-    rownames(Limestone) <- NULL
-    colnames(Coke) <- NULL
-    rownames(Coke) <- NULL
+    colnames(BoundaryInput) <- NULL
+    rownames(BoundaryInput) <- NULL
     
     # Write Supply, Use, In- and Output to root folder, note that because write.csv will always export colnames
     # had to use the write.tabel function.
@@ -397,31 +385,12 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
                 row.names = FALSE,
                 sep = ",")
     
-    write.table(Nature,file = paste0(path_set,"/",year,"_InputsFromNature_Region",i,".csv"),
+    write.table(BoundaryInput,file = paste0(path_set,"/",year,"_BoundaryInput_Region",i,".csv"),
                 col.names = FALSE,
                 row.names = FALSE,
                 sep = ",")
     
-    write.table(EolScrap,file = paste0(path_set,"/",year,"_EolScrap_Region",i,".csv"),
-                col.names = FALSE,
-                row.names = FALSE,
-                sep = ",")
-    
-    write.table(Coke,file = paste0(path_set,"/",year,"_Coke_Region",i,".csv"),
-                col.names = FALSE,
-                row.names = FALSE,
-                sep = ",")
-    
-    write.table(Limestone,file = paste0(path_set,"/",year,"_Limestone_Region",i,".csv"),
-                col.names = FALSE,
-                row.names = FALSE,
-                sep = ",")
-    
-    write.table(Air,file = paste0(path_set,"/",year,"_Air_Region",i,".csv"),
-                col.names = FALSE,
-                row.names = FALSE,
-                sep = ",")
-    
+      
     # Check if the mother directory really exists and write tables to file
     if(dir.exists(path$mother))
     {
@@ -440,34 +409,12 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
                   row.names = FALSE,
                   sep = ",")
       
-      write.table(Nature,file = paste0(path$mother,"Data/IE/",year,"_InputsFromNature_Region",i,".csv"),
+      write.table(BoundaryInput,file = paste0(path$mother,"Data/IE/",year,"_BoundaryInput_Region",i,".csv"),
                   col.names = FALSE,
                   row.names = FALSE,
                   sep = ",")
-      
-      write.table(EolScrap,file = paste0(path$mother,"Data/IE/",year,"_EolScrap_Region",i,".csv"),
-                  col.names = FALSE,
-                  row.names = FALSE,
-                  sep = ",")
-      
-      write.table(Limestone,file = paste0(path$mother,"Data/IE/",year,"_Limestone_Region",i,".csv"),
-                  col.names = FALSE,
-                  row.names = FALSE,
-                  sep = ",")
-      
-      write.table(Coke,file = paste0(path$mother,"Data/IE/",year,"_Coke_Region",i,".csv"),
-                  col.names = FALSE,
-                  row.names = FALSE,
-                  sep = ",")
-      
-      write.table(Air,file = paste0(path$mother,"Data/IE/",year,"_Air_Region",i,".csv"),
-                  col.names = FALSE,
-                  row.names = FALSE,
-                  sep = ",")
-      
     }
-    # In case for debugging:
-    #print(paste0("Region ",i," of ",n_reg))
+    
     print(paste0("Minimum value: ",min(SUT)))
   }
   print("IEDataProcessing_PIOLab_BuildingDomesticTables finished.")

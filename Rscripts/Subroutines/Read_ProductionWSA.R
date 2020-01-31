@@ -1,7 +1,7 @@
 ################################################################################
 # This function reads and aligns the WSA steel production raw data with the root classification
 
-Read_ProductionWSA <- function(path,year,item_page,yb,concordance)
+Read_ProductionWSA <- function(path,year,item_page,yb,concord)
 {
   # For the case where the data is on one page
   if(length(item_page) == 1)

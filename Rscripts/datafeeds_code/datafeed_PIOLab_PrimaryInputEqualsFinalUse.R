@@ -1,6 +1,5 @@
 ########################################################################
-# datafeed_PIOLab_PrimaryInputEqualsFinalUse
-#
+# 
 # This data feed formulates ALANG commands so that the sum of the primary inputs 
 # (inputs from nature and EoL scrap) equals the sum of the final use (incl. flows to the environment) 
 
@@ -19,7 +18,7 @@ source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
 # Read global extraction and EOL values
 source(paste0(path$Subroutines,"/Read_ExtractionIRP.R"))
-DE <- sum(DE$Quantity)
+DE <- sum(data$Quantity)
 # For now just this (assume per ton of iron ore 1.3 ton of flux, air and coke are required)
 # Set SE to 5%
 tot <-  DE + DE*1.3 
@@ -33,7 +32,7 @@ ALANG <- ALANG[,c(1:19,11:19)]
 ALANG <- add_row(ALANG,'1' = "Sum of primary inputs equals sum of final use",
                  Coef1 = "1",'Row parent' = "1-e",'Row child' = "3",'Row grandchild' = "1-e",
                  'Column parent' = "1-e",'Column child' = "1",'Column grandchild' = "1-e",
-                 'Coef1.1' = "-1",'Row parent.1' = "1-e",'Row child.1' = "1-e",'Row grandchild.1' = "1-e",
+                 'Coef1.1' = "-1",'Row parent.1' = "1-e",'Row child.1' = "1-2",'Row grandchild.1' = "1-e",
                  'Column parent.1' = "1-e",'Column child.1' = "3",'Column grandchild.1' = "1-e")
 
 # Add other variables
