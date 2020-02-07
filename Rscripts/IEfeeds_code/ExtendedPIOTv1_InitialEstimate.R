@@ -10,7 +10,7 @@
 ################################################################################
 # 1. Set up environment for building the initial estimate
 
-IEdatafeed_name <- "StandardPIOTv2" 
+IEdatafeed_name <- "ExtendedPIOTv1" 
 print(paste0("Start of ",IEdatafeed_name," InitialEstimate."))
 
 # Set library path when running on suphys server
@@ -87,7 +87,7 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension(year,path)
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_WasteMFAIOModelRun.R"))
 IEDataProcessing_PIOLab_WasteMFAIOModelRun(year,path)
 
-# Compile national SUTs
+# Compile domestic SUTs
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_BuildingDomesticTables.R"))
 IEDataProcessing_PIOLab_BuildingDomesticTables(year,path)
 
