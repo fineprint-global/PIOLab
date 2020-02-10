@@ -31,7 +31,7 @@ IEDataProcessing_PIOLab_AligningData <- function(year,path)
   Energy_con <- read.csv(paste0(path$IE_Processed,"/IEA/IEA_",year,"_SteelIndustryEnergyConsumption.csv"))
   
   # Loading BACI trade data on iron ores and IRP extraction accounts
-  IronOre_Trade <- read.csv(file = paste0(path$IE_Processed,"/BACI/BACI_",year,"_IronOre.csv"))
+  BACI <- read.csv(file = paste0(path$IE_Processed,"/BACI/BACI_",year,".csv"))
   IronOre_Extraction <- read.csv(file = paste0(path$IE_Processed,"/IRP/IRP_",year,".csv"))
   
   ##############################################################################
@@ -112,16 +112,11 @@ IEDataProcessing_PIOLab_AligningData <- function(year,path)
   ##############################################################################
   # 3. Delete BACI trade flows of iron ores where IRP reports no extraction
   colnames(IronOre_Extraction)[2] <- "Extraction"
-  IronOre_Trade_agg <- IronOre_Trade %>% select(From,quantity) %>% group_by(From) %>% 
-    summarise(quantity = sum(quantity)) %>% ungroup(From)
-  colnames(IronOre_Trade_agg) <- c("base","Trade")
-  IronOre_Check <- full_join(IronOre_Extraction,IronOre_Trade_agg,c("base"),copy = FALSE) %>%
-    mutate(Share = Trade/Extraction)
-  # Read base classificatipon region code
-  delete <- IronOre_Check %>% filter(is.na(Extraction)) %>% select(base)
-  # Remove trade data for regions with no extraction
-  IronOre_Trade <- IronOre_Trade[!IronOre_Trade$From %in% delete$base,]
-  
+  # Code of countries with no extraction
+  sel <- setdiff(base$region$Code,IronOre_Extraction$base)
+  # Set zero
+  BACI$quantity[BACI$From %in% sel & BACI$Product == 1] <- 0
+  BACI <- BACI[BACI$quantity != 0,]
   ##############################################################################
   # 4. Writing manipulated data to folder
   Flat <- select(Steel_vs_energy,base,Flat) 
@@ -134,7 +129,7 @@ IEDataProcessing_PIOLab_AligningData <- function(year,path)
   write.csv(Long,file = paste0(path$IE_Processed,"/WSA/WSA_",year,"_LongRolledProducts.csv"),row.names = FALSE)
   write.csv(BOF,file = paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelOxygenBlownConverters.csv"),row.names = FALSE)
   write.csv(EAF,file = paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelElectricFurnaces.csv"),row.names = FALSE)
-  write.csv(IronOre_Trade,file = paste0(path$IE_Processed,"/BACI/BACI_",year,"_IronOre.csv"),row.names = FALSE)
+  write.csv(BACI,file = paste0(path$IE_Processed,"/BACI/BACI_",year,".csv"),row.names = FALSE)
   
   print("IEDataProcessing_PIOLab_AligningData finished.")
   

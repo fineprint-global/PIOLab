@@ -12,17 +12,16 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   # Load function to create allocation map
   source(paste0(path$Subroutines,"/makeEndUseMap.R"))
   
-  # Load the base codes for products
-  base_product <- read.xlsx(paste0(path$Concordance,"/StandardPIOT_RootClassification.xlsx"),sheet = 7)
-  # Load the base codes for industries
-  base_industry <- read.xlsx(paste0(path$Concordance,"/StandardPIOT_RootClassification.xlsx"),sheet = 8)
   # Load region aggregator
   source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-  reg_agg <- Root2Base_RegionAggregator(paste0(path$Concordance,"/Region Aggregators/StandardPIOT_RegionAggregator.csv"))
+  reg_agg <- Root2Base_RegionAggregator(IEdatafeed_name)
 
+  # Load BACI data
+  BACI <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,".csv"))
+  
   # Define general variables
-  n_pro <- nrow(base_product)
-  n_ind <- nrow(base_industry)
+  n_pro <- nrow(base$product)
+  n_ind <- nrow(base$industry)
   n_va <- 2
   n_fd <- 2
   # Read number of base regions
@@ -31,30 +30,30 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   ##############################################################################
   # 1. Load data on traded commodities
   # Load BACI trade data
-  FlatRolled <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_FlatRolledProducts.csv"))
-  LongRolled <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_LongRolledProducts.csv"))
-  BilletBloom <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_Billet&Bloom.csv"))
-  IronOre <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_IronOre.csv"))
-  Ingot <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_Ingot.csv"))
-  PigIron <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_PigIron.csv"))
-  Slab <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_Slab.csv"))
-  SpongeIron <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_SpongeIron.csv"))
-  Scrap <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_ScrapAfterTreatment.csv"))
+  FlatRolled <- filter(BACI,Product == 8) %>% select(From,To,quantity)
+  LongRolled <- filter(BACI,Product == 9) %>% select(From,To,quantity)
+  BilletBloom <- filter(BACI,Product == 7) %>% select(From,To,quantity)
+  IronOre <- filter(BACI,Product == 1) %>% select(From,To,quantity)
+  Ingot <- filter(BACI,Product == 5) %>% select(From,To,quantity)
+  PigIron <- filter(BACI,Product == 3) %>% select(From,To,quantity)
+  Slab <- filter(BACI,Product == 6) %>% select(From,To,quantity)
+  SpongeIron <- filter(BACI,Product == 2) %>% select(From,To,quantity)
+  Scrap <- filter(BACI,Product == 11) %>% select(From,To,quantity)
   # Load steel in final demand
   FinalDemand <- read.csv(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_SteelInFinalDemand.csv")) 
   
   # Define function to create empty Use table
   CreateIntermediateUse <- function() {
     Use <- data.frame(matrix(0,n_pro,n_ind))
-    colnames(Use) <- base_industry$BaseIndustryName
-    rownames(Use) <- base_product$BaseProductName
+    colnames(Use) <- base$industry$Name
+    rownames(Use) <- base$product$Name
     Use <- as.matrix(Use)
     return(Use)}
   
   CreateFinalUse <- function() {
     FinalUse <- data.frame(matrix(0,n_pro,n_fd))
     colnames(FinalUse) <- c("FinalConsumption","Environment")
-    rownames(FinalUse) <- base_product$BaseProductName
+    rownames(FinalUse) <- base$product$Name
     FinalUse <- as.matrix(FinalUse)
     return(FinalUse)}
   

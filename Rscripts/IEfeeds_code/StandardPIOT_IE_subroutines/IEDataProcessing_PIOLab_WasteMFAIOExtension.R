@@ -62,7 +62,7 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
   # Load processed data from Cullen et al 2012
   Yields <- read.csv(paste0(path$IE_Processed,"/Cullen/FabricationYields.csv"))
 
-    ##############################################################################
+  ##############################################################################
   # 1. The first section calculates the net use of rolled steel products in regions
   # by adding imports and subtracting exports from the WSA production values
   
@@ -70,8 +70,10 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
   Flat <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_FlatRolledProducts.csv"))
   Long <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_LongRolledProducts.csv"))
   # Load BACI trade flows 
-  Flat_trade <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_FlatRolledProducts.csv"))
-  Long_trade <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,"_LongRolledProducts.csv"))
+  BACI <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,".csv"))
+  
+  Flat_trade <- BACI %>% filter(Product == 8) %>% select(From,To,quantity)
+  Long_trade <- BACI %>% filter(Product == 9) %>% select(From,To,quantity)
   
   # Estimate the net-use of products in countries
   Flat_import <- Flat_trade %>% group_by(To) %>% summarise(Quantity = sum(quantity))

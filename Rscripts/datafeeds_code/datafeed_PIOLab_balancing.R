@@ -21,37 +21,42 @@ source(paste0(path$Subroutines,"/makeALANGheadline.R"))
 # Extend table with additional columns
 ALANG <- ALANG[,c(1:19,11:19)]
 
+n_reg <- nrow(root$region)
+
 for(r in 1:n_reg)  
 {
+  reg_name <- root$region$Name[r]
+  
   # Balancing industries
-  ALANG <- add_row(ALANG,'1' = paste0("Balancing industries of ",base_regions$BaseRegionName[r]),
-                   Coef1 = 1,'Row parent' = r,'Row child' = 1,'Row grandchild' = "1:e",
+  ALANG <- add_row(ALANG,'1' = paste0("Balancing industry: ",reg_name),
+                   Coef1 = "1",'Row parent' = as.character(r),'Row child' = "1",'Row grandchild' = "1:e",
                    'Column parent' = "1-e",'Column child' = "1-e",'Column grandchild' = "1-e",
-                   'Coef1.1' = -1,'Row parent.1' = "1-e",'Row child.1' = "1-e",'Row grandchild.1' = "1-e",
-                   'Column parent.1' = r,'Column child.1' = 1,'Column grandchild.1' = "1:e")
+                   'Coef1.1' = "-1",'Row parent.1' = "1-e",'Row child.1' = "1-e",'Row grandchild.1' = "1-e",
+                   'Column parent.1' = as.character(r),'Column child.1' = "1",'Column grandchild.1' = "1:e")
   
   # Balancing products
-  ALANG <- add_row(ALANG,'1' = paste0("Balancing products of ",base_regions$BaseRegionName[r]),
-                   Coef1 = 1,'Row parent' = r,'Row child' = 2,'Row grandchild' = "1:e",
+  ALANG <- add_row(ALANG,'1' = paste0("Balancing products: ",reg_name),
+                   Coef1 = "1",'Row parent' = as.character(r),'Row child' = "2",'Row grandchild' = "1:e",
                    'Column parent' = "1-e",'Column child' = "1-e",'Column grandchild' = "1-e",
-                   'Coef1.1' = -1,'Row parent.1' = "1-e",'Row child.1' = "1-e",'Row grandchild.1' = "1-e",
-                   'Column parent.1' = r,'Column child.1' = 2,'Column grandchild.1' = "1:e")
+                   'Coef1.1' = "-1",'Row parent.1' = "1-e",'Row child.1' = "1-e",'Row grandchild.1' = "1-e",
+                   'Column parent.1' = as.character(r),'Column child.1' = "2",'Column grandchild.1' = "1:e")  
+
 }
 
 # Add other variables
 ALANG$`#` <- as.character(1:nrow(ALANG))
 ALANG$Incl <- "Y"
-ALANG$Parts <- 2
-ALANG$Value <- 0
-ALANG$S.E. <- 0
-ALANG$Years <- ALANG$Years.1 <- 1
-ALANG$Margin <- ALANG$Margin.1 <- 1
+ALANG$Parts <- "2"
+ALANG$Value <- "0"
+ALANG$S.E. <- "0"
+ALANG$Years <- ALANG$Years.1 <- "1"
+ALANG$Margin <- ALANG$Margin.1 <- "1"
 ALANG$`Pre-map` <- ""
 ALANG$`Post-map` <- ""
 ALANG$`Pre-Map` <- ""
 ALANG$`Post-Map` <- ""
   
-# Call script that writes the ALANG file to the repsective folder in the root
+# Call script that writes the ALANG file to the respective folder in the root
 source(paste0(root_folder,"Rscripts/datafeeds_code/WriteALANG2Folder.R"))
 
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))

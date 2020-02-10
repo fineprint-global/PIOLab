@@ -14,10 +14,8 @@ IEDataProcessing_PIOLab_StandardErrorsForTy <- function(year,path)
   path_set <- paste0(path$IE_Processed,"/SUT/")
   
   # Set base products and industries
-  base_products <- read.xlsx(paste0(path$Concordance,"/StandardPIOT_RootClassification.xlsx"),sheet = 7)
-  base_industries <- read.xlsx(paste0(path$Concordance,"/StandardPIOT_RootClassification.xlsx"),sheet = 8)
-  n_pro <- nrow(base_products)
-  n_ind <- nrow(base_industries)
+  n_pro <- nrow(base$product)
+  n_ind <- nrow(base$industry)
   
   ##############################################################################
   # Create empty S8 sheet
@@ -47,7 +45,7 @@ IEDataProcessing_PIOLab_StandardErrorsForTy <- function(year,path)
   for(r in 1:n_reg)
   {
     print(r)
-    # Loead and write domestic supply tables
+    # Load and write domestic supply tables
     SUP <- read.table(file = paste0(path_set,year,"_DomesticSupply_Region",r,".csv"),sep = ",")
     SUP <- melt(SUP)
     S8_sup$t[S8_sup$x3 == r] <- SUP$value            
@@ -76,11 +74,8 @@ IEDataProcessing_PIOLab_StandardErrorsForTy <- function(year,path)
       S8_fd$t[S8_fd$x3 == s & S8_fd$x6 == r] <- FD$value
     }
   }
-                          
-  # Filter rows mit values in it and combine in one object
-  #S8_use <- S8_use[S8_use$t > 0,]
-  #S8_sup <- S8_sup[S8_sup$t > 0,]
-  #S8_fd <- S8_fd[S8_fd$t > 0,]
+  
+  # Combine frames and select columns                        
   S8 <- bind_rows(S8_use,S8_sup,S8_fd)
   S8 <- S8[,2:10]
   

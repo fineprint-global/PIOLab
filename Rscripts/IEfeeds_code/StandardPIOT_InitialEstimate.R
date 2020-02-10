@@ -19,10 +19,19 @@ if(Sys.info()[1] == "Linux"){
 
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
+path[["IE_Subroutines"]] <- paste0(root_folder,"Rscripts/IEfeeds_code/",IEdatafeed_name,"_IE_subroutines")
+path[["IE_Processed"]] <- paste0(root_folder,"ProcessedData/",IEdatafeed_name)
 
-# Check whether output folder for processed data exists, if yes delete them
+# Read base regions, products and codes
+base <- list("region" = read.xlsx(paste0(path$Concordance,"/",IEdatafeed_name,"_BaseClassification.xlsx"),sheet = 1),
+             "industry" = read.xlsx(paste0(path$Concordance,"/",IEdatafeed_name,"_BaseClassification.xlsx"),sheet = 2),
+             "product" = read.xlsx(paste0(path$Concordance,"/",IEdatafeed_name,"_BaseClassification.xlsx"),sheet = 3))
+
+# Check whether output folder for processed data exists, if yes delete it
 if(dir.exists(path$IE_Processed)) unlink(path$IE_Processed,recursive = TRUE) 
 dir.create(path$IE_Processed)
+# Check if ALANG files of old initial estimateexist and delete
+source(paste0(path$Subroutines,"/DeleteALANGfilesOfOldIEfeeds.R"))
 
 ################################################################################
 # 2. Load functions
@@ -35,18 +44,17 @@ source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_EOL.R"))
 source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_IEA.R"))
 source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_EXIOWasteMFAIO.R"))
 source(paste0(path$IE_Subroutines,"/IEFeed_PIOLab_Cullen.R"))
+
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_AligningData.R"))
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_WasteMFAIOExtension.R"))
+
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_WasteMFAIOModelRun.R"))
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_BuildingDomesticTables.R"))
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_BuildingTradeBlocks.R"))
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_StandardErrorsForTy.R"))
 
-
-
 ################################################################################
 # 3. Commencing data feeds
-
 # Loading production values for semi- and finished steel + information on yields
 IEFeed_PIOLab_WSA(year,path)
 IEFeed_PIOLab_SteelIndustryYields(path)
@@ -87,6 +95,7 @@ print("Start writing ALANG commands.")
 # For the development phase on Windows laptop, set DATAPATH here
 #if(Sys.info()[1] == "Windows") DATAPATH <- paste0(root_folder,"ProcessedData")
 
+n_reg <- nrow(base$region)
 # Create empty file with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
 
@@ -156,7 +165,7 @@ ALANG <- add_row(ALANG,'1' = "Standard deviation estimator",
                  Coef1 = paste0("S8 ",path$IE_Processed,"/StandardErrorsForTy/",gsub("-","",Sys.Date()),
                                 "_PIOLab_AllCountries_000_StandardErrorsForTy_000_S8FileFor",year,".csv"),
                 Value = "S", 'Row parent' = "",'Row child' = "",'Row grandchild' = "",'Column parent' = "",
-                'Column child' = "",'Column grandchild' = "",Years = "",Margin = "",S.E. = "E MX1;MN10;CN1")
+                'Column child' = "",'Column grandchild' = "",Years = "",Margin = "",S.E. = "E MX100;MN1000;CN1000")
 
 ALANG$`#` <- as.character(1:nrow(ALANG))
 ALANG$Incl <- "Y"

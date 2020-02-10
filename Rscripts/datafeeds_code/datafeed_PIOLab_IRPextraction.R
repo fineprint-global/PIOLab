@@ -2,7 +2,6 @@
 # datafeed_PIOLab_IRPextraction
 # 
 #
-
 datafeed_name <- "IRPextraction"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 
@@ -16,7 +15,6 @@ if(Sys.info()[1] == "Linux"){
 ################################################################################
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
-remove(base_regions)
   
 # Loading raw data
 source(paste0(path$Subroutines,"/Read_ExtractionIRP.R"))
@@ -28,35 +26,36 @@ source(paste0(path$Subroutines,"/makeALANGheadline.R"))
 for(i in 1:nrow(data))
 { 
   # Get root_code of region 
-  reg <- data$RootRegionCode[i]
+  reg_num <- data$Code[i]
+  reg_name <- as.character(root$region$Name[reg_num])
+  reg_num <- as.character(reg_num)
   # Read extraction value
   value <- data$Quantity[i]
   # Set SE to 5%
-  SE <- value/20
-    
+  SE <- round(value * 0.05) 
+  SE <- as.character(SE)
+  # SE <- "E LN0.05"
+  value <- as.character(value)
+  
   # Add command for domestic Use table
-  ALANG <- add_row(ALANG,'1' = paste0("DataFeed IRP Extraction Region ",reg),
-                   Value = value,'Row parent' = reg,'Row child' = 3,'Row grandchild' = 1,
-                   'Column parent' = reg,'Column child' = 1,'Column grandchild' = 1,S.E. = SE)
+  ALANG <- add_row(ALANG,'1' = paste0("DataFeed IRP Extraction ",reg_name),
+                   Value = value,'Row parent' = reg_num,'Row child' = "3",'Row grandchild' = "1",
+                   'Column parent' = reg_num,'Column child' = "1",'Column grandchild' = "1",S.E. = SE)
 }
 # Add other variables
 ALANG$`#` <- as.character(1:nrow(ALANG))
 ALANG$Incl <- "Y"
-ALANG$Parts <- 1
+ALANG$Parts <- "1"
 ALANG$`Pre-map` <- ""
 ALANG$`Post-map` <- ""
 ALANG$`Pre-Map` <- ""
 ALANG$`Post-Map` <- ""
-ALANG$Years <- 1
-ALANG$Margin <- 1
-ALANG$Coef1 <- 1
+ALANG$Years <- "1"
+ALANG$Margin <- "1"
+ALANG$Coef1 <- "1"
   
 # Call script that writes the ALANG file to the repsective folder in the root
 source(paste0(root_folder,"Rscripts/datafeeds_code/WriteALANG2Folder.R"))
   
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
   
-  
-  
-
-
