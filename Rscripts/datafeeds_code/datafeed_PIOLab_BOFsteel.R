@@ -26,6 +26,10 @@ item_page <- items[[4]]$page
 # Read values and align with root classification
 data <- Read_ProductionWSA(path,year,item_page,yb,concord)
 
+# Loading function for estimating SE with linear regression
+source(paste0(path$Subroutines,"/SE_LogRegression.R"))
+data <- SE_LogRegression(data,0.2,0.03)
+
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
 # Extend table with additional columns
@@ -37,11 +41,9 @@ for(i in 1:nrow(data))
   reg_name <- as.character(root$region$Name[reg_num])
   reg_num <- as.character(reg_num)
   # Read extraction value
-  value <- data$Quantity[i]
+  value <- as.character(data$Quantity[i])
   # Set SE to 10%
-  SE <- round(value * 0.10) 
-  SE <- as.character(SE)
-  value <- as.character(value)
+  SE <- as.character(data$SE[i])
   
   # Add command for domestic supply table
   ALANG <- add_row(ALANG,'1' = paste0("DataFeed WSA Liquid steel from BOF ",reg_name),

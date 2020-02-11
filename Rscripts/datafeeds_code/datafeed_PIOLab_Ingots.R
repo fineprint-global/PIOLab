@@ -2,7 +2,7 @@
 # datafeed_PIOLab_BOFsteel
 # 
 #
-datafeed_name <- "WSAPigIron"
+datafeed_name <- "Ingots"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 
 ################################################################################
@@ -21,14 +21,14 @@ source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 source(paste0(path$Subroutines,"/Load_YearbookWSA.R"))
 # Load function to align data with root classification
 source(paste0(path$Subroutines,"/Read_ProductionWSA.R"))
-# Select BOF steel production
-item_page <- items[[2]]$page
+# Select Ingot production
+item_page <- items[[3]]$page
 # Read values and align with root classification
 data <- Read_ProductionWSA(path,year,item_page,yb,concord)
 
 # Loading function for estimating SE with linear regression
 source(paste0(path$Subroutines,"/SE_LogRegression.R"))
-data <- SE_LogRegression(data,0.15,0.03)
+data <- SE_LogRegression(data,0.3,0.1)
 
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
@@ -45,10 +45,10 @@ for(i in 1:nrow(data))
   # Set SE 
   SE <- as.character(data$SE[i])
   
-  # Add command to list
-  ALANG <- add_row(ALANG,'1' = paste0("DataFeed WSA Pig Iron Production ",reg_name),
-                   Value = value,'Row parent' = reg_num,'Row child' = "1",'Row grandchild' = "6",
-                   'Column parent' = reg_num,'Column child' = "2",'Column grandchild' = "11-13",S.E. = SE)
+  # Add command for domestic supply table
+  ALANG <- add_row(ALANG,'1' = paste0("DataFeed WSA Ingot Production ",reg_name),
+                   Value = value,'Row parent' = reg_num,'Row child' = "1",'Row grandchild' = "25-27",
+                   'Column parent' = reg_num,'Column child' = "2",'Column grandchild' = "35-38",S.E. = SE)
 }
 # Add other variables
 ALANG$`#` <- as.character(1:nrow(ALANG))

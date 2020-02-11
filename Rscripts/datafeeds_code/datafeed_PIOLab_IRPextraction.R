@@ -18,7 +18,11 @@ source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
   
 # Loading raw data
 source(paste0(path$Subroutines,"/Read_ExtractionIRP.R"))
-  
+
+# Loading function for estimating SE with linear regression
+source(paste0(path$Subroutines,"/SE_LogRegression.R"))
+data <- SE_LogRegression(data,0.20,0.03)
+
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
 # Extend table with additional columns
@@ -30,12 +34,9 @@ for(i in 1:nrow(data))
   reg_name <- as.character(root$region$Name[reg_num])
   reg_num <- as.character(reg_num)
   # Read extraction value
-  value <- data$Quantity[i]
-  # Set SE to 5%
-  SE <- round(value * 0.05) 
-  SE <- as.character(SE)
-  # SE <- "E LN0.05"
-  value <- as.character(value)
+  value <- as.character(data$Quantity[i])
+  # Set SE
+  SE <- as.character(data$SE[i]) 
   
   # Add command for domestic Use table
   ALANG <- add_row(ALANG,'1' = paste0("DataFeed IRP Extraction ",reg_name),
