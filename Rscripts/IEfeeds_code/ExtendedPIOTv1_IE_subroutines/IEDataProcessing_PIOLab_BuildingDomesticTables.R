@@ -226,7 +226,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     ############################################
     users <- base$industry$Code[11:20][map$index]
     # Load trade data 
-    data <- filter(BACI,Product == base$product$Code[base$product$Name == item]) %>% select(From,To,quantity)
+    data <- filter(BACI,Product == base$product$Code[base$product$Name == item]) %>% select(From,To,Quantity)
     # Read domestic production
     pro <- SUT["Flat rolling","Flat rolled products"]
     # Read domestic use
@@ -243,7 +243,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     share <- map$Share
     users <- base$industry$Code[11:20][map$index]
     # Load trade data 
-    data <- filter(BACI,Product == base$product$Code[base$product$Name == item]) %>% select(From,To,quantity)
+    data <- filter(BACI,Product == base$product$Code[base$product$Name == item]) %>% select(From,To,Quantity)
     # Read domestic production
     pro <- SUT["Long rolling",item]
     # Read domestic use
@@ -260,7 +260,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     item <- "Billets & blooms"
     users <- "Long rolling"
     share <- 1
-    data <- filter(BACI,Product == base$product$Code[base$product$Name == item]) %>% select(From,To,quantity)
+    data <- filter(BACI,Product == base$product$Code[base$product$Name == item]) %>% select(From,To,Quantity)
     pro <- SUT["Casting of billets & blooms",item]
     use <- sum(SUT[users,])
     
@@ -270,17 +270,17 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     # 3.6 Use of ingots and slabs by flat rolling
     # 3.6.1 Ingots
     export <- filter(BACI,Product == base$product$Code[base$product$Name == "Ingots"]) %>% 
-      select(From,To,quantity) %>% filter(From == i) 
-    value <- SUT["Casting of ingots & slabs","Ingots"] - sum(export$quantity)
+      select(From,To,Quantity) %>% filter(From == i) 
+    value <- SUT["Casting of ingots & slabs","Ingots"] - sum(export$Quantity)
     # In case value is negative, assume that 5% of inputs is coming from domestic ingots
     if(value > 0) {SUT["Ingots","Flat rolling"] <- value} else
     {SUT["Ingots","Flat rolling"] <- sum(SUT["Flat rolling",]) * 0.05}
     
     # 3.6.2 Slabs
     export <-  filter(BACI,Product == base$product$Code[base$product$Name == "Slabs"]) %>% 
-      select(From,To,quantity) %>% filter(From == i) 
+      select(From,To,Quantity) %>% filter(From == i) 
     # Domestic production of slabs minus exports = domestic use
-    value <- SUT["Casting of ingots & slabs","Slabs"] - sum(export$quantity)
+    value <- SUT["Casting of ingots & slabs","Slabs"] - sum(export$Quantity)
     if(value > 0) {SUT["Slabs","Flat rolling"] <- value} else
     {SUT["Slabs","Flat rolling"] <-  sum(SUT["Flat rolling",]) * 0.45}
     
@@ -303,7 +303,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     
     if(SUT["Direct reduction","Sponge iron"] != 0) 
     {
-      value <- SUT["Direct reduction","Sponge iron"] - sum(export$quantity)
+      value <- SUT["Direct reduction","Sponge iron"] - sum(export$Quantity)
       if(value > 0) {SUT["Sponge iron","Electric arc furnace"] <- value} else
       {SUT["Sponge iron","Electric arc furnace"] <- sum(SUT["Direct reduction","Sponge iron"])/2}
     }
@@ -313,7 +313,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     
     # 3.10 Allocate iron ores used by Blast furnace 
     export <- filter(BACI,Product == base$product$Code[base$product$Name == "Iron ore"],From == i)
-    value <- SUT["Mining","Iron ore"] - sum(export$quantity)
+    value <- SUT["Mining","Iron ore"] - sum(export$Quantity)
     if(value > 0) {SUT["Iron ore","Blast furnace"] <- value} else
     {SUT["Iron ore","Blast furnace"] <- sum(SUT["Blast furnace",])/2}
     
@@ -332,7 +332,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     
     # 3.11 Allocating pig iron to BOF
     export <- filter(BACI,Product == base$product$Code[base$product$Name == "Pig iron"],From == i)
-    value <- SUT["Blast furnace","Pig iron"] - sum(export$quantity)
+    value <- SUT["Blast furnace","Pig iron"] - sum(export$Quantity)
     if(value > 0) {SUT["Pig iron","Oxygen blown & open hearth furnace"] <- value} else
     {SUT["Pig iron","Oxygen blown & open hearth furnace"] <- sum(SUT["Oxygen blown & open hearth furnace",])*0.4}
     
@@ -389,31 +389,6 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
                 col.names = FALSE,
                 row.names = FALSE,
                 sep = ",")
-    
-      
-    # Check if the mother directory really exists and write tables to file
-    if(dir.exists(path$mother))
-    {
-      write.table(Supply,file = paste0(path$mother,"Data/IE/",year,"_DomesticSupply_Region",i,".csv"),
-                  col.names = FALSE,
-                  row.names = FALSE,
-                  sep = ",")
-      
-      write.table(Use,file = paste0(path$mother,"Data/IE/",year,"_DomesticUse_Region",i,".csv"),
-                  col.names = FALSE,
-                  row.names = FALSE,
-                  sep = ",")
-      
-      write.table(BoundaryOutput,file = paste0(path$mother,"Data/IE/",year,"_BoundaryOutput_Region",i,".csv"),
-                  col.names = FALSE,
-                  row.names = FALSE,
-                  sep = ",")
-      
-      write.table(BoundaryInput,file = paste0(path$mother,"Data/IE/",year,"_BoundaryInput_Region",i,".csv"),
-                  col.names = FALSE,
-                  row.names = FALSE,
-                  sep = ",")
-    }
     
     print(paste0("Minimum value: ",min(SUT)))
   }

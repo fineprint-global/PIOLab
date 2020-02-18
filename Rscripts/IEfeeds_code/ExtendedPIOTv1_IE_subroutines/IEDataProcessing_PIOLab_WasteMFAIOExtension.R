@@ -28,7 +28,7 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
   }
   
   # Writing values of rolled products into arrays (extension and fabrication scrap)
-  WriteValues2Array <- function(data,name)
+  WriteValues2Array <- function(data,name,Q,Scrap)
   {
     for(i in 1:nrow(data))
     {
@@ -48,12 +48,12 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
       
       if(name == "Flat")
       {
-        Q[1,index] <<- map$EndUse
-        Scrap[1,index] <<- map$Scrap
+        Q[1,index] <- map$EndUse
+        Scrap[1,index] <- map$Scrap
       }else
       {
-        Q[2,index] <<- map$EndUse
-        Scrap[2,index] <<- map$Scrap
+        Q[2,index] <- map$EndUse
+        Scrap[2,index] <- map$Scrap
       }
     }
     
@@ -72,12 +72,12 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
   # Load BACI trade flows 
   BACI <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,".csv"))
   
-  Flat_trade <- BACI %>% filter(Product == 8) %>% select(From,To,quantity)
-  Long_trade <- BACI %>% filter(Product == 9) %>% select(From,To,quantity)
+  Flat_trade <- BACI %>% filter(Product == 8) %>% select(From,To,Quantity)
+  Long_trade <- BACI %>% filter(Product == 9) %>% select(From,To,Quantity)
   
   # Estimate the net-use of products in countries
-  Flat_import <- Flat_trade %>% group_by(To) %>% summarise(Quantity = sum(quantity))
-  Flat_export <- Flat_trade %>% group_by(From) %>% summarise(Quantity = sum(quantity))
+  Flat_import <- Flat_trade %>% group_by(To) %>% summarise(Quantity = sum(Quantity))
+  Flat_export <- Flat_trade %>% group_by(From) %>% summarise(Quantity = sum(Quantity))
   Flat_trade <- full_join(Flat_import,Flat_export,c("To" = "From"),copy = FALSE)
   colnames(Flat_trade) <- c("base","import","export")
   # Regional production + imports - exports = net-use
@@ -93,8 +93,8 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
   colnames(Flat)[2] <- "Quantity"
   #####################################
   
-  Long_import <- Long_trade %>% group_by(To) %>% summarise(Quantity = sum(quantity))
-  Long_export <- Long_trade %>% group_by(From) %>% summarise(Quantity = sum(quantity))
+  Long_import <- Long_trade %>% group_by(To) %>% summarise(Quantity = sum(Quantity))
+  Long_export <- Long_trade %>% group_by(From) %>% summarise(Quantity = sum(Quantity))
   Long_trade <- full_join(Long_import,Long_export,c("To" = "From"),copy = FALSE)
   colnames(Long_trade) <- c("base","import","export")
   # Regional production + imports - exports = net-use
@@ -119,8 +119,8 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
   # Execute functions
   # Warnings are turned of for the run.
   options(warn = -1)
-  WriteValues2Array(Flat,"Flat")
-  WriteValues2Array(Long,"Long")
+  WriteValues2Array(Flat,"Flat",Q,Scrap)
+  WriteValues2Array(Long,"Long",Q,Scrap)
   options(warn = 0)
 
   # Save extension of the MFA-Waste-IO Model

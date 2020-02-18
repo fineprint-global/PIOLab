@@ -41,12 +41,13 @@ for(r in data$Code)
   
   # Add command for domestic Use table
   ALANG <- add_row(ALANG,'1' = paste0("Ratio Slag-PigIron: ",reg_name),
-                  'Row parent' = reg_num,'Column parent' = reg_num,
-                  'Column child' = "[2;3]",'Column grandchild' = "[11;2]~7")
+                  'Row parent' = reg_num,'Column parent' = reg_num)
   
   
 }
 
+ALANG$`Column child` <- "2:3~8"
+ALANG$`Column grandchild` <- "11;2"
 ALANG$Coef1 <- paste0("R [1000;",slag,"]")  
 ALANG$S.E. <- "0.1"
 ALANG$`#` <- as.character(1:nrow(ALANG))

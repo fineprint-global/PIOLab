@@ -32,13 +32,31 @@ IEFeed_PIOLab_EXIOWasteMFAIO <- function(year,path)
   # Load the root classifciation
   root_class <- root$region %>% select(Code,ISO2digitCode)
   
-  # Load Root2Base region aggregator
+  # Load region aggregator
   source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-  reg_agg <- Root2Base_RegionAggregator(IEdatafeed_name)
   
+  # Load source-to-root and root-to-base concordances
+  Source2Root <- read.csv(paste0(path$Concordance,"/EXIOBASE/Source2Root_Region_EXIOBASE.csv"),
+                          header = FALSE)
+  Root2Base <- read.csv(paste0(path$Concordance,"/Region Aggregators/",IEdatafeed_name,"_RegionAggregator.csv"),
+                        header = FALSE)
+  
+  Source2Root <- as.matrix(Source2Root)
+  # Create map from concordance
+  Source2Root <- Source2Root/rowSums(Source2Root)
+  Root2Base <- as.matrix(Root2Base)
+  # Create Source-to-base matrix
+  Source2Base <- Source2Root %*% Root2Base
+  
+  # Create concordance
+  Source2Base <- t(Source2Base)*(1:ncol(Source2Base))
+  rownames(Source2Base) <- NULL
+  Source2Base <- melt(Source2Base)
+  Source2Base <- filter(Source2Base,value > 0) %>% select(-value)
+  colnames(Source2Base) <- c("base","root")
   
   IO.codes <- data.frame(IO.codes,"NewProducts" = "NEC",stringsAsFactors = FALSE)
-  IO.codes["base"] <- rep(1:49,each = 200)
+  IO.codes["base"] <- rep(Source2Base$base,each = 200)
   
   # select steel containing commodities
   steel.id <- c(117:125,150)
@@ -58,7 +76,7 @@ IEFeed_PIOLab_EXIOWasteMFAIO <- function(year,path)
   Z <- t(Z)
 
   # Aggregate final demand
-  Y.codes["base"] <- rep(1:49,each = 7) 
+  Y.codes["base"] <- rep(Source2Base$base,each = 7) 
   colnames(Y) <- Y.codes$base
   Y <- Agg(Y)
   Y <- t(Y)
@@ -66,7 +84,7 @@ IEFeed_PIOLab_EXIOWasteMFAIO <- function(year,path)
   Y <- Agg(Y)
   Y <- t(Y)
   # Rearrange columns so that the region code of the base table is in increasing order 
-  Y <- Y[,as.character(1:max(reg_agg$base))]
+  Y <- Y[,as.character(1:max(Source2Base$base))]
   
   # Create new IO.codes to rearrange the variables so that base region codes increases
   IO.codes <- colnames(Z)
@@ -79,8 +97,8 @@ IEFeed_PIOLab_EXIOWasteMFAIO <- function(year,path)
   IO.codes <- IO.codes[,c("index","base","commodity","Key")]
   
   # New Y.codes 
-  Y.codes <- data.frame("base" = 1:max(reg_agg$base),
-                        "Region.Name" = regions, 
+  Y.codes <- data.frame("base" = 1:max(Source2Base$base),
+                        "Region.Name" = base$region$Name, 
                         stringsAsFactors = FALSE)
   
   # Rearrange Z & Y (if necessary)

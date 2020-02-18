@@ -1,6 +1,6 @@
 ################################################################################
 # 
-# This function estimates the standard errors of a given raw data set by linearly regressing
+# This function estimates the standard errors of a given raw data set by a linear regression
 # the relative standard error dx of the smallest data point x to fit the relative standard error 
 # dy of the largest data point y. See AISHA manual or Lenzen et al 2010 
 # (UNCERTAINTY ANALYSIS FOR MULTI-REGION INPUT–OUTPUT MODELS)

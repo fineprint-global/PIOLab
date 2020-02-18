@@ -30,15 +30,15 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   ##############################################################################
   # 1. Load data on traded commodities
   # Load BACI trade data
-  FlatRolled <- filter(BACI,Product == 8) %>% select(From,To,quantity)
-  LongRolled <- filter(BACI,Product == 9) %>% select(From,To,quantity)
-  BilletBloom <- filter(BACI,Product == 7) %>% select(From,To,quantity)
-  IronOre <- filter(BACI,Product == 1) %>% select(From,To,quantity)
-  Ingot <- filter(BACI,Product == 5) %>% select(From,To,quantity)
-  PigIron <- filter(BACI,Product == 3) %>% select(From,To,quantity)
-  Slab <- filter(BACI,Product == 6) %>% select(From,To,quantity)
-  SpongeIron <- filter(BACI,Product == 2) %>% select(From,To,quantity)
-  Scrap <- filter(BACI,Product == 11) %>% select(From,To,quantity)
+  FlatRolled <- filter(BACI,Product == 8) %>% select(From,To,Quantity)
+  LongRolled <- filter(BACI,Product == 9) %>% select(From,To,Quantity)
+  BilletBloom <- filter(BACI,Product == 7) %>% select(From,To,Quantity)
+  IronOre <- filter(BACI,Product == 1) %>% select(From,To,Quantity)
+  Ingot <- filter(BACI,Product == 5) %>% select(From,To,Quantity)
+  PigIron <- filter(BACI,Product == 3) %>% select(From,To,Quantity)
+  Slab <- filter(BACI,Product == 6) %>% select(From,To,Quantity)
+  SpongeIron <- filter(BACI,Product == 2) %>% select(From,To,Quantity)
+  Scrap <- filter(BACI,Product == 11) %>% select(From,To,Quantity)
   # Load steel in final demand
   FinalDemand <- read.csv(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_SteelInFinalDemand.csv")) 
   
@@ -62,7 +62,7 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       data.sel <- data %>% filter(From == i & To == j)
       # Check if available
       if(nrow(data.sel) == 1) 
-      {value <- sum(data %>% filter(From == i & To == j) %>% select(quantity))} else
+      {value <- sum(data %>% filter(From == i & To == j) %>% select(Quantity))} else
           {value <- 0}
       Use[from,to] <- value
       return(Use)
@@ -75,7 +75,6 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
     # i loops only over the regions where i != j
     for(i in (1:n_reg)[-j])
     {
-      print(i)
       #Create empty use table
       Use <- CreateIntermediateUse()
       
@@ -109,8 +108,8 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       # Check if available and write values
       if(nrow(IronOre.sel) == 1) 
       {
-        Use["Iron ore","Blast furnace"] <- IronOre.sel$quantity * Share$Pig
-        Use["Iron ore","Direct reduction"] <- IronOre.sel$quantity * Share$Sponge 
+        Use["Iron ore","Blast furnace"] <- IronOre.sel$Quantity * Share$Pig
+        Use["Iron ore","Direct reduction"] <- IronOre.sel$Quantity * Share$Sponge 
       }
       
       ##########################################################################
@@ -129,8 +128,8 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       # Check if available and write values
       if(nrow(Scrap.sel) == 1) 
       {
-        Use["Scrap steel","Oxygen blown & open hearth furnace"] <- Scrap.sel$quantity * Share$BOF
-        Use["Scrap steel","Electric arc furnace"] <- Scrap.sel$quantity * Share$EAF 
+        Use["Scrap steel","Oxygen blown & open hearth furnace"] <- Scrap.sel$Quantity * Share$BOF
+        Use["Scrap steel","Electric arc furnace"] <- Scrap.sel$Quantity * Share$EAF 
       }
       
       ##########################################################################
@@ -144,7 +143,7 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       # If available allocate according to shares
       if(nrow(Flat.sel) == 1)
       {
-        values <- map * Flat.sel$quantity
+        values <- map * Flat.sel$Quantity
         Use["Flat rolled products",(ncol(Use)-length(map)+1):ncol(Use)] <- values
       
       }
@@ -160,7 +159,7 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       # If available allocate according to shares
       if(nrow(Flat.sel) == 1)
       {
-        values <- map * Flat.sel$quantity
+        values <- map * Flat.sel$Quantity
         Use["Long rolled products",(ncol(Use)-length(map)+1):ncol(Use)] <- values
       }
       
@@ -194,19 +193,6 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
                   row.names = FALSE,
                   sep = ",")
       
-      # Write to working directory if on server
-      if(dir.exists(path$mother))
-      {
-        write.table(Use,file = paste0(path$mother,"Data/IE/",year,"_IntermediateTrade_",i,"_",j,".csv"),
-                    col.names = FALSE,
-                    row.names = FALSE,
-                    sep = ",")
-        
-        write.table(FD,file = paste0(path$mother,"Data/IE/",year,"_FinalTrade_",i,"_",j,".csv"),
-                    col.names = FALSE,
-                    row.names = FALSE,
-                    sep = ",")
-      } 
     }
   }
   print("End of IEDataProcessing_PIOLab_BuildingTradeBlocks.")

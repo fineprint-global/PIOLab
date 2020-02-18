@@ -10,7 +10,8 @@
 ################################################################################
 # 1. Set up environment for building the initial estimate
 
-IEdatafeed_name <- "ExtendedPIOTv1" 
+# This IE includes only, China, Australia, Brazil, Europe and one RoW
+IEdatafeed_name <- "TestPIOT" 
 print(paste0("Start of ",IEdatafeed_name," InitialEstimate."))
 
 # Set library path when running on suphys server
@@ -22,7 +23,7 @@ if(Sys.info()[1] == "Linux"){
 
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
-path[["IE_Subroutines"]] <- paste0(root_folder,"Rscripts/IEfeeds_code/",IEdatafeed_name,"_IE_subroutines")
+path[["IE_Subroutines"]] <- paste0(root_folder,"Rscripts/IEfeeds_code/ExtendedPIOTv1_IE_subroutines")
 path[["IE_Processed"]] <- paste0(root_folder,"ProcessedData/",IEdatafeed_name)
 
 # Read base regions, products and codes
@@ -82,7 +83,12 @@ IEDataProcessing_PIOLab_AligningData(year,path)
 
 # Compile extension for the MFA-Waste IO Model and estimate fabrication scrap
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_WasteMFAIOExtension.R"))
+
+# ERROR HERE!!!!
+
 IEDataProcessing_PIOLab_WasteMFAIOExtension(year,path)
+
+
 # Run Waste-IO Model calculation
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_WasteMFAIOModelRun.R"))
 IEDataProcessing_PIOLab_WasteMFAIOModelRun(year,path)
@@ -151,7 +157,6 @@ if(file.exists(path$mother))
   write.table(ALANG,file = filename,row.names = FALSE, quote = F,sep = "\t") 
 }
   
-
 print(paste0("End of ",IEdatafeed_name," InitialEstimate."))
 
 

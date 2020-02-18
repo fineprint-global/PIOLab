@@ -13,19 +13,27 @@ IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables <- function(year,path)
   # Wrapper for writing files to folder
   write_file <- function(object,name)
   {
-    filename <-  paste0(path_target,"/",gsub("-","",Sys.Date()),
-                        "_PIOLab_AllCountriesS8File_",name,year,".csv")
+    if(dir.exists(path_target))
+    {
+      filename <-  paste0(path_target,gsub("-","",Sys.Date()),
+                          "_PIOLab_AllCountriesS8File_",name,year,".csv")
+      
+      write.table(object,file = filename,row.names = FALSE,col.names = FALSE,sep = ",")  
+    }else
+    {
+      # For debugging, i.e. when running the script on a local pc and not on the server,
+      # The files are stored in the root folder
+      filename <-  paste0(path_source,gsub("-","",Sys.Date()),
+                          "_PIOLab_AllCountriesS8File_",name,year,".csv")
+      
+      write.table(object,file = filename,row.names = FALSE,col.names = FALSE,sep = ",")
+    }
     
-    write.table(object,file = filename,row.names = FALSE,col.names = FALSE,sep = ",")
   }
   
   # Path to folder where processed SUTs are stored
   path_source <- paste0(path$IE_Processed,"/SUT/")
-  path_target <- paste0(path$IE_Processed,"/S8files")
-  
-  # Check whether output folder for processed data exists, if yes delete them
-  if(dir.exists(path_target)) unlink(path_target,recursive = TRUE) 
-  dir.create(path_target)
+  path_target <- paste0(path$mother,"Data/IE/")
   
   # Set base products and industries
   n_reg <- nrow(base$region)

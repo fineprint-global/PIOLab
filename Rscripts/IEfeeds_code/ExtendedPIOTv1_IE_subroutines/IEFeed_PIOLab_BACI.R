@@ -20,9 +20,9 @@ IEFeed_PIOLab_BACI <- function(year,path)
   data_clean <- left_join(data,reg_agg,by = c("From" = "root"),copy = FALSE)
   data_clean <- left_join(data_clean,reg_agg,by = c("To" = "root"),copy = FALSE) 
   data_clean <- left_join(data_clean,prod_agg,by = c("Product" = "root"),copy = FALSE) 
-  data_clean <- select(data_clean,base.x,base.y,base,quantity)
+  data_clean <- select(data_clean,base.x,base.y,base,Quantity)
   colnames(data_clean)[1:3] <- c("From","To","Product")
-  data_clean <- data_clean %>% group_by(From,To,Product) %>% summarise(quantity = sum(quantity)) %>%
+  data_clean <- data_clean %>% group_by(From,To,Product) %>% summarise(Quantity = sum(Quantity)) %>%
     ungroup(From,To,Product)
   
   # Remove trade flows between RoW countries

@@ -115,8 +115,8 @@ IEDataProcessing_PIOLab_AligningData <- function(year,path)
   # Code of countries with no extraction
   sel <- setdiff(base$region$Code,IronOre_Extraction$base)
   # Set zero
-  BACI$quantity[BACI$From %in% sel & BACI$Product == 1] <- 0
-  BACI <- BACI[BACI$quantity != 0,]
+  BACI$Quantity[BACI$From %in% sel & BACI$Product == 1] <- 0
+  BACI <- BACI[BACI$Quantity != 0,]
   ##############################################################################
   # 4. Writing manipulated data to folder
   Flat <- select(Steel_vs_energy,base,Flat) 
