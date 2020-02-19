@@ -26,7 +26,7 @@ IEFeed_PIOLab_Grades <- function(path)
   options(warn = 0)
   # Load region aggregator and filter for all non-RoW countries
   source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-  reg_agg <- Root2Base_RegionAggregator(IEdatafeed_name) 
+  reg_agg <- Root2Base_RegionAggregator(RegionAggregator) 
   #reg_agg <- reg_agg %>% filter(base != max(reg_agg$base))
   
   # Look-up base classification codes

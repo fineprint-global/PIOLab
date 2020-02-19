@@ -2,16 +2,23 @@
 #                                             #
 #   This is the IE data feed for processing   #
 #     raw data of the iron and steel PIOT     #
+#     it covers 20 processes and 22 products  #
 #                                             #
 ###############################################
+# IE feed for 20 industries/processes and 22 products base classifications
+# hanspeter.wieland@wu.ac.at (c)
+# 02.19.2020 
 
-
+# In case the code is executed not on the server (and the GUI) for debugging, 
+# the user can choose the desired region aggregator by setting the following variable
+# either to 5,35 or 49. If test_regagg is not defined it will be set automatically to 
+# 5 regions later on in the code.
+# test_regagg <- 35
 
 ################################################################################
 # 1. Set up environment for building the initial estimate
 
-# This IE includes only, China, Australia, Brazil, Europe and one RoW
-IEdatafeed_name <- "TestPIOT" 
+IEdatafeed_name <- "Ind20Pro22v1" 
 print(paste0("Start of ",IEdatafeed_name," InitialEstimate."))
 
 # Set library path when running on suphys server
@@ -23,13 +30,11 @@ if(Sys.info()[1] == "Linux"){
 
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
-path[["IE_Subroutines"]] <- paste0(root_folder,"Rscripts/IEfeeds_code/ExtendedPIOTv1_IE_subroutines")
-path[["IE_Processed"]] <- paste0(root_folder,"ProcessedData/",IEdatafeed_name)
+path[["IE_Subroutines"]] <- paste0(path$root,"Rscripts/IEfeeds_code/IE_subroutines")
+path[["IE_Processed"]] <- paste0(path$root,"ProcessedData/",IEdatafeed_name)
 
-# Read base regions, products and codes
-base <- list("region" = read.xlsx(paste0(path$Concordance,"/",IEdatafeed_name,"_BaseClassification.xlsx"),sheet = 1),
-             "industry" = read.xlsx(paste0(path$Concordance,"/",IEdatafeed_name,"_BaseClassification.xlsx"),sheet = 2),
-             "product" = read.xlsx(paste0(path$Concordance,"/",IEdatafeed_name,"_BaseClassification.xlsx"),sheet = 3))
+# Read base regions, products and codes from mat-file if available
+source(paste0(path$root,"Rscripts/Subroutines/Read_BaseClassification.R"))
 
 # Check whether output folder for processed data exists, if yes delete it
 if(dir.exists(path$IE_Processed)) unlink(path$IE_Processed,recursive = TRUE) 
@@ -83,11 +88,7 @@ IEDataProcessing_PIOLab_AligningData(year,path)
 
 # Compile extension for the MFA-Waste IO Model and estimate fabrication scrap
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_WasteMFAIOExtension.R"))
-
-# ERROR HERE!!!!
-
 IEDataProcessing_PIOLab_WasteMFAIOExtension(year,path)
-
 
 # Run Waste-IO Model calculation
 source(paste0(path$IE_Subroutines,"/IEDataProcessing_PIOLab_WasteMFAIOModelRun.R"))

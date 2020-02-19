@@ -11,10 +11,10 @@ IEFeed_PIOLab_BACI <- function(year,path)
   source(paste0(path$Subroutines,"/Load_BACI.R"))
   # Load region aggregator
   source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-  reg_agg <- Root2Base_RegionAggregator(IEdatafeed_name)
+  reg_agg <- Root2Base_RegionAggregator(RegionAggregator)
   # Load product aggregation matrix
   source(paste0(path$Subroutines,"/Root2Base_ProductAggregator.R"))
-  prod_agg <- Root2Base_ProductAggregator(IEdatafeed_name)
+  prod_agg <- Root2Base_ProductAggregator(ProductAggregator)
   
   # Aggregate trade data from the root (245 reg and 266 prod) to the base classification
   data_clean <- left_join(data,reg_agg,by = c("From" = "root"),copy = FALSE)

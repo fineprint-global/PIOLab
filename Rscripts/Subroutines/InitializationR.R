@@ -24,7 +24,7 @@ library(R.matlab)
 
 # Read current export (aka working or mother) directory, for debugging we have the following if-else  
 # Note that only when run via the server, a .mat file can be found in the IEfeeds_code folder
-OnServer <- paste0(root_folder,"IEfeeds_code/WorkingDirectory4R.mat")
+OnServer <- paste0(root_folder,"ProcessedData/WorkingDirectory4R.mat")
 if(file.exists(OnServer))
 {
   # Path to libraries
@@ -60,7 +60,8 @@ path <- list("Raw" = paste0(root_folder,"RawDataRepository"),
 year <- 2008
 
 # Read root region, industry and products
-root <- list("region" = read.xlsx(paste0(path$Concordance,"/PIOLab_RootClassification.xlsx"),sheet = 1),
-             "industry" = read.xlsx(paste0(path$Concordance,"/PIOLab_RootClassification.xlsx"),sheet = 2)[,1:2],
-             "product" = read.xlsx(paste0(path$Concordance,"/PIOLab_RootClassification.xlsx"),sheet = 3)[,1:2])
+root <- list("region" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/PIOLab_RootClassification.xlsx"),sheet = 1),
+             "industry" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/PIOLab_RootClassification.xlsx"),sheet = 2)[,1:2],
+             "product" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/PIOLab_RootClassification.xlsx"),sheet = 3)[,1:2])
 
+remove(mother,OnServer,root_folder)

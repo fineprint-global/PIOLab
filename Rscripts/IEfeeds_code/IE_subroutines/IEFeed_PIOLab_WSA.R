@@ -27,7 +27,7 @@ IEFeed_PIOLab_WSA <- function(year,path)
       
     # Load region aggregator and look up base table codes
     source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-    reg_agg <- Root2Base_RegionAggregator(IEdatafeed_name)
+    reg_agg <- Root2Base_RegionAggregator(RegionAggregator)
     
     data_clean <- left_join(data_clean,reg_agg,by = c("Code" = "root"),copy = FALSE) %>% select(base,Quantity)
     data_clean <- data_clean %>% group_by(base) %>% summarise(Quantity = sum(Quantity))

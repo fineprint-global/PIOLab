@@ -46,29 +46,3 @@ quantity_missing <- select(quantity_missing,-price)
 data <- data %>% filter(!is.na(Quantity)) %>% bind_rows(quantity_missing)
 
 remove(quantity_missing,average_prices,conco)
-
-
-
-
-# # Read BACI's HS-6-digit commodity codes and country codes 
-# code <- list("HS" = read.csv(paste0(path$Raw,"/BACI/product_code_baci92.csv"),stringsAsFactors=FALSE),
-#              "country" = read.csv(paste0(path$Raw,"/BACI/country_code_baci92.csv"),stringsAsFactors=FALSE))
-# 
-# # splitting the 6-digit code into 2 columns for better filtering
-# disag <- t(sapply(code$HS$CODE,function(x) substring(x,c(1,5),c(4,6))))
-# colnames(disag) <- c("C1","C2")
-# 
-# # Set to numeric and NA's to zero
-# # Note that warnings are turned off and after the transformation on.
-# options(warn = -1)
-# storage.mode(disag) <- "integer"
-# disag[is.na(disag)] <- 0
-# 
-# # Add the two columns to the original code array
-# code$HS <- cbind(disag,code$HS)
-# storage.mode(code$HS$CODE) <- "integer"
-# code$HS$CODE[is.na(code$HS$CODE)] <- 0
-# # Warnings turned back on
-# options(warn = 0)
-
-

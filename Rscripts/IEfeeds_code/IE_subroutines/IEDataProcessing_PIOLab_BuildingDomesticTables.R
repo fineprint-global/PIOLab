@@ -13,7 +13,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
   print("IEDataProcessing_PIOLab_BuildingDomesticTables initiated.")
   # Load region aggregator
   source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-  reg_agg <- Root2Base_RegionAggregator(IEdatafeed_name)
+  reg_agg <- Root2Base_RegionAggregator(RegionAggregator)
   # Load function to compile end use map
   source(paste0(path$Subroutines,"/makeEndUseMap.R"))
   # Load slag rate of blast furnace and coefficient per ton of pig iron output

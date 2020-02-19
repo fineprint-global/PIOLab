@@ -35,12 +35,12 @@ IEFeed_PIOLab_EXIOWasteMFAIO <- function(year,path)
   # Load region aggregator
   source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
   
-  # Load source-to-root and root-to-base concordances
+  # Load source-to-root and calculate Source2Base concordances
   Source2Root <- read.csv(paste0(path$Concordance,"/EXIOBASE/Source2Root_Region_EXIOBASE.csv"),
                           header = FALSE)
-  Root2Base <- read.csv(paste0(path$Concordance,"/Region Aggregators/",IEdatafeed_name,"_RegionAggregator.csv"),
-                        header = FALSE)
   
+  Root2Base <- as.matrix(RegionAggregator)
+    
   Source2Root <- as.matrix(Source2Root)
   # Create map from concordance
   Source2Root <- Source2Root/rowSums(Source2Root)

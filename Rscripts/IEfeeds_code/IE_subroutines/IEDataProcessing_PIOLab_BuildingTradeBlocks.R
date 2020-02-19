@@ -14,7 +14,7 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   
   # Load region aggregator
   source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-  reg_agg <- Root2Base_RegionAggregator(IEdatafeed_name)
+  reg_agg <- Root2Base_RegionAggregator(RegionAggregator)
 
   # Load BACI data
   BACI <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,".csv"))

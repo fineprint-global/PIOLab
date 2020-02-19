@@ -68,7 +68,7 @@ ALANG$`Column child` <- "1"
 ALANG$`Column grandchild` <- "1-e"
 
 # Call script that writes the ALANG file to the repsective folder in the root
-source(paste0(root_folder,"Rscripts/datafeeds_code/WriteALANG2Folder.R"))
+source(paste0(path$root,"Rscripts/datafeeds_code/WriteALANG2Folder.R"))
 
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
 
