@@ -16,7 +16,7 @@ if(file.exists(reg_path))
   # Read the number of regions from the name of the aggregator 
   RegionAgg <- substr(reg_map,nchar(reg_map)-23,nchar(reg_map)-21)
   
-  base <- list("region" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",reg_agg,"_BaseRegionClassification.xlsx"),sheet = 1),
+  base <- list("region" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",RegionAgg,"_BaseRegionClassification.xlsx"),sheet = 1),
                "industry" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 1),
                "product" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 2))
   
