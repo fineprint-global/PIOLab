@@ -21,6 +21,10 @@ RSE <- list("small" = 0.15,"large" = 0.03)
 # Set range of products and industries to be adressed by this feed
 Grandchild <- list("RoW" = "6","Column" = "11-13")
 
+# Load function and create ALANG commands
+source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/CreateALANGforWSAdata.R"))
+ALANG <- CreateALANGforWSAdata(item_id,RSE,Grandchild,datafeed_name)
+
 # Call script that writes the ALANG file to the repsective folder in the root
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
   
