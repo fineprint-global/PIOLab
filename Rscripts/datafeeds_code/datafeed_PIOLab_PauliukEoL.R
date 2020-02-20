@@ -31,7 +31,7 @@ source(paste0(path$Subroutines,"/SE_LogRegression.R"))
 data <- SE_LogRegression(data,0.50,0.1)
 
 data <- select(data,Code,Quantity,SE)
-data[nrow(data)+1,] <- c(212,NA,NA)
+data[nrow(data)+1,] <- c(212,NaN,NaN)
 
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))

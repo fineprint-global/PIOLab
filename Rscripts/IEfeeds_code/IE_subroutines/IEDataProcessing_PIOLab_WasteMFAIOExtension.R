@@ -48,12 +48,12 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
       
       if(name == "Flat")
       {
-        Q[1,index] <- map$EndUse
-        Scrap[1,index] <- map$Scrap
+        Q[1,index] <<- map$EndUse
+        Scrap[1,index] <<- map$Scrap
       }else
       {
-        Q[2,index] <- map$EndUse
-        Scrap[2,index] <- map$Scrap
+        Q[2,index] <<- map$EndUse
+        Scrap[2,index] <<- map$Scrap
       }
     }
     

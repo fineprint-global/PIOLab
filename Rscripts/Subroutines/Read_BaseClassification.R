@@ -27,13 +27,13 @@ if(file.exists(reg_path))
   # In cases when the code is not executed on the server and no specific region aggregation is 
   # given in the initial estimate, set it to 5 (the smallest reg classification at the moment)
   
-  if(!exists("test_regagg")) test_regagg <- 5
+  if(!exists("test_regagg")) test_regagg <- "005"
   
   # Import matrix
-  RegionAggregator <- read.csv(paste0(path$Concordance,"/Region Aggregators/00",test_regagg,"_RegionAggregator.csv"),
+  RegionAggregator <- read.csv(paste0(path$Concordance,"/Region Aggregators/",test_regagg,"_RegionAggregator.csv"),
                       stringsAsFactors=FALSE, sep = ",",header = FALSE)  
   
-  base <- list("region" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/00",test_regagg,"_BaseRegionClassification.xlsx"),sheet = 1),
+  base <- list("region" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",test_regagg,"_BaseRegionClassification.xlsx"),sheet = 1),
                "industry" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 1),
                "product" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 2))
   remove(test_regagg)

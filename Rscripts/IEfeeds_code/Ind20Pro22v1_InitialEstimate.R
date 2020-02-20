@@ -13,7 +13,7 @@
 # the user can choose the desired region aggregator by setting the following variable
 # either to 5,35 or 49. If test_regagg is not defined it will be set automatically to 
 # 5 regions later on in the code.
-# test_regagg <- 35
+# test_regagg <- "049"
 
 ################################################################################
 # 1. Set up environment for building the initial estimate
@@ -30,11 +30,17 @@ if(Sys.info()[1] == "Linux"){
 
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
-path[["IE_Subroutines"]] <- paste0(path$root,"Rscripts/IEfeeds_code/IE_subroutines")
-path[["IE_Processed"]] <- paste0(path$root,"ProcessedData/",IEdatafeed_name)
 
 # Read base regions, products and codes from mat-file if available
 source(paste0(path$root,"Rscripts/Subroutines/Read_BaseClassification.R"))
+
+# Read region aggregation from classification to set the right path for the IE data
+if(max(base$region$Code) < 10) {regagg <- paste0("00",max(base$region$Code))} else
+{regagg <- paste0("0",max(base$region$Code))}
+
+path[["IE_Subroutines"]] <- paste0(path$root,"Rscripts/IEfeeds_code/IE_subroutines")
+path[["IE_Processed"]] <- paste0(path$root,"ProcessedData/",IEdatafeed_name,"/",regagg)
+remove(regagg)
 
 # Check whether output folder for processed data exists, if yes delete it
 if(dir.exists(path$IE_Processed)) unlink(path$IE_Processed,recursive = TRUE) 
