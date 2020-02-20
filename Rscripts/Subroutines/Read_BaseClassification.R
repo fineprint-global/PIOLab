@@ -20,7 +20,7 @@ if(file.exists(reg_path))
                "industry" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 1),
                "product" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 2))
   
-  remove(reg_map,reg_agg)
+  remove(reg_map,RegionAgg)
   
 } else
 {

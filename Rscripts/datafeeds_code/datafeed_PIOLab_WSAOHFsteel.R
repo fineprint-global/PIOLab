@@ -1,6 +1,6 @@
 ################################################################################
 
-datafeed_name <- "WSAPigIron"
+datafeed_name <- "WSAOHFsteel"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 
 ################################################################################
@@ -13,13 +13,17 @@ if(Sys.info()[1] == "Linux"){
 ################################################################################
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
-  
+
 # Long rolled products have the item code 7 in WSA data
-item_id <- 2
+item_id <- 6
 # Set relative standard error for smallest and largest values in the data set
-RSE <- list("small" = 0.15,"large" = 0.03)
+RSE <- list("small" = 0.3,"large" = 0.05)
 # Set range of products and industries to be adressed by this feed
-Grandchild <- list("RoW" = "6","Column" = "11-13")
+Grandchild <- list("RoW" = "21","Column" = "32")
+
+# Load function and create ALANG commands
+source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/CreateALANGforWSAdata.R"))
+ALANG <- CreateALANGforWSAdata(item_id,RSE,Grandchild,datafeed_name)
 
 # Call script that writes the ALANG file to the repsective folder in the root
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
