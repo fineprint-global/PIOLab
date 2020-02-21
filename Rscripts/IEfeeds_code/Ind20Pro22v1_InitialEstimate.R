@@ -38,11 +38,17 @@ source(paste0(path$root,"Rscripts/Subroutines/Read_BaseClassification.R"))
 if(max(base$region$Code) < 10) {regagg <- paste0("00",max(base$region$Code))} else
 {regagg <- paste0("0",max(base$region$Code))}
 
+# Set additional paths that are specific to the present run
 path[["IE_Subroutines"]] <- paste0(path$root,"Rscripts/IEfeeds_code/IE_subroutines")
 path[["IE_Processed"]] <- paste0(path$root,"ProcessedData/",IEdatafeed_name,"/",regagg)
+path[["Agg_Processed"]] <- paste0(path$root,"ProcessedData/",IEdatafeed_name)
+
 remove(regagg)
 
-# Check whether output folder for processed data exists, if yes delete it
+# Check whether output folder for processed data for the present initial estimate exists, if not then create it
+if(!dir.exists(path$Agg_Processed)) dir.create(path$Agg_Processed)
+
+# Check whether output folder for processed data for the specific aggregation exists, if yes, delete it
 if(dir.exists(path$IE_Processed)) unlink(path$IE_Processed,recursive = TRUE) 
 dir.create(path$IE_Processed)
 
@@ -165,5 +171,3 @@ if(file.exists(path$mother))
 }
   
 print(paste0("End of ",IEdatafeed_name," InitialEstimate."))
-
-

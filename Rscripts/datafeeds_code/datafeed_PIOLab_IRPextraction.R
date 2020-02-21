@@ -1,7 +1,5 @@
 ################################################################################
-# datafeed_PIOLab_IRPextraction
-# 
-#
+
 datafeed_name <- "IRPextraction"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 
@@ -40,10 +38,14 @@ for(i in 1:nrow(data))
   
   # Add command for domestic Use table
   ALANG <- add_row(ALANG,'1' = paste0("DataFeed IRP Extraction ",reg_name),
-                   Value = value,'Row parent' = reg_num,'Row child' = "3",'Row grandchild' = "1",
-                   'Column parent' = reg_num,'Column child' = "1",'Column grandchild' = "1",S.E. = SE)
+                   Value = value,'Row parent' = reg_num,'Column parent' = reg_num,S.E. = SE)
 }
 # Add other variables
+
+ALANG$`Column child` <- "1"
+ALANG$`Column grandchild` <- "1-5"
+ALANG$`Row child` <- "3"
+ALANG$`Row grandchild` <- "1"
 ALANG$`#` <- as.character(1:nrow(ALANG))
 ALANG$Incl <- "Y"
 ALANG$Parts <- "1"

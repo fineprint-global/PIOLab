@@ -20,7 +20,7 @@ item_id <- 7
 # Set relative standard error for smallest and largest values in the data set
 RSE <- list("small" = 0.2,"large" = 0.05)
 # Set range of products and industries to be adressed by this feed
-Grandchild <- list("RoW" = "33-42","Column" = "126-231")
+Grandchild <- list("RoW" = "[33-42,59-63]","Column" = "126-231")
 
 # Load function and create ALANG commands
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/CreateALANGforWSAdata.R"))
