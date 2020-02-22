@@ -6,15 +6,16 @@
 # Note for HP: Insert code to read root folder from HANDLER variable here
 
 # Load packages
-library(dplyr)
-library(tidyr)
+
+suppressMessages(library(dplyr))
+suppressMessages(library(tidyr))
 # Because the data.table package is not available for the R version currently running on the USYD server
 # use the forerunner version of it, that is the reshape2 package, to use its functionalities
 #library(data.table)
-library(reshape2)
-library(openxlsx)
-library(stringr)
-library(R.matlab)
+suppressMessages(library(reshape2))
+suppressMessages(library(openxlsx))
+suppressMessages(library(stringr))
+suppressMessages(library(R.matlab))
 
 # Check which system the code is running, at the moment needed to 
 #Check_Server <- Sys.info()[1]
