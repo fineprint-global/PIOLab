@@ -19,7 +19,7 @@ source(paste0(path$Subroutines,"/Read_ExtractionIRP.R"))
 
 # Loading function for estimating SE with linear regression
 source(paste0(path$Subroutines,"/SE_LogRegression.R"))
-data <- SE_LogRegression(data,0.20,0.03)
+data <- SE_LogRegression(data,0.03,0.01)
 
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
