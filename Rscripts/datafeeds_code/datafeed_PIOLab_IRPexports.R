@@ -37,7 +37,8 @@ reg_max <- nrow(root$region)
 
 # Add standard errors 
 source(paste0(path$Subroutines,"/SE_LogRegression.R"))
-data <- SE_LogRegression(data,0.3,0.05)
+RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
+data <- SE_LogRegression(data,RSE$Minimum,RSE$Maximum)
 
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))

@@ -22,10 +22,12 @@ data <- data * 1000
 
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
-# Extend table with additional columns
+
+# Load RSE settings
+RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
 
 # Set SE
-SE <- data*0.05
+SE <- data*RSE$Minimum
   
 # Add command for domestic Use table
 ALANG <- add_row(ALANG,'1' = paste0("Krausmann total EoL-Scrap ",year))

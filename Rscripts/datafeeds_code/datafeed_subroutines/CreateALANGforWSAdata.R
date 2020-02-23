@@ -14,7 +14,7 @@ CreateALANGforWSAdata <- function(item_id,RSE,Grandchild,datafeed_name)
 
   # Loading function for estimating SE with linear regression
   source(paste0(path$Subroutines,"/SE_LogRegression.R"))
-  data <- SE_LogRegression(data,RSE$small,RSE$large)
+  data <- SE_LogRegression(data,RSE$Minimum,RSE$Maximum)
 
   # Create empty ALANG table with header
   source(paste0(path$Subroutines,"/makeALANGheadline.R"))

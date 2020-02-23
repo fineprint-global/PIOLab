@@ -19,9 +19,10 @@ path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name)
 # Loading raw data
 source(paste0(path$Subroutines,"/Load_BACI.R"))
 
-# Add standard errors 
+# Load function to calculate standard errors 
 source(paste0(path$Subroutines,"/SE_LogRegression.R"))
-data <- SE_LogRegression(data,0.5,0.05)
+RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
+data <- SE_LogRegression(data,RSE$Minimum,RSE$Maximum)
 data <- select(data,-value)
 
 # Set variables

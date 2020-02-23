@@ -30,6 +30,8 @@ source(paste0(path$Subroutines,"/Read_ProductionWSA.R"))
 item_page <- items[[2]]$page
 # Read values and align with root classification
 data <- Read_ProductionWSA(path,year,item_page,yb,concord)
+# Load RSE settings
+RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
 
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
@@ -49,7 +51,7 @@ for(r in data$Code)
 ALANG$`Column child` <- "2:3~8"
 ALANG$`Column grandchild` <- "11;2"
 ALANG$Coef1 <- paste0("R [1000;",slag,"]")  
-ALANG$S.E. <- "0.1"
+ALANG$S.E. <- RSE$Minimum
 ALANG$`#` <- as.character(1:nrow(ALANG))
 ALANG$`Row child` <- "1"
 ALANG$`Row grandchild` <- "6"

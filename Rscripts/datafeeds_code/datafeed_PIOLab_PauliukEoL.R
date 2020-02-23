@@ -28,7 +28,8 @@ data <- data[!is.na(data$Code),]
 
 # Loading function for estimating SE with linear regression
 source(paste0(path$Subroutines,"/SE_LogRegression.R"))
-data <- SE_LogRegression(data,0.50,0.1)
+RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
+data <- SE_LogRegression(data,RSE$Minimum,RSE$Maximum)
 
 data <- select(data,Code,Quantity,SE)
 data[nrow(data)+1,] <- c(212,NaN,NaN)

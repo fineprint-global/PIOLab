@@ -16,8 +16,10 @@ source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
 # Long rolled products have the item code 7 in WSA data
 item_id <- 4
-# Set relative standard error for smallest and largest values in the data set
-RSE <- list("small" = 0.2,"large" = 0.03)
+
+# Get relative standard error for smallest and largest values in the data set
+RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
+
 # Set range of products and industries to be adressed by this feed
 Grandchild <- list("RoW" = "20","Column" = "30")
 

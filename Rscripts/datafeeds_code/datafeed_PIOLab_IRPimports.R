@@ -33,7 +33,8 @@ data <- data %>% filter(!Code %in% c(233,242))
 
 # Add standard errors 
 source(paste0(path$Subroutines,"/SE_LogRegression.R"))
-data <- SE_LogRegression(data,0.3,0.05)
+RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
+data <- SE_LogRegression(data,RSE$Minimum,RSE$Maximum)
 
 reg_max <- nrow(root$region)
 
@@ -67,11 +68,15 @@ for(i in 1:nrow(data))
   
   # Add command
   ALANG <- add_row(ALANG,'1' = paste0("DataFeed IRP imports to ",reg_name),
-                   Value = value,S.E. = SE,
-                   'Row parent' = reg_range,'Row child' = "2",'Row grandchild' = "1-e",
-                   'Column parent' = reg,'Column child' = "1",'Column grandchild' = "1-e")
+                   Value = value,S.E. = SE,'Row parent' = reg_range,'Column parent' = reg)
 }
+
 # Add other variables
+
+ALANG$`Row child` <- "2"
+ALANG$`Row grandchild` <- "1-e"
+ALANG$`Column child` <- "1"
+ALANG$`Column grandchild` <- "1-e"
 ALANG$`#` <- as.character(1:nrow(ALANG))
 ALANG$Incl <- "Y"
 ALANG$Parts <- "1"

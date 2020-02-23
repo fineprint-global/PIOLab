@@ -55,7 +55,9 @@ path <- list("Raw" = paste0(root_folder,"RawDataRepository"),
              "Rscripts" = paste0(root_folder,"Rscripts"),
              "Subroutines" = paste0(root_folder,"Rscripts/Subroutines"),
              "root" = root_folder,
-             "mother" = mother)
+             "mother" = mother,
+             "Settings" = paste0(root_folder,"Settings"),
+             "RSE_settings" = paste0(root_folder,"Settings/datafeeds_settings/RSE_settings.xlsx"))
 
 # Set the year
 year <- 2008
