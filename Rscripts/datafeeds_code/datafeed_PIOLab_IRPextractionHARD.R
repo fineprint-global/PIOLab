@@ -1,6 +1,6 @@
 ################################################################################
 
-datafeed_name <- "IRPextraction"
+datafeed_name <- "IRPextractionHARD"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 
 ################################################################################
@@ -19,8 +19,6 @@ source(paste0(path$Subroutines,"/Read_ExtractionIRP.R"))
 
 # Loading function for estimating SE with linear regression
 source(paste0(path$Subroutines,"/SE_LogRegression.R"))
-RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
-data <- SE_LogRegression(data,RSE$Minimum,RSE$Maximum)
 
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
@@ -34,15 +32,14 @@ for(i in 1:nrow(data))
   reg_num <- as.character(reg_num)
   # Read extraction value
   value <- as.character(data$Quantity[i])
-  # Set SE
-  SE <- as.character(data$SE[i]) 
   
   # Add command for domestic Use table
   ALANG <- add_row(ALANG,'1' = paste0("DataFeed IRP Extraction ",reg_name),
-                   Value = value,'Row parent' = reg_num,'Column parent' = reg_num,S.E. = SE)
+                   Value = value,'Row parent' = reg_num,'Column parent' = reg_num)
 }
 # Add other variables
 
+ALANG$S.E. <- "0"
 ALANG$`Column child` <- "1"
 ALANG$`Column grandchild` <- "1-5"
 ALANG$`Row child` <- "3"

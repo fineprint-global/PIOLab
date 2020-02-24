@@ -1,6 +1,6 @@
 ################################################################################
-
-datafeed_name <- "WSAPigIron"
+#
+datafeed_name <- "KrausmannTotalsEoL"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 
 ################################################################################
@@ -14,19 +14,46 @@ if(Sys.info()[1] == "Linux"){
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
   
-# Long rolled products have the item code 7 in WSA data
-item_id <- 2
+# Load data 
+data <- read.csv(paste0(path$Raw,"/KrausmannTotalsEoL/GECKrausmann2018 iron steel results.csv"))
+data <- data[data$Year == year,"Outputs.from.stock.and.use..EoL"]
+# Krausmann is in 1000 tons, convert to tons 
+data <- data * 1000
 
-# Get relative standard error for smallest and largest values in the data set
+# Create empty ALANG table with header
+source(paste0(path$Subroutines,"/makeALANGheadline.R"))
+
+# Load RSE settings
 RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
 
-# Set range of products and industries to be adressed by this feed
-Grandchild <- list("RoW" = "6","Column" = "11-13")
+# Set SE
+SE <- data*RSE$Minimum
+  
+# Add command for domestic Use table
+ALANG <- add_row(ALANG,'1' = paste0("Krausmann total EoL-Scrap ",year))
 
-# Load function and create ALANG commands
-source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/CreateALANGforWSAdata.R"))
-ALANG <- CreateALANGforWSAdata(item_id,RSE,Grandchild,datafeed_name)
+ALANG$Value <- as.character(data)
+ALANG$S.E. <- as.character(SE)
 
+ALANG$`Row parent` <- "1-e"
+ALANG$`Row child` <- "3"
+ALANG$`Row grandchild` <- "2"
+
+ALANG$`Column parent` <- "1-e"
+ALANG$`Column child` <- "1"
+ALANG$`Column grandchild` <- "64-65"
+
+ALANG$`#` <- as.character(1:nrow(ALANG))
+ALANG$Incl <- "Y"
+ALANG$Parts <- "1"
+ALANG$`Pre-map` <- ""
+ALANG$`Post-map` <- ""
+ALANG$`Pre-Map` <- ""
+ALANG$`Post-Map` <- ""
+ALANG$Years <- "1"
+ALANG$Margin <- "1"
+ALANG$Coef1 <- "1"
+  
 # Call script that writes the ALANG file to the repsective folder in the root
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
   

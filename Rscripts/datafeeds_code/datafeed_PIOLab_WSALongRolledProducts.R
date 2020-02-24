@@ -1,6 +1,6 @@
 ################################################################################
 
-datafeed_name <- "WSAPigIron"
+datafeed_name <- "WSALongRolledProducts"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 
 ################################################################################
@@ -15,20 +15,20 @@ if(Sys.info()[1] == "Linux"){
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
   
 # Long rolled products have the item code 7 in WSA data
-item_id <- 2
+item_id <- 7
 
 # Get relative standard error for smallest and largest values in the data set
 RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
 
 # Set range of products and industries to be adressed by this feed
-Grandchild <- list("RoW" = "6","Column" = "11-13")
+Grandchild <- list("RoW" = "[33-42,59-63]","Column" = "126-231")
 
 # Load function and create ALANG commands
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/CreateALANGforWSAdata.R"))
 ALANG <- CreateALANGforWSAdata(item_id,RSE,Grandchild,datafeed_name)
 
-# Call script that writes the ALANG file to the repsective folder in the root
+# Call script that writes the ALANG file to the respective folder in the root
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
-  
+
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
   

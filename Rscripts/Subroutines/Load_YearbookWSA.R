@@ -14,7 +14,30 @@ if(year >= 2008)
                 list("page"=c(22,23),"name"="SteelElectricFurnaces"),
                 list("page"=26,"name"="SteelOpenHearthFurnaces"),
                 list("page"=c(32,33),"name"="LongRolledProducts"),
-                list("page"=34,"name"="FlatRolledProducts"))
+                list("page"=34,"name"="FlatRolledProducts"),
+                list("page"=c(30,31),"name"="HotRolledProducts"),
+                list("page"=c(10,11),"name"="ContinuouslyCastSteel"),
+                list("page"=14,"name"="LiquidSteelForCastings"),
+                list("page"=c(1,2),"name"="TotalProductionOfCrudeSteel"),
+                list("page"=35,"name"="RailwayTrackMaterial"),
+                list("page"=36,"name"="HeavySections"),
+                list("page"=37,"name"="LightSections"),
+                list("page"=c(38,39),"name"="ConcreteReinforcingBars"),
+                list("page"=40,"name"="Hot RolledBarsOtherThanConcreteReinforcingBars"),
+                list("page"=c(41,42),"name"="WireRod"),
+                list("page"=43,"name"="HotRolledPlate"),
+                list("page"=44,"name"="HotRolledCoilSheetStrip"),
+                list("page"=45,"name"="ElectricalSheetAndStrip"),
+                list("page"=46,"name"="TinmillProducts"),
+                list("page"=47,"name"="OtherMetalCoatedAndSheetandStrip"),
+                list("page"=48,"name"="OtherNonMetalCoatedAndSheetandStrip"),
+                list("page"=49,"name"="TubesAndTubeFittings"),
+                list("page"=50,"name"="SeamlessTubes"),
+                list("page"=51,"name"="WeldedTubes"))
+  
+  
+                               
+
   
   # Loading raw RData-File containing the full yearbook
   # Note that at the moment the data feed does not encompass the transformation

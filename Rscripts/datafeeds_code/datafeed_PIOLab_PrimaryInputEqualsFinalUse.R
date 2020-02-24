@@ -20,10 +20,11 @@ source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 source(paste0(path$Subroutines,"/Read_ExtractionIRP.R"))
 DE <- sum(data$Quantity)
 # For now just this (assume per ton of iron ore 1.3 ton of flux, air and coke are required)
-# Set SE to 5%
+# Set SE
+RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
+
 tot <-  DE + DE*1.3 
-error <- 0.05
-SE <- as.character(round(tot*error))
+SE <- as.character(round(tot*RSE$Minimum))
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
 # Extend table with additional columns
@@ -49,7 +50,7 @@ ALANG$`Pre-Map` <- ""
 ALANG$`Post-Map` <- ""
 
 # Call script that writes the ALANG file to the repsective folder in the root
-source(paste0(root_folder,"Rscripts/datafeeds_code/WriteALANG2Folder.R"))
+source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
 
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
 

@@ -6,15 +6,16 @@
 # Note for HP: Insert code to read root folder from HANDLER variable here
 
 # Load packages
-library(dplyr)
-library(tidyr)
+
+suppressMessages(library(dplyr))
+suppressMessages(library(tidyr))
 # Because the data.table package is not available for the R version currently running on the USYD server
 # use the forerunner version of it, that is the reshape2 package, to use its functionalities
 #library(data.table)
-library(reshape2)
-library(openxlsx)
-library(stringr)
-library(R.matlab)
+suppressMessages(library(reshape2))
+suppressMessages(library(openxlsx))
+suppressMessages(library(stringr))
+suppressMessages(library(R.matlab))
 
 # Check which system the code is running, at the moment needed to 
 #Check_Server <- Sys.info()[1]
@@ -24,7 +25,7 @@ library(R.matlab)
 
 # Read current export (aka working or mother) directory, for debugging we have the following if-else  
 # Note that only when run via the server, a .mat file can be found in the IEfeeds_code folder
-OnServer <- paste0(root_folder,"IEfeeds_code/WorkingDirectory4R.mat")
+OnServer <- paste0(root_folder,"ProcessedData/WorkingDirectory4R.mat")
 if(file.exists(OnServer))
 {
   # Path to libraries
@@ -54,13 +55,16 @@ path <- list("Raw" = paste0(root_folder,"RawDataRepository"),
              "Rscripts" = paste0(root_folder,"Rscripts"),
              "Subroutines" = paste0(root_folder,"Rscripts/Subroutines"),
              "root" = root_folder,
-             "mother" = mother)
+             "mother" = mother,
+             "Settings" = paste0(root_folder,"Settings"),
+             "RSE_settings" = paste0(root_folder,"Settings/datafeeds_settings/RSE_settings.xlsx"))
 
 # Set the year
 year <- 2008
 
 # Read root region, industry and products
-root <- list("region" = read.xlsx(paste0(path$Concordance,"/PIOLab_RootClassification.xlsx"),sheet = 1),
-             "industry" = read.xlsx(paste0(path$Concordance,"/PIOLab_RootClassification.xlsx"),sheet = 2)[,1:2],
-             "product" = read.xlsx(paste0(path$Concordance,"/PIOLab_RootClassification.xlsx"),sheet = 3)[,1:2])
+root <- list("region" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/PIOLab_RootClassification.xlsx"),sheet = 1),
+             "industry" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/PIOLab_RootClassification.xlsx"),sheet = 2)[,1:2],
+             "product" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/PIOLab_RootClassification.xlsx"),sheet = 3)[,1:2])
 
+remove(mother,OnServer,root_folder)
