@@ -43,10 +43,20 @@ for(i in 1:nrow(data))
 }
 # Add other variables
 
-ALANG$`Column child` <- "1"
-ALANG$`Column grandchild` <- "1-5"
+# Create product concordance 
+Concord <-  matrix(0,nrow = 1, ncol = length(root$product$Code))
+Concord[1,1:5] <- 1
+
+# Write to folder
+Concord_path <- paste0(path$Concordance,"/IRPextraction_concordance.csv")
+write.table(Concord,file = Concord_path,row.names = FALSE,col.names = FALSE,sep = ",")
+
+# Create extension conocrdane 
+
 ALANG$`Row child` <- "3"
 ALANG$`Row grandchild` <- "1"
+ALANG$`Column child` <- "1"
+ALANG$`Column grandchild` <- "1:e t2 CONCPATH/IRPextraction_concordance.csv"
 ALANG$`#` <- as.character(1:nrow(ALANG))
 ALANG$Incl <- "Y"
 ALANG$Parts <- "1"
