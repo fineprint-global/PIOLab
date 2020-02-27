@@ -9,7 +9,12 @@
 classi <- list("region" = read.csv(paste0(path$Raw,"/BACI/country_code_baci92.csv"),stringsAsFactors=FALSE),
               "product" = read.csv(paste0(path$Raw,"/BACI/product_code_baci92.csv"),stringsAsFactors=FALSE))
 
-length(unique(classi$region$iso3))
+# Note that Taiwan is not explicity included in the BACI's region classification,
+# but after thoroughly checking all countries and other (aggregated) regions
+# it can be safely assumed for now that "other asia" (baci code 490) must refer to Taiwan
+
+# Insert Taiwan region into baci list
+classi$region$iso3[classi$region$i == 490] <- "TWN"
 
 # Import raw data and change headers
 data <- read.csv(paste0(path$Raw,"/BACI/baci92_",year,".csv"),stringsAsFactors=FALSE)
@@ -24,11 +29,11 @@ data <- filter(data,!from == 260) %>% filter(!to == 260)
 data <- filter(data,hs6 %in% root$product$BACI[!is.na(root$product$BACI)])  
 
 # Look up baci country codes
-data <- left_join(data,classi$region[c("iso3","i")],by = c("from" = "i"),copy = FALSE)
-data <- left_join(data,classi$region[c("iso3","i")],by = c("to" = "i"),copy = FALSE) 
+data <- left_join(data,classi$region[c("iso3","i")],
+                  by = c("from" = "i"),copy = FALSE)
 
-# AD HOC SOLUTION FOR THE MOMENT becasue there are a lot of NULL (regions),
-# filter only the regions that are in the root. For 2008, this will delete ca. 3% of trade
+data <- left_join(data,classi$region[c("iso3","i")],
+                  by = c("to" = "i"),copy = FALSE) 
 
 # Look up root region code
 data <- left_join(data,root$region[c("RootCountryAbbreviation","Code")],
@@ -37,11 +42,17 @@ data <- left_join(data,root$region[c("RootCountryAbbreviation","Code")],
 data <- left_join(data,root$region[c("RootCountryAbbreviation","Code")],
                   by = c("iso3.y" = "RootCountryAbbreviation"),copy = FALSE)
 
+# AD HOC SOLUTION FOR THE MOMENT becasue there are ca. 500 entries of NULL (regions),
+# filter only the regions that are in the root. For 2008, this will delete ca. 0.01% of trade
+
+data <- data[!is.na(data$Code.x),]
+data <- data[!is.na(data$Code.y),]
+
 # Look up root product code
 data <- left_join(data,root$product[c("BACI","Code")],
                   by = c("hs6" = "BACI"),copy = FALSE)
 
-# delete old baci codes
+# Delete old baci codes
 data <- select(data, Code.x, Code.y, Code, value, Quantity)
 colnames(data)[1:3] <- c("From","To","Product")
 

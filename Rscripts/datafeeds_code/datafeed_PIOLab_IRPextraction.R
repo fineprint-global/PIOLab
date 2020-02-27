@@ -25,7 +25,7 @@ data <- SE_LogRegression(data,RSE$Minimum,RSE$Maximum)
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
 # Extend table with additional columns
-  
+
 for(i in 1:nrow(data))
 { 
   # Get root_code of region 

@@ -28,10 +28,15 @@ data <- data %>% separate(AlphaNumISO, into = c('ISOCode', 'num'), sep = 3) %>% 
 colnames(data)[ncol(data)] <- "Quantity"
 data <- filter(data,Quantity > 0)
 # Look up root codes
-data <- left_join(data,root$region[,c("Code","ISO3digitCode")],by = c("ISOCode" = "ISO3digitCode"),copy = FALSE) %>% select(Code,Quantity)
+data <- left_join(data,root$region[,c("Code","RootCountryAbbreviation")],by = c("ISOCode" = "RootCountryAbbreviation"),copy = FALSE) 
 
-# Remove Yugoslavia (242) and USSR (233) from data
+# No root codes for Faroe Islands and Mayotte (remove for now and talk Manfred/Arne)
+data <- data[!is.na(data$Code),]
+
+# Remove Yugoslavia and USSR from data
 data <- data %>% filter(!Code %in% c(233,242)) 
+
+data <- data[!is.na(data$Code),] # Mayotte and Farour Isl. are not in root (tbc)
 
 reg_max <- nrow(root$region)
 
@@ -90,4 +95,3 @@ ALANG$Coef1 <- "1"
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
 
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
-

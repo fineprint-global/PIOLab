@@ -22,14 +22,21 @@ data <- data %>% filter(CCC_IEATrade_Name == "Iron ores") %>% select(Country,Alp
 # Remove NA
 data <- data[!is.na(data$`2008`),]
 
-data <- data %>% separate(AlphaNumISO, into = c('ISOCode', 'num'), sep = 3) %>% select(-num)  
+data <- data %>% separate(AlphaNumISO, into = c('ISOCode', 'num'), sep = 3) %>% 
+  select(-num)  
+
 colnames(data)[ncol(data)] <- "Quantity"
 data <- filter(data,Quantity > 0)
-# Look up root codes
-data <- left_join(data,root$region[,c("Code","ISO3digitCode")],by = c("ISOCode" = "ISO3digitCode"),copy = FALSE) %>% select(Code,Quantity)
 
-# Remove Yugoslavia (242) and USSR (233) from data
-data <- data %>% filter(!Code %in% c(233,242)) 
+# Remove Yugoslavia and USSR from data
+data <- data %>% filter(!ISOCode %in% c("YUG","SUN")) 
+
+# Look up root codes
+data <- left_join(data,root$region[,c("Code","RootCountryAbbreviation")],
+                  by = c("ISOCode" = "RootCountryAbbreviation"),copy = FALSE) %>% 
+  select(Code,Quantity)
+
+data <- data[!is.na(data$Code),] # Mayotte and Farour Isl. are not in root (tbc)
 
 # Add standard errors 
 source(paste0(path$Subroutines,"/SE_LogRegression.R"))
