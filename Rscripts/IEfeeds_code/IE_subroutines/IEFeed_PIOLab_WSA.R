@@ -16,6 +16,10 @@ IEFeed_PIOLab_WSA <- function(year,path)
   # Load function to align data with root classification
   source(paste0(path$Subroutines,"/Read_ProductionWSA.R"))
   
+  # Load region aggregator and look up base table codes
+  source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
+  reg_agg <- Root2Base_RegionAggregator(RegionAggregator)
+  
   # Loop over selected items 
   for(i in 1:length(items))
   {
@@ -25,10 +29,6 @@ IEFeed_PIOLab_WSA <- function(year,path)
     # Read values and align with root classification
     data_clean <- Read_ProductionWSA(path,year,item_page,yb,concord)
       
-    # Load region aggregator and look up base table codes
-    source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-    reg_agg <- Root2Base_RegionAggregator(RegionAggregator)
-    
     data_clean <- left_join(data_clean,reg_agg,by = c("Code" = "root"),copy = FALSE) %>% select(base,Quantity)
     data_clean <- data_clean %>% group_by(base) %>% summarise(Quantity = sum(Quantity))
     

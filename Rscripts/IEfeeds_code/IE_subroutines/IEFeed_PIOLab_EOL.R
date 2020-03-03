@@ -29,6 +29,9 @@ IEFeed_PIOLab_EOL <- function(year,path)
   path_set <- paste0(path$IE_Processed,"/EOL")
   if(!dir.exists(path_set)) dir.create(path_set)
   
+  # Remove NaN (Bermudas & Kosovo for until we have a new root classification)
+  data_clean <- data_clean[!is.na(data_clean$base),]
+  
   write.csv(data_clean,
             file = paste0(path_set,"/EOL_",year,".csv"),
             row.names = FALSE)
