@@ -1,7 +1,5 @@
 ################################################################################
-# datafeed_PIOLab_IRPexports
-#
-#
+
 datafeed_name <- "IRPexports"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 

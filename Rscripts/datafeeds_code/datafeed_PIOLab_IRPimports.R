@@ -82,7 +82,7 @@ for(i in 1:nrow(data))
 
 ALANG$`Row child` <- "2"
 ALANG$`Row grandchild` <- "1-e"
-ALANG$`Column child` <- "1"
+ALANG$`Column child` <- "[1,3]"
 ALANG$`Column grandchild` <- "1-e"
 ALANG$`#` <- as.character(1:nrow(ALANG))
 ALANG$Incl <- "Y"
