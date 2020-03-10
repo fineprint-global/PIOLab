@@ -11,24 +11,14 @@ if(Sys.info()[1] == "Linux"){
   root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
   root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
 ################################################################################
+
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
-# Long rolled products have the item code 7 in WSA data
-item_id <- 4
+path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name) # Add path for processed data
 
-# Get relative standard error for smallest and largest values in the data set
-RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
-
-# Set range of products and industries to be adressed by this feed
-Grandchild <- list("RoW" = "20","Column" = "30")
-
-# Load function and create ALANG commands
+# Run code for ALANG commands
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/CreateALANGforWSAdata.R"))
-ALANG <- CreateALANGforWSAdata(item_id,RSE,Grandchild,datafeed_name)
-
-# Call script that writes the ALANG file to the respective folder in the root
-source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
 
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
   

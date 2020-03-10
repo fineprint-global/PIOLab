@@ -11,8 +11,14 @@ if(Sys.info()[1] == "Linux"){
   root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
     root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
 ################################################################################
+
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
+
+path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name)
+
+# Load function to write arrays to files
+source(paste0(path$Subroutines,"/Numbers2File.R"))
 
 # Loading raw data
 data <- read.csv(paste0(path$Raw,"/IRP/all_CCC_Exp_ResearchDB.csv"),stringsAsFactors=FALSE)
@@ -36,7 +42,7 @@ data <- data %>% filter(!Code %in% c(233,242))
 
 data <- data[!is.na(data$Code),] # Mayotte and Farour Isl. are not in root (tbc)
 
-reg_max <- nrow(root$region)
+n_reg <- nrow(root$region)
 
 # Add standard errors 
 source(paste0(path$Subroutines,"/SE_LogRegression.R"))
@@ -52,21 +58,21 @@ for(i in 1:nrow(data))
   # Get root_code of regions 
   reg <- data$Code[i]
   
-  if(reg == 1) reg_range <- paste0("2-",as.character(reg_max))
+  if(reg == 1) reg_range <- paste0("2-",as.character(n_reg))
   
-  if(reg == 2) reg_range <- paste0("[1,3-",as.character(reg_max),"]")
+  if(reg == 2) reg_range <- paste0("[1,3-",as.character(n_reg),"]")
   
-  if(reg == reg_max) reg_range <- paste0("1-",as.character(reg_max-1))
+  if(reg == n_reg) reg_range <- paste0("1-",as.character(n_reg-1))
   
-  if(reg == (reg_max-1)) reg_range <- paste0("[1-",as.character(reg_max-2),",",as.character(reg_max),"]")
+  if(reg == (n_reg-1)) reg_range <- paste0("[1-",as.character(n_reg-2),",",as.character(n_reg),"]")
   
-  if(reg > 2 & reg < (reg_max-1)) {
+  if(reg > 2 & reg < (n_reg-1)) {
     reg_range <- paste0("[1-",as.character(reg-1),",",as.character(reg+1),"-",
-                        as.character(reg_max),"]") }
+                        as.character(n_reg),"]") }
   
   # Read import value
   value <- as.character(data$Quantity[i])
-  # Set SE to 5%
+  # Set SE
   SE <- as.character(data$SE[i])
   reg_name <- root$region$Name[reg]
   reg <- as.character(reg)

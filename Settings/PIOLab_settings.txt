@@ -1,0 +1,65 @@
+Settings File for the PIOLab
+(c) Arne Geschke, 12th Nov 2019, arne.geschke@sydney.edu.au
+
+If you add a numeric flag that is not in already handled in makenumeric, you MUST insert this value in makenumeric
+
+root.clearname=Physical Input-Output Lab
+root.shortname=PIOLab
+
+Default Concordances (only the filenames, no paths):
+regionagg_default=none
+sectoragg_default=none
+sectoraggprod_default=none
+
+Year for which the IE data was written
+root.baseyear=2008
+
+Number of Markups in this root
+
+root.NMarkups=1
+root.NRegions=221
+
+Admin Email for this root
+
+admin_email=hanspeter.wieland@wu.ac.at
+
+Specify, how the RoW blocks are generated
+three options: 
+fixed: remains the same
+variable: same as in Base MRIO
+NoRoW: RoW cannot be added (used for global tables)
+This one used to be imports variable and exports fixed
+
+root.RoW_Imports_type=NoRoW
+root.RoW_Exports_type=NoRoW
+
+if imports or exports RoW is fixed, define NSectors here
+
+root.RoW_Exports_NSectors=1
+
+Specify, if small values should be deleted in this root and if yes, what the threshold is
+
+root.postprocess_deletesmallvalues=yes
+root.postprocess_deletesmallvalues_bp_lowerboundary=-0.1
+root.postprocess_deletesmallvalues_bp_upperboundary=0.1
+root.postprocess_deletesmallvalues_margins_lowerboundary=-0.1
+root.postprocess_deletesmallvalues_margins_upperboundary=0.1
+
+Root table structure set up
+Homegeneous and heterogeneous table structures can be supported. For each of these two selections, the root can allow for IIOT, CIOT, SUT, or mixed tables
+
+root.tablestructure=homogeneous
+root.regiontype=SUT
+root.indprodidentical=0
+
+Specify if this root needs to use adjustentities. This is only the case if mixed SUT/IIOT/CIOT structures are allowed and intended under this root
+0 means no, 1 means yes
+if tablestructure and tabletype are set, then adjustentities will be set accordingly
+
+flags.useadjustentities=0
+
+Additional toolboxes
+
+Define the visibility of the root
+
+root.visibility=geschke,fry,manni,hwie3321
