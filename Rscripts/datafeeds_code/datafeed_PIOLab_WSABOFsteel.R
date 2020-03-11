@@ -1,8 +1,12 @@
 ################################################################################
+# Data feed: Production values of steel from oxygen blown converters 
+# Source: Statistical Yearbooks of World Steel Association
+# Author: hanspeter.wieland@wu.ac.at
+# Date: 10.03.2020 
 
-datafeed_name <- "WSABOFsteel"
-print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
+datafeed_name <- "WSABOFsteel"  # Set name of feed 
 
+# Determine loaction of root folder
 ################################################################################
 # Set library path when running on suphys server
 if(Sys.info()[1] == "Linux"){
@@ -12,13 +16,12 @@ if(Sys.info()[1] == "Linux"){
   root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
 ################################################################################
 
-# Initializing R script (load R packages and set paths to folders etc.)
-source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
+# Location of the WSA syntax in the lab
 
-path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name) # Add path for processed data
+subfun <- "Rscripts/datafeeds_code/datafeed_subroutines/CreateALANGforWSAdata.R"
 
-# Run code for ALANG commands
-source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/CreateALANGforWSAdata.R"))
+source(paste0(root_folder,subfun)) # Run syntax
 
-print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
+rm(list = ls()) # clear workspace
+
   

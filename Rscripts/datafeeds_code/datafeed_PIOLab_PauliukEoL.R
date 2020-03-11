@@ -31,6 +31,7 @@ data <- select(data,Code,Quantity) # Select only variables that are needed
 data <- group_by(data,Code) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(Code)
 
 # Loading function for estimating SE with linear regression
+
 source(paste0(path$Subroutines,"/SE_LogRegression.R"))
 
 RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
@@ -77,6 +78,8 @@ Conco[Reg$Source[4],Reg$Root[[4]]] <- 1 # Belgium-Luxembourg
 # Allocate the remaining root regions to source region NEC
 Conco[109,colSums(Conco) == 0] <- 1
 
+Conco <- Conco
+
 # Print sum of matrix which should be 221
 print(paste0("Sum of aggregator matrix = ",sum(Conco)))
 
@@ -91,38 +94,56 @@ dir.create(path$df_Processed)
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
 
-for(i in data$Code)
-{ 
-  
-  if(i == 666)
-  {
-    reg_name <- "NEC"
-  } else
-  {
-    reg_name <- root$region$Name[i] # Read name of region
-  }
-    
-  sel <- data[,-1]    # Create copy of data array
-  
-  sel[-i,] <- NaN # Write only values of target region
-  
-  # Define filenames of arrays:
-  
-  filename_sel <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",year,
-                                  "_",reg_name,".csv"),
-                   "SE" = paste0("/",datafeed_name,"/",datafeed_name,"_SE_",year,
-                                 "_",reg_name,".csv"))
-  
-  # Write RHS and SE data to folder:
-  
-  Numbers2File(sel$RHS,paste0(path$Processed,filename_sel$RHS)) 
-  Numbers2File(sel$SE,paste0(path$Processed,filename_sel$SE)) 
+filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",
+                                year,".csv"),
+                 "SE" = paste0("/",datafeed_name,"/",datafeed_name,"_SE_",
+                               year,".csv"))
 
-  ALANG <- add_row(ALANG,
-                   '1' = paste("Pauliuk EoL",reg_name,year),
-                   Value = paste0("DATAPATH",filename_sel$RHS),
-                   S.E. = paste0("DATAPATH",filename_sel$RHS) )
-}
+data <- data[,-1] # Remove codes
+
+
+Numbers2File( t(data$RHS) , paste0( path$Processed, filename$RHS ) ) 
+
+ALANG <- add_row(ALANG,
+                 '1' = paste("Pauliuk EoL",year),
+                 Value = paste0("DATAPATH",filename$RHS),
+                 S.E. = paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";") )
+
+
+# for(i in data$Code)
+# { 
+#   
+#   if(i == 666)
+#   {
+#     reg_name <- "NEC"
+#   } else
+#   {
+#     reg_name <- root$region$Name[i] # Read name of region
+#   }
+#     
+#   sel <- data[,-1]    # Create copy of data array
+#   
+#   row_num <- which(data$Code == i)
+#   
+#   sel[-row_num,] <- 0 # Write only values of target region
+#   
+#   # Define filenames of arrays:
+#   
+#   filename_sel <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",year,
+#                                   "_",reg_name,".csv"),
+#                    "SE" = paste0("/",datafeed_name,"/",datafeed_name,"_SE_",year,
+#                                  "_",reg_name,".csv"))
+#   
+#   # Write RHS and SE data to folder (with transposition from col to row vector)
+#   
+#   Numbers2File( t(sel$RHS) , paste0( path$Processed, filename_sel$RHS ) ) 
+#   Numbers2File( t(sel$SE) ,paste0(path$Processed,filename_sel$SE)) 
+# 
+#   ALANG <- add_row(ALANG,
+#                    '1' = paste("Pauliuk EoL",reg_name,year),
+#                    Value = paste0("DATAPATH",filename_sel$RHS),
+#                    S.E. = paste0("DATAPATH",filename_sel$SE) )
+# }
 
 # Add other variables
 ALANG$`#` <- as.character(1:nrow(ALANG))
@@ -131,11 +152,11 @@ ALANG$Years <- "1"
 ALANG$Margin <- "1"
 ALANG$Coef1 <- "1"
 
-ALANG$`Row parent` <- "1:e"
+ALANG$`Row parent` <- "1-e"
 ALANG$`Row child` <- "3"
 ALANG$`Row grandchild` <- "2"
 
-ALANG$`Column parent` <- paste0("1:e~3 a CONCPATH",filename_RegAgg)
+ALANG$`Column parent` <- paste0("1:e t2 CONCPATH",filename_RegAgg)
 ALANG$`Column child` <- "1"
 ALANG$`Column grandchild` <- "64-65"
 
@@ -151,3 +172,4 @@ source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG
   
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
 
+rm(list = ls()) # clear workspace

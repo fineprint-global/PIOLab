@@ -1,8 +1,12 @@
 ################################################################################
-#
-datafeed_name <- "WSAEAFsteel"
-print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
+# Data feed: Production values of steel from electric arc furnace 
+# Source: Statistical Yearbooks of World Steel Association
+# Author: hanspeter.wieland@wu.ac.at
+# Date: 10.03.2020 
 
+datafeed_name <- "WSAEAFsteel" # Set name of feed 
+
+# Determine loaction of root folder
 ################################################################################
 # Set library path when running on suphys server
 if(Sys.info()[1] == "Linux"){
@@ -11,24 +15,11 @@ if(Sys.info()[1] == "Linux"){
   root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
   root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
 ################################################################################
-# Initializing R script (load R packages and set paths to folders etc.)
-source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
-# Long rolled products have the item code 7 in WSA data
-item_id <- 5
+# Location of the WSA syntax in the lab
 
-# Get relative standard error for smallest and largest values in the data set
-RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
+subfun <- "Rscripts/datafeeds_code/datafeed_subroutines/CreateALANGforWSAdata.R"
 
-# Set range of products and industries to be adressed by this feed
-Grandchild <- list("RoW" = "22","Column" = "31")
+source(paste0(root_folder,subfun)) # Run syntax
 
-# Load function and create ALANG commands
-source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/CreateALANGforWSAdata.R"))
-ALANG <- CreateALANGforWSAdata(item_id,RSE,Grandchild,datafeed_name)
-
-# Call script that writes the ALANG file to the respective folder in the root
-source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
-
-print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
-  
+rm(list = ls()) # clear workspace
