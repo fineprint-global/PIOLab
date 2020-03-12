@@ -1,8 +1,12 @@
 ################################################################################
+# Data feed: Production values of steel from oxygen blown converters 
+# Source: Statistical Yearbooks of World Steel Association
+# Author: hanspeter.wieland@wu.ac.at
+# Date: 10.03.2020 
 
-datafeed_name <- "WSABOFsteel"
-print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
+datafeed_name <- "WSABOFsteel"  # Set name of feed 
 
+# Determine loaction of root folder
 ################################################################################
 # Set library path when running on suphys server
 if(Sys.info()[1] == "Linux"){
@@ -11,24 +15,13 @@ if(Sys.info()[1] == "Linux"){
   root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
   root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
 ################################################################################
-# Initializing R script (load R packages and set paths to folders etc.)
-source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
-# Long rolled products have the item code 7 in WSA data
-item_id <- 4
+# Location of the WSA syntax in the lab
 
-# Get relative standard error for smallest and largest values in the data set
-RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
+subfun <- "Rscripts/datafeeds_code/datafeed_subroutines/CreateALANGforWSAdata.R"
 
-# Set range of products and industries to be adressed by this feed
-Grandchild <- list("RoW" = "20","Column" = "30")
+source(paste0(root_folder,subfun)) # Run syntax
 
-# Load function and create ALANG commands
-source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/CreateALANGforWSAdata.R"))
-ALANG <- CreateALANGforWSAdata(item_id,RSE,Grandchild,datafeed_name)
+rm(list = ls()) # clear workspace
 
-# Call script that writes the ALANG file to the respective folder in the root
-source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
-
-print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
   

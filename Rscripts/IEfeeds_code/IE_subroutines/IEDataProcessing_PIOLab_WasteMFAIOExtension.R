@@ -72,8 +72,11 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
   # Load BACI trade flows 
   BACI <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,".csv"))
   
-  Flat_trade <- BACI %>% filter(Product == 8) %>% select(From,To,Quantity)
-  Long_trade <- BACI %>% filter(Product == 9) %>% select(From,To,Quantity)
+  Flat_trade <- BACI %>% filter(Product == base$product$Code[base$product$Name == "Flat rolled products"]) %>% 
+    select(From,To,Quantity)
+  
+  Long_trade <- BACI %>% filter(Product == base$product$Code[base$product$Name == "Long rolled products"]) %>% 
+    select(From,To,Quantity)
   
   # Estimate the net-use of products in countries
   Flat_import <- Flat_trade %>% group_by(To) %>% summarise(Quantity = sum(Quantity))

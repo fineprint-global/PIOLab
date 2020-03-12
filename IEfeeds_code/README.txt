@@ -1,1 +1,1 @@
-See \PIOLab\Rscripts\IEfeeds_code for IEfeeds_code.
+See \PIOLab\Rscripts\IEfeeds_code for IE feeds in R scripts.

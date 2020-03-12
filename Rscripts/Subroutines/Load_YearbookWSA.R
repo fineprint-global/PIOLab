@@ -23,7 +23,7 @@ if(year >= 2008)
                 list("page"=36,"name"="HeavySections"),
                 list("page"=37,"name"="LightSections"),
                 list("page"=c(38,39),"name"="ConcreteReinforcingBars"),
-                list("page"=40,"name"="Hot RolledBarsOtherThanConcreteReinforcingBars"),
+                list("page"=40,"name"="HotRolledBarsOtherThanConcreteReinforcingBars"),
                 list("page"=c(41,42),"name"="WireRod"),
                 list("page"=43,"name"="HotRolledPlate"),
                 list("page"=44,"name"="HotRolledCoilSheetStrip"),

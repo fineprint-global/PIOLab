@@ -74,7 +74,8 @@ Read_ProductionWSA <- function(path,year,item_page,yb,concord)
     select(-countries,-index)
   colnames(data_clean)[2] <- "Quantity"
   # Look up root classification code and filter specific year
-  data_clean <- left_join(data_clean,root$region,by = c("ISO3digitCode"),copy = FALSE) %>% select(Code,Quantity)
+  data_clean <- left_join(data_clean,root$region,by = c("ISO3digitCode" = "RootCountryAbbreviation"),copy = FALSE) %>% 
+    select(Code,Quantity)
   # Translate quantities into metric tons
   data_clean$Quantity <- data_clean$Quantity * 1000
   

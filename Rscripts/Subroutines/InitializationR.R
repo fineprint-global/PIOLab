@@ -65,6 +65,6 @@ year <- 2008
 # Read root region, industry and products
 root <- list("region" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/PIOLab_RootClassification.xlsx"),sheet = 1),
              "industry" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/PIOLab_RootClassification.xlsx"),sheet = 2)[,1:2],
-             "product" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/PIOLab_RootClassification.xlsx"),sheet = 3)[,1:2])
+             "product" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/PIOLab_RootClassification.xlsx"),sheet = 3))
 
 remove(mother,OnServer,root_folder)

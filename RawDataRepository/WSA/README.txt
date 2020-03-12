@@ -1,0 +1,2 @@
+Note that the pdf of worldsteel has been pre-processed into an R object due to the relatively slow transformation of that process.
+It is planned to have this step included in the PIOLab asap. The function can be found on Github.

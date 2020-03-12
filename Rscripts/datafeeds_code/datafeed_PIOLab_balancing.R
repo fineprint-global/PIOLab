@@ -14,10 +14,13 @@ if(Sys.info()[1] == "Linux"){
   root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
     root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
 ################################################################################
+
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
+
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
+
 # Extend table with additional columns
 ALANG <- ALANG[,c(1:19,11:19)]
 

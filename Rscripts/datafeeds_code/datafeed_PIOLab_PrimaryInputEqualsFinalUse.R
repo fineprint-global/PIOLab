@@ -13,31 +13,51 @@ if(Sys.info()[1] == "Linux"){
   root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
     root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
 ################################################################################
+
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
 # Read global extraction and EOL values
 source(paste0(path$Subroutines,"/Read_ExtractionIRP.R"))
 DE <- sum(data$Quantity)
+
 # For now just this (assume per ton of iron ore 1.3 ton of flux, air and coke are required)
 # Set SE
 RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
 
 tot <-  DE + DE*1.3 
 SE <- as.character(round(tot*RSE$Minimum))
+
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
+
 # Extend table with additional columns
 ALANG <- ALANG[,c(1:19,11:19)]
 
-ALANG <- add_row(ALANG,'1' = "Sum of primary inputs equals sum of final use",
-                 Coef1 = "1",'Row parent' = "1-e",'Row child' = "3",'Row grandchild' = "1-e",
-                 'Column parent' = "1-e",'Column child' = "1",'Column grandchild' = "1-e",
-                 'Coef1.1' = "-1",'Row parent.1' = "1-e",'Row child.1' = "1-2",'Row grandchild.1' = "1-e",
-                 'Column parent.1' = "1-e",'Column child.1' = "3",'Column grandchild.1' = "1-e")
+ALANG <- add_row(ALANG,'1' = "Sum of primary inputs equals sum of final use")
 
+
+
+# Part 1: Sum over primary inputs 
+ALANG$Coef1 <- "1"
+ALANG$`Row parent` <- "1-e"
+ALANG$`Row child` <- "3" 
+ALANG$`Row grandchild` <- "1-e"
+ALANG$`Column parent` <- "1-e"
+ALANG$`Column child` <- "1"
+ALANG$`Column grandchild` <- "1-e"
+
+# Part 2: Sum over final use
+ALANG$Coef1.1 <- "-1"
+ALANG$`Row parent.1` <- "1-e"
+ALANG$`Row child.1` <- "1-2"                 
+ALANG$`Row grandchild.1` <- "1-e"                 
+ALANG$`Column parent.1` <- "1-e"
+ALANG$`Column child.1` <- "3"                 
+ALANG$`Column grandchild.1` <- "1-e"
+                 
 # Add other variables
-ALANG$`#` <- as.character(1:nrow(ALANG))
+ALANG$`#` <- "1"
 ALANG$Incl <- "Y"
 ALANG$Parts <- "2"
 ALANG$Value <- "0"

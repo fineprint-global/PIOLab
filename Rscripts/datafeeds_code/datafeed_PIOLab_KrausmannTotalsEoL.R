@@ -41,7 +41,7 @@ ALANG$`Row grandchild` <- "2"
 
 ALANG$`Column parent` <- "1-e"
 ALANG$`Column child` <- "1"
-ALANG$`Column grandchild` <- "64-65"
+ALANG$`Column grandchild` <- "1-e"
 
 ALANG$`#` <- as.character(1:nrow(ALANG))
 ALANG$Incl <- "Y"
