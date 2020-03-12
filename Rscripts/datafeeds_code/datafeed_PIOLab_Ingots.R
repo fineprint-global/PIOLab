@@ -1,10 +1,10 @@
 ################################################################################
-# Data feed: Total production of sponge iron (direct reduction) 
+# Data feed: Total production of ingots 
 # Source: Statistical Yearbooks of World Steel Association
 # Author: hanspeter.wieland@wu.ac.at
 # Date: 10.03.2020 
 
-datafeed_name <- "WSASpongeIron"
+datafeed_name <- "Ingots"
 
 # Determine loaction of root folder
 ################################################################################

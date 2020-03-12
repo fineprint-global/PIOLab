@@ -1,10 +1,10 @@
 ################################################################################
-# Data feed: Production values of steel from oxygen blown converters 
+# Data feed: Total production flat rolled products 
 # Source: Statistical Yearbooks of World Steel Association
 # Author: hanspeter.wieland@wu.ac.at
 # Date: 10.03.2020 
 
-datafeed_name <- "WSABOFsteel"  # Set name of feed 
+datafeed_name <- "FlatRolledProducts"
 
 # Determine loaction of root folder
 ################################################################################
@@ -23,5 +23,3 @@ subfun <- "Rscripts/datafeeds_code/datafeed_subroutines/CreateALANGforWSAdata.R"
 source(paste0(root_folder,subfun)) # Run syntax
 
 rm(list = ls()) # clear workspace
-
-  

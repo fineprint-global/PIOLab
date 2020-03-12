@@ -1,10 +1,10 @@
 ################################################################################
-# Data feed: Total production of pig iron (blast furnace) 
+# Data feed: Total production long rolled products 
 # Source: Statistical Yearbooks of World Steel Association
 # Author: hanspeter.wieland@wu.ac.at
 # Date: 10.03.2020 
 
-datafeed_name <- "WSAPigIron"
+datafeed_name <- "LongRolledProducts"
 
 # Determine loaction of root folder
 ################################################################################

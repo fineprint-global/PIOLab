@@ -1,10 +1,10 @@
 ################################################################################
-# Data feed: Total production long rolled products 
+# Data feed: Total production of steel in open hearth furnace 
 # Source: Statistical Yearbooks of World Steel Association
 # Author: hanspeter.wieland@wu.ac.at
 # Date: 10.03.2020 
 
-datafeed_name <- "WSALongRolledProducts"
+datafeed_name <- "SteelOpenHearthFurnaces"
 
 # Determine loaction of root folder
 ################################################################################
