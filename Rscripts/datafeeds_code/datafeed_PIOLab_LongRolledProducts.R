@@ -2,7 +2,7 @@
 # Data feed: Total production long rolled products 
 # Source: Statistical Yearbooks of World Steel Association
 # Author: hanspeter.wieland@wu.ac.at
-# Date: 10.03.2020 
+# Date: 19.03.2020 
 
 datafeed_name <- "LongRolledProducts"
 

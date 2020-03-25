@@ -2,7 +2,7 @@
 # Data feed: Production values of steel from oxygen blown converters 
 # Source: Statistical Yearbooks of World Steel Association
 # Author: hanspeter.wieland@wu.ac.at
-# Date: 10.03.2020 
+# Date: 19.03.2020 
 
 datafeed_name <- "SteelOxygenBlownConverters"  # Set name of feed 
 

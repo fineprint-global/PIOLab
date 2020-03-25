@@ -18,11 +18,10 @@ if(Sys.info()[1] == "Linux"){
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
-# Create empty ALANG table with header
-source(paste0(path$Subroutines,"/makeALANGheadline.R"))
 
-# Extend table with additional columns
-ALANG <- ALANG[,c(1:19,11:19)]
+source(paste0(path$Subroutines,"/makeALANGheadline.R"))  # Create ALANG header
+
+ALANG <- ALANG[,c(1:19,11:19)]  # Extend table with additional columns
 
 n_reg <- nrow(root$region)
 
@@ -64,3 +63,4 @@ source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG
 
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
 
+rm(list = ls()) # clear workspace
