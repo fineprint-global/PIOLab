@@ -9,189 +9,261 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
 {
   print("IEDataProcessing_PIOLab_BuildingTradeBlocks initiated.")
   
-  # Load function to create allocation map
-  source(paste0(path$Subroutines,"/makeEndUseMap.R"))
+  path[["IE_classification"]] <- paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx")
   
-  # Load region aggregator
-  source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-  reg_agg <- Root2Base_RegionAggregator(RegionAggregator)
+  # Define general variables:
+  
+  num <- list("pro" = nrow(base$product),
+              "ind" = nrow(base$industry),
+              "reg" = nrow(base$region),
+              "va" = nrow(base$input),
+              "fd" = nrow(base$demand) )
 
-  # Load BACI data
-  BACI <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,".csv"))
+  # Load WSA settings (for codes and feed names):
   
-  # Define general variables
-  n_pro <- nrow(base$product)
-  n_ind <- nrow(base$industry)
-  n_va <- 5
-  n_fd <- 3
-  # Read number of base regions
-  n_reg <- max(reg_agg$base)
+  Settings <- read.xlsx(paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"))
+  
+  # Load prorating function and Number2File:
+  
+  source(paste0(path$Subroutines,"/Prorate.R"))
+  
+  source(paste0(path$Subroutines,"/Numbers2File.R"))
+  
+  
+  Setting <- list( "WSA" = read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"), sheet = 1 ),
+                   "IE" = read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/IE_settings.xlsx"), sheet = 1 )
+                  )
+  
+  # Load flow data where all regions are included in one object:
+  
+  data <- list( "FinalDemand" =  read.csv( paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_","FinalDemand.csv") ),
+                "Fab2Demand" = read.csv( paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_","Fabrication2FinalDemand.csv") ),
+                "BACI" =  read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,".csv") ) 
+              )
 
-  ##############################################################################
-  # 1. Load data on traded commodities
-  # Load BACI trade data
-  FlatRolled <- filter(BACI,Product == 8) %>% select(From,To,Quantity)
-  LongRolled <- filter(BACI,Product == 9) %>% select(From,To,Quantity)
-  BilletBloom <- filter(BACI,Product == 7) %>% select(From,To,Quantity)
-  IronOre <- filter(BACI,Product == 1) %>% select(From,To,Quantity)
-  Ingot <- filter(BACI,Product == 5) %>% select(From,To,Quantity)
-  PigIron <- filter(BACI,Product == 3) %>% select(From,To,Quantity)
-  Slab <- filter(BACI,Product == 6) %>% select(From,To,Quantity)
-  SpongeIron <- filter(BACI,Product == 2) %>% select(From,To,Quantity)
-  Scrap <- filter(BACI,Product == 11) %>% select(From,To,Quantity)
-  # Load steel in final demand
-  FinalDemand <- read.csv(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_SteelInFinalDemand.csv")) 
+  # Select codes for finished steel:
   
-  # Define function to create empty Use table
-  CreateIntermediateUse <- function() {
-    Use <- data.frame(matrix(0,n_pro,n_ind))
-    colnames(Use) <- base$industry$Name
-    rownames(Use) <- base$product$Name
-    Use <- as.matrix(Use)
-    return(Use)}
+  Code <- list("base" = list("Finished" = filter(base$product,Type == 'Finished') %>% pull(Code),
+                             "Final" = filter(base$product,Type == 'Final') %>% pull(Code),
+                             "Forgings" = base$product$Code[base$product$Name == 'Forgings'],
+                             "CoilSheetStrip" = base$product$Code[base$product$Name == "Hot rolled coil-sheet-strip"]),
+               "industry" = list("manu" = filter(base$industry,Type == 'Final') %>% pull(Code),
+                                 "others" = filter(base$industry,Type != 'Final') %>% pull(Code)),
+               "WSA" = Settings %>% filter(Type == 'Finished') %>% pull(id))
   
-  CreateFinalUse <- function() {
-    FinalUse <- data.frame(matrix(0,(n_pro+n_ind),n_fd))
-    colnames(FinalUse) <- c("FinalConsumption","Landfill","Atmosphere")
-    rownames(FinalUse) <- c(base$industry$Name,base$product$Name)
-    FinalUse <- as.matrix(FinalUse)
-    return(FinalUse)}
+  # Load SUT templates
   
-  WriteValue <- function(data,from,to,Use)
-    {
-      data.sel <- data %>% filter(From == i & To == j)
-      # Check if available
-      if(nrow(data.sel) == 1) 
-      {value <- sum(data %>% filter(From == i & To == j) %>% select(Quantity))} else
-          {value <- 0}
-      Use[from,to] <- value
-      return(Use)
-    }
-    
-  # j refers to the column and i to the row view. j loops through all country codes
-  for(j in 1:n_reg)
+  SUT_temp <- list( "Supply" = as.matrix( read.xlsx(path$IE_classification, sheet = 5,colNames = FALSE) ),
+                    "Use" = as.matrix( read.xlsx(path$IE_classification, sheet = 6,colNames = FALSE) )
+                  )
+  
+  # Run syntax to load Source2Root maps:
+  
+  
+  Source2Root <-list("WSA" = as.matrix( read.csv(paste0(path$Concordance,"/WSA/WSA_Source2Root_Product.csv"),header = FALSE) ))
+  
+  Source2Root$WSA <- Source2Root$WSA[Code$WSA,]  # Select only finished steel
+  
+  Source2Root$WSA <- Source2Root$WSA / rowSums(Source2Root$WSA)  # Create map (normalized concordance)
+  
+  Source2Root[["Cullen"]] <- list("Product" = as.matrix( read.csv(paste0(path$Concordance,"/Cullen/Cullen_Source2Root_Product.csv"),header = FALSE) ),
+                                  "EndUse" = as.matrix( read.csv(paste0(path$Concordance,"/Cullen/Cullen_Source2Root_EndUse.csv"),header = FALSE) ))
+  
+  # Compile Source to mother concordance for finished steel products
+  
+  Source2Mother <- list("WSA" = Source2Root$WSA %*% as.matrix(ProductAggregator[,Code$base$Finished]) )
+  
+  # Load WSA Source2Source map for estimate final use of hot rolled coil-sheet-strip
+  
+  Source2Source <- list("WSA" = as.matrix(read.csv(paste0(path$Concordance,"/WSA/WSA_Source2Source.csv"),header = FALSE)) )
+  
+  Source2Source$WSA <- Source2Source$WSA[Code$WSA,Code$WSA]
+  
+  
+  # Create map to allocate mother to source:
+  
+  Mother2Source_Map <- list("WSA" = t(Source2Mother$WSA) / colSums(Source2Mother$WSA) ) 
+  
+  Mother2Source_Map$WSA[is.na(Mother2Source_Map$WSA)] <- 0 # Because forgings is not form WSA, set NA to 0
+  
+  # Create mother2mother concordance = parent to child processes
+  
+  Mother2Mother <-  list("WSA" = Mother2Source_Map$WSA %*% Source2Source$WSA %*% Source2Mother$WSA )
+  
+  colnames(Mother2Mother$WSA) <- rownames(Mother2Mother$WSA) <- Code$base$Finished
+  
+  
+  # Load products to end-use map from Cullen et al 2012
+  
+  Products2EndUse <- read.csv(paste0(path$IE_Processed,"/Cullen/ProductsToEndUse.csv"))
+  
+  rownames(Products2EndUse) <- Products2EndUse$X  # Write products names to row names
+  
+  Products2EndUse$X <- NULL  # Delete product name column 
+  
+  Products2EndUse <- as.matrix(Products2EndUse)
+  
+  # Create Source to Root and Source to mother maps:
+  
+  Source2Root_Map <- list("Cullen" = list("EndUse" = (Source2Root$Cullen$EndUse / rowSums(Source2Root$Cullen$EndUse) ),
+                                          "Product" = (Source2Root$Cullen$Product / rowSums(Source2Root$Cullen$Product) )
+  )
+  )
+  
+  Source2Mother[["Cullen"]] <- list("EndUse" =  Source2Root_Map$Cullen$EndUse %*% as.matrix(ProductAggregator[,Code$base$Final]),
+                                    "Product" = Source2Root_Map$Cullen$Product %*% as.matrix(ProductAggregator[,Code$base$Finished])
+  )
+  
+  Source2Mother$Cullen$Yields <- Source2Mother$Cullen$EndUse  # Add concordance for yields
+  
+  Source2Mother$Cullen$Yields[Source2Mother$Cullen$Yields > 0] <- 1  # Set shares to 1 for yields
+  
+  
+  # Add mother sector names to maps:
+  
+  colnames(Source2Mother$Cullen$EndUse) <- base$product$Name[Code$base$Final]
+  
+  colnames(Source2Mother$Cullen$Product) <- base$product$Name[Code$base$Finished]
+  
+  # Translate product to end-use map to base classification of mother table: 
+  
+  Products2EndUse <- t(Source2Mother$Cullen$Product)  %*% Products2EndUse %*% Source2Mother$Cullen$EndUse
+  
+  
+  
+  # Add forgings (no information):
+  
+  Products2EndUse[rownames(Products2EndUse) == "Forgings",c(1,2,7,8)] <- 1  
+  
+  # Define functions for creating intermediate use and final output tables:
+  
+  CreateUse <- function() 
   {
-    print(paste0("Imports of region ",j))
-    # i loops only over the regions where i != j
-    for(i in (1:n_reg)[-j])
-    {
-      #Create empty use table
-      Use <- CreateIntermediateUse()
-      
-      ##########################################################################
-      # Write flows into table that match 1:1
-      Use <- WriteValue(Ingot,"Ingots","Flat rolling",Use)
-      Use <- WriteValue(PigIron,"Pig iron","Oxygen blown & open hearth furnace",Use)
-      Use <- WriteValue(Slab,"Slabs","Flat rolling",Use)
-      Use <- WriteValue(SpongeIron,"Sponge iron","Electric arc furnace",Use)
-      Use <- WriteValue(BilletBloom,"Billets & blooms","Long rolling",Use)
-      
-      ##########################################################################
-      # Allocating iron ore trade flows to blast furnace and direct reduction
-      
-      # Read out the production of pig and sponge iron and calculate shares
-      Share <- data.frame("Pig" = 0,"Sponge" = 0)
-      Pig <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_PigIron.csv")) 
-      if(j %in% Pig$base) Share$Pig <- Pig$Quantity[Pig$base == j] * 0.85
-      Sponge <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SpongeIron.csv")) 
-      if(j %in% Sponge$base) Share$Sponge <- Sponge$Quantity[Sponge$base == j] 
-      Share <- Share/sum(Share)
-      
-      # In case WSa does not report any production values, allocate everything to BOF 
-      if(is.na(Share$Pig) & is.na(Share$Sponge))
-      {
-        Share$Pig <- 1
-        Share$Sponge <- 0
-      }
-      
-      IronOre.sel <- IronOre %>% filter(From == i & To == j)
-      # Check if available and write values
-      if(nrow(IronOre.sel) == 1) 
-      {
-        Use["Iron ore","Blast furnace"] <- IronOre.sel$Quantity * Share$Pig
-        Use["Iron ore","Direct reduction"] <- IronOre.sel$Quantity * Share$Sponge 
-      }
-      
-      ##########################################################################
-      # Allocating scrap trade flows to BOF and EAF
+    x <- data.frame(matrix(0,num$pro,num$ind))
     
-      # Read out the production of liquid steel in order to divide scrap input 
-      # to oxygen blown and electric furnace
-      Share <- data.frame("BOF" = 0,"EAF" = 0)
-      BOF <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelOxygenBlownConverters.csv")) 
-      if(j %in% BOF$base) Share$BOF <- BOF$Quantity[BOF$base == j] * 0.10
-      EAF <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelElectricFurnaces.csv")) 
-      if(j %in% EAF$base) Share$EAF <- EAF$Quantity[EAF$base == j] * 0.5 
-      Share <- Share/sum(Share)
+    colnames(x) <- base$industry$Name
+    
+    rownames(x) <- base$product$Name
+    
+    x <- as.matrix(x)
+    
+    return(x)
+  }
+  
+  CreateOutput <- function() 
+  {
+    x <- data.frame( matrix(0,num$ind,num$fd) )
+    
+    colnames(x) <- base$demand$Name
+    
+    rownames(x) <- base$industry$Name
+    
+    x <- as.matrix(x)
+    
+    return(x)
+  }
+  
+  
+  # j refers to the column and i to the row view. j loops through all country codes
+  
+  for(j in 1:num$reg)
+  {
+    print(paste("Imports of",base$region$Name[j]))
+    
+    # Load production values of region j:
+    
+    Supply <- read.csv( paste0(path$IE_Processed,"/SUT/",year,"_Supply_Region",j,".csv"), header = FALSE )
+    
+    Supply <- rowSums(Supply)
+    
+    # i loops only over the regions where i != j
+    
+    for(i in (1:num$reg)[-j])
+    {
+      Use <- CreateUse()  # Create empty use table
       
-      Scrap.sel <- Scrap %>% filter(From == i & To == j)
-      # Check if available and write values
-      if(nrow(Scrap.sel) == 1) 
-      {
-        Use["Scrap steel","Oxygen blown & open hearth furnace"] <- Scrap.sel$Quantity * Share$BOF
-        Use["Scrap steel","Electric arc furnace"] <- Scrap.sel$Quantity * Share$EAF 
-      }
+      Final <- CreateOutput()  # Create empty final output table
       
-      ##########################################################################
-      # Allocate Flat rolled product trade flow
-      # call function to create specific map 
-      map <- makeEndUseMap(j,"Flat")
-      map <- map$Share[order(map$index)]
       
-      # Select flat rolled trade flow
-      Flat.sel <- FlatRolled %>% filter(From == i, To == j)
-      # If available allocate according to shares
-      if(nrow(Flat.sel) == 1)
-      {
-        values <- map * Flat.sel$Quantity
-        Use["Flat rolled products",(ncol(Use)-length(map)+1):ncol(Use)] <- values
+      ### Allocating finished steel to fabrication/manufacturing use ###
       
-      }
+      vec <- filter(data$BACI, From == i, To == j, Product %in% Code$base$Finished)
       
-      ##########################################################################
-      # Allocate Long rolled product trade flow
-      # call function to create specific map 
-      map <- makeEndUseMap(j,"Long")
-      map <- map$Share[order(map$index)]
+      # Read production of intermed. fabrication in region i:
       
-      # Select flat rolled trade flow
-      Long.sel <- LongRolled %>% filter(From == i, To == j)
-      # If available allocate according to shares
-      if(nrow(Flat.sel) == 1)
-      {
-        values <- map * Flat.sel$Quantity
-        Use["Long rolled products",(ncol(Use)-length(map)+1):ncol(Use)] <- values
-      }
+      filter <- Supply[filter(base$industry,Type == "Final") %>% pull(Code)] 
       
-      ##########################################################################
-      # Create tables for final demand trade flows
-      FD <- CreateFinalUse()
-      # Filter data (from i to j)
-      data.sel <- FinalDemand %>% filter(From.Region == i, To.Region == j) %>%
-        select(Product, Quantity)
-      # Write into table
-      FD[n_ind+data.sel$Product,"FinalConsumption"] <- data.sel$Quantity
+      filter[filter > 1] <- 1  # Set to one for filtering the map
       
-      ##########################################################################
+      filter <- Products2EndUse %*%  diag(filter)  # Apply filter
+      
+      Map <- filter / rowSums(filter)  # Create map 
+      
+      Map <- Map[vec$Product - 10,]  # Select rows of imported products
+      
+      Value <- Map * vec$Quantity  # Map values to sectors
+      
+      Use[vec$Product,filter(base$industry,Type == "Final") %>% pull(Code)] <- Value
+  
+      
+      ### Allocate manufacturing intermediate imports to manufacturing use ###
+      
+      Value <- filter(data$Fab2Demand,base.from == i,base.to == j) %>%
+        select(Quantity,sector.from,sector.to) 
+      
+      Value$sector.from <- Code$base$Final[Value$sector.from]
+      
+      Value$sector.to <- Code$industry$manu[Value$sector.to]
+      
+      index <- as.matrix( Value[, c("sector.from","sector.to") ] )
+      
+      Use[index] <- Value$Quantity  # # Write values in table
+      
+      
+      
+      ### Allocate all other intermediate products ###
+      
+      # Read concordance for all other industries except manufacturing:
+      
+      Map <- SUT_temp$Use[base$product$Code,]
+      
+      Map <- Prorate(Map,Supply)
+      
+      vec <- filter(data$BACI, From == i, To == j, ! Product %in% Code$base$Finished)
+      
+      Value <- Map[vec$Product,] * vec$Quantity
+
+      Use[vec$Product,] <- Value 
+      
+      
+      ### Allocate Final Outputs ###
+      
+      Value <- filter(data$FinalDemand, base.from == i, base.to == j) %>% 
+        select(Quantity, sector, demand)
+        
+      Value$sector <- Code$industry$manu[Value$sector]
+      
+      index <- as.matrix( Value[, c("sector","demand") ] )
+      
+      Final[index] <- Value$Quantity
+      
       # Delete column and row names
+      
       Use <- round(Use,2)
-      FD <- round(FD,2)
+      
+      Final <- round(Final,2)
       
       colnames(Use) <- NULL
       rownames(Use) <- NULL
-      colnames(FD) <- NULL
-      rownames(FD) <- NULL
+      colnames(Final) <- NULL
+      rownames(Final) <- NULL
       
       # Write table to file
-      write.table(Use,file = paste0(path$IE_Processed,"/SUT/",year,"_IntermediateTrade_",i,"_",j,".csv"),
-                  col.names = FALSE,
-                  row.names = FALSE,
-                  sep = ",")
       
-      write.table(FD,file = paste0(path$IE_Processed,"/SUT/",year,"_FinalTrade_",i,"_",j,".csv"),
-                  col.names = FALSE,
-                  row.names = FALSE,
-                  sep = ",")
+      Numbers2File(Use, paste0(path$IE_Processed,"/SUT/",year,"_IntermediateTrade_",i,"_",j,".csv") )
+      
+      Numbers2File(Final, paste0(path$IE_Processed,"/SUT/",year,"_FinalTrade_",i,"_",j,".csv") )
+      
       
     }
   }

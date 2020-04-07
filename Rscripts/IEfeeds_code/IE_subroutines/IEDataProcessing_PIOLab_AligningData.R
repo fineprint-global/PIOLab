@@ -11,17 +11,29 @@
 IEDataProcessing_PIOLab_AligningData <- function(year,path)
 {
   print("IEDataProcessing_PIOLab_AligningData initiated.")
+  
   ##############################################################################
+  
   # 1. Loading data
+  
   # Loading processed WSA production numbers
+  
   Pig <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_PigIron.csv"))
+  
   Flat <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_FlatRolledProducts.csv"))
+  
   colnames(Flat)[2] <- "Flat"
+  
   Long <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_LongRolledProducts.csv"))
+  
   colnames(Long)[2] <- "Long"
+  
   BOF_steel <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelOxygenBlownConverters.csv"))
+  
   EAF_steel <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelElectricFurnaces.csv"))
+  
   colnames(EAF_steel)[2] <- "EAF"
+  
   
   # Loading IE_Processed IEA energy data
   BF_gas <- read.csv(paste0(path$IE_Processed,"/IEA/IEA_",year,"_BlastFurnaceGas.csv"))

@@ -10,7 +10,9 @@
 IEFeed_PIOLab_Cullen <- function(path)
 {
   print("IEFeed_PIOLab_Cullen initiated.")
+  
   # 1. Importing data on fabrication yields
+  
   raw_data <- read.xlsx(paste0(path$Raw,"/Cullen/4_PY_FabricationYield_Cullen2012.xlsx"),
                         sheet = 2)
   
@@ -18,14 +20,19 @@ IEFeed_PIOLab_Cullen <- function(path)
   data <- raw_data[,c("aspect.3.:.commodity","value")]
   colnames(data) <- c("Yield.Sector","Yield.Factor")
   data$Yield.Factor <- data$Yield.Factor/100  
-  data <- as.data.frame(data)
+  yields <- as.data.frame(data)
   
   # Check if subfolder in processed data exists and if not create it
+  
   path_set <- paste0(path$IE_Processed,"/Cullen")
+  
   if(!dir.exists(path_set)) dir.create(path_set)
 
+
   # Write to file
-  write.csv(data,file = paste0(path_set,"/FabricationYields.csv"),row.names = FALSE)  
+  
+  write.csv(yields,file = paste0(path_set,"/FabricationYields.csv"),row.names = FALSE)  
+  
   
   # 2. importing sankey raw data and select end-use flows in order to calculate shares
   
@@ -33,29 +40,46 @@ IEFeed_PIOLab_Cullen <- function(path)
                         sheet = 2)
   
   # Select columns
+  
   data <- raw_data[,c("aspect.2.:.destination_process","aspect.3.:.commodity","value")]
+  
   colnames(data) <- c("EndUse","Commodity","Quantity")
+  
   data <- data[,c("Commodity","EndUse","Quantity")]
   
+  
   # The end-use categories used in Cullen et al 2012
+  
   end_use  <- c("Buildings","Infrastructure","Cars","Trucks","Ships + other","Mechanical equipment",
-                "Electrical equipment","Food packaging","Domestic appliances")
+                "Electrical equipment","Food packaging","Domestic appliances","Metal goods","Food packaging")
   
   # Filter end-use categories
+  
   data <- filter(data,EndUse %in% end_use)
   
-  # Set up concordance to link the commodity to groups 
-  groups <- data.frame("index" = 1:length(unique(data$Commodity)),
-                     "Commodity.Group" = c(rep("Long",6),rep("Flat",10),"Long",rep("Castings",2)),
-                     "item" = unique(data$Commodity),
-                     stringsAsFactors = FALSE)
-    
-  data <- left_join(data,groups,c("Commodity" = "item"),copy = FALSE)
-  data <- data[,c("index","Commodity","Commodity.Group","EndUse","Quantity")]
-  data$index <- 1:nrow(data)
+  # Set up concordance to link the products to end-use categories 
+  
+  Conco <- reshape(data = data,
+                   idvar = "Commodity",
+                   v.names = "Quantity",
+                   timevar = "EndUse",
+                   direction = "wide")
+  
+  remove(data,raw_data)  # Delete objects that are not needed anymore
+  
+  rownames(Conco) <- Conco$Commodity  # Move product names to rownames 
+  
+  Conco$Commodity <- NULL # Delete product name column
+  
+  colnames(Conco) <- gsub("Quantity.","",colnames(Conco)) # Cleaning colnames
+  
+  colnames(Conco)[colnames(Conco) == "Ships + other"] <- "Ships/other"
+  
+  Conco[is.na(Conco)] <- 0
   
   # Write to file
-  write.csv(data,file = paste0(path_set,"/ProductsToEndUse.csv"),row.names = FALSE)
+  
+  write.csv(Conco,file = paste0(path_set,"/ProductsToEndUse.csv"))
   
   print("IEFeed_PIOLab_Cullen finished.")
 }

@@ -20,7 +20,7 @@ IEDataProcessing_PIOLab_WasteMFAIOModelRunV2 <- function(year,path)
   
   Y.codes <- read.csv( paste0(path$IE_Processed,"/EXIOWasteMFAIO/Y_codes.csv"))
   
-  Y.codes["Key"] <- paste0(Y.codes$base,"-",Y.codes$sector)
+  Y.codes["Key"] <- paste0(Y.codes$base,"-",Y.codes$demand)
   
   
   # Load model variables:
@@ -36,13 +36,13 @@ IEDataProcessing_PIOLab_WasteMFAIOModelRunV2 <- function(year,path)
   
   x <- rowSums( L %*% Y )  # Calculate gross output
   
-  # Calculate multipliers
   
-  E <- colSums(Q)/x
+  
+  E <- colSums(Q)/x  # Calculate direct intensity
   
   E[is.na(E)] <- 0
   
-  MP <- L*E
+  MP <- L*E  # Calculate material mulitplier
   
   # 1. Estimate flows from fabrication to final product
   
@@ -79,9 +79,9 @@ IEDataProcessing_PIOLab_WasteMFAIOModelRunV2 <- function(year,path)
   
   # Set col and row names:
   
-  colnames(FP) <- paste0(Y.codes$base,"-",Y.codes$demand)
+  colnames(FP) <- Y.codes$Key
   
-  rownames(FP) <- paste0(IO.codes$base,"-",IO.codes$sector)
+  rownames(FP) <- IO.codes$Key
   
   FP[1:nrow(Y),1:ncol(Y)] <- 0  # Set values to zero
   
@@ -105,37 +105,23 @@ IEDataProcessing_PIOLab_WasteMFAIOModelRunV2 <- function(year,path)
                    copy = FALSE, 
                    suffix = c(".from",".to") ) 
   
-  FP <- left_join( x = FP, y = select(IO.codes,base,sector,Key), 
+  FP <- left_join( x = FP, y = select(Y.codes,base,demand,Key), 
                    by = c("To" = "Key"), 
                    copy = FALSE, 
                    suffix = c(".from",".to") ) 
   
-  Fabrication2Final <- select(FP,-From,-To) # Remove key (not needed anymore)
-  
-  
-  
-  
-  colSums(SteelInFinalDemand)/1000000
-  
-  
-  sum(SteelInFinalDemand)
-  
-  SteelInFinalDemand <- tibble::rownames_to_column(SteelInFinalDemand, "Key")
-  SteelInFinalDemand <- melt(SteelInFinalDemand,id.vars = "Key")
-  colnames(SteelInFinalDemand) <- c("Key","To.Region","Quantity")
-  # Warning messages are turned off for the following join
-  options(warn = -1)
-  SteelInFinalDemand <- left_join(SteelInFinalDemand,IO.codes,c("Key"),copy = FALSE) %>%
-    select(base,To.Region,commodity,Quantity)
-  options(warn = 0)
-  colnames(SteelInFinalDemand)[c(1,3)] <- c("From.Region","Commodity")
-  SteelInFinalDemand <- left_join(SteelInFinalDemand,base$product,c("Commodity" = "Name"),copy = FALSE) %>%
-    select(From.Region,To.Region,Code,Quantity)
-  colnames(SteelInFinalDemand)[3] <- "Product"
+  FinalDemand <- select(FP,-From,-To) # Remove key (not needed anymore)
   
   # 4. Save results to folder 
-  write.csv(FabricationToFinal,file = paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_FabricationToFinalDemand.csv"),row.names = FALSE)
-  write.csv(SteelInFinalDemand,file = paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_SteelInFinalDemand.csv"),row.names = FALSE)
   
-  print("DataProcessing_PIOLab_WasteMFAIOModelRun finished.")
+  write.csv(Fabrication2Final,
+            file = paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_Fabrication2FinalDemand.csv"),
+            row.names = FALSE)
+  
+  write.csv(FinalDemand,
+            file = paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_FinalDemand.csv"),
+            row.names = FALSE)
+  
+  print("DataProcessing_PIOLab_WasteMFAIOModelRunV2 finished.")
+  
 }

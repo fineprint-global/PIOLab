@@ -128,6 +128,8 @@ IEFeed_PIOLab_EXIOWasteMFAIO <- function(year,path)
   x <- rowSums(L%*%Y)
   IO.codes <- IO.codes[IO.codes$commodity != "NEC",]
   IO.codes$index <- 1:nrow(IO.codes)
+  IO.codes$WIOcode <- 1:length(unique(IO.codes$commodity))
+  IO.codes$base.product <- base$product$Code[base$product$Name  %in% IO.codes$commodity]
   
   # Check if subfolder in processed data exists and if not create it
   path_set <- paste0(path$IE_Processed,"/EXIOWasteMFAIO")

@@ -66,11 +66,13 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
   # 1. The first section calculates the net use of rolled steel products in regions
   # by adding imports and subtracting exports from the WSA production values
   
+  BACI <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,".csv")) # Load trade data
+  
   # Load finished steel production
   Flat <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_FlatRolledProducts.csv"))
   Long <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_LongRolledProducts.csv"))
-  # Load BACI trade flows 
-  BACI <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,".csv"))
+   
+  
   
   Flat_trade <- BACI %>% filter(Product == base$product$Code[base$product$Name == "Flat rolled products"]) %>% 
     select(From,To,Quantity)

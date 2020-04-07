@@ -18,7 +18,9 @@ if(file.exists(reg_path))
   
   base <- list("region" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",RegionAgg,"_BaseRegionClassification.xlsx"),sheet = 1),
                "industry" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 1),
-               "product" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 2))
+               "product" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 2),
+               "demand" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 3),
+               "input" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 4))
   
   remove(reg_map,RegionAgg)
   
@@ -35,15 +37,34 @@ if(file.exists(reg_path))
   
   base <- list("region" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",test_regagg,"_BaseRegionClassification.xlsx"),sheet = 1),
                "industry" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 1),
-               "product" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 2))
+               "product" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 2),
+               "demand" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 3),
+               "input" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 4))
+  
   remove(test_regagg)
 }
 
 # Import product aggregator for different cases
+
 if(IEdatafeed_name == "Ind20Pro22v1")
 {
   ProductAggregator <- read.csv(paste0(path$Concordance,"/Sector Aggregators/22ProV1_SectorAggregatorProducts.csv"),
                                 stringsAsFactors=FALSE, sep = ",",header = FALSE)
+                                
+  IndustryAggregator <- read.csv(paste0(path$Concordance,"/Sector Aggregators/20IndV1_SectorAggregatorIndustries.csv"),
+                                 stringsAsFactors=FALSE, sep = ",",header = FALSE)
 }
+
+if(IEdatafeed_name == "Ind30Pro40v1")
+{
+  
+  ProductAggregator <- read.csv(paste0(path$Concordance,"/Sector Aggregators/40ProV1_SectorAggregatorProducts.csv"),
+                                stringsAsFactors=FALSE, sep = ",",header = FALSE)
+  
+  IndustryAggregator <- read.csv(paste0(path$Concordance,"/Sector Aggregators/30IndV1_SectorAggregatorIndustries.csv"),
+                                 stringsAsFactors=FALSE, sep = ",",header = FALSE)
+}
+
+
 
 remove(reg_path)
