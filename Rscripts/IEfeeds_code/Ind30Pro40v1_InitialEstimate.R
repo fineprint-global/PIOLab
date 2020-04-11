@@ -13,7 +13,7 @@
 # the user can choose the desired region aggregator by setting the following variable
 # either to 5,35 or 49. If test_regagg is not defined it will be set automatically to 
 # 5 regions later on in the code.
-# test_regagg <- "049"
+# test_regagg <- "002"
 
 ################################################################################
 # 1. Set up environment for building the initial estimate
