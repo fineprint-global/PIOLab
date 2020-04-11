@@ -214,10 +214,9 @@ IEDataProcessing_PIOLab_WasteMFAIOExtensionV2 <- function(year,path)
     
     df$Use <- df$Production + df$Import - df$Export
     
-    df$Use[df$Use < 0] <- df$Import[df$Use < 0] # Set use to import where negative
+   
     
     
-    print(paste0("Minimum of ",base$region$Name[r],": ",min(df$Use))) # Check min.
     
     
     # Subtract production values of cold rolled products from hot rolled coil-sheet-strip
@@ -226,7 +225,13 @@ IEDataProcessing_PIOLab_WasteMFAIOExtensionV2 <- function(year,path)
     
     df$Use[df$Code == Code$base$CoilSheetStrip] <- df$Use[df$Code == Code$base$CoilSheetStrip] - Subtract 
     
-    df$Use[df$Use < 0] <- df$Import[df$Use < 0] # Set use to import where negative
+    print("minimum values before adjustment to domestic production:")
+    print(df[df$Use < 0,])
+    
+    df$Use[df$Use < 0] <- df$Production[df$Use < 0] # Set use to import where negative
+    
+    
+    print(paste0("Minimum of ",base$region$Name[r],": ",min(df$Use))) # Check min.
     
     
     x_filter <- diag(x[IO.codes$index[IO.codes$base == r]])  # Read production of region r
