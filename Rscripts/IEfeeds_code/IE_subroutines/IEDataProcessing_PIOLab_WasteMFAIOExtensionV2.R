@@ -228,7 +228,7 @@ IEDataProcessing_PIOLab_WasteMFAIOExtensionV2 <- function(year,path)
     print("minimum values before adjustment to domestic production:")
     print(df[df$Use < 0,])
     
-    df$Use[df$Use < 0] <- df$Production[df$Use < 0] # Set use to import where negative
+    df$Use[df$Use < 0] <- df$Production[df$Use < 0] # Set use to production where negative
     
     
     print(paste0("Minimum of ",base$region$Name[r],": ",min(df$Use))) # Check min.
