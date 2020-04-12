@@ -77,7 +77,10 @@ ALANG$`Row grandchild` <- prod$Num
 ALANG$`Column parent` <- reg$To$Num
 ALANG$`Column child` <- "1"
 ALANG$`Column grandchild` <- "1-e"
-
+ALANG$`Pre-map` <- ""
+ALANG$`Post-map` <-  ""
+ALANG$`Pre-Map` <- ""
+ALANG$`Post-Map` <- ""
 
 # Call script that writes the ALANG file to the repsective folder in the root
 
