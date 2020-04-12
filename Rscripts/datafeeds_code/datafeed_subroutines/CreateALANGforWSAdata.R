@@ -76,12 +76,11 @@ concord <- read.xlsx(xlsxFile = paste0(path$Concordance,"/WSA/WSA_RegionConcorda
 
 ConcoInd <- read.table(paste0(path$Concordance,"/WSA/WSA_Source2Root_Industry.csv"),sep = ",")
 
-#ConcoInd <- paste0("[", paste( which(ConcoInd[Settings$id,] == 1) , collapse = "," ),"]")
-ConcoInd <- paste( which(ConcoInd[Settings$id,] == 1) , collapse = "," )
-
+ConcoInd <- list("One" = paste( which(ConcoInd[Settings$id,] == 1) , collapse = "," ),
+                 "Zero" = paste( which(ConcoInd[Settings$id,] == 0) , collapse = "," ) )
+                 
 ConcoPro <- read.table(paste0(path$Concordance,"/WSA/WSA_Source2Root_Product.csv"),sep = ",")
 
-#ConcoPro <- paste0("[", paste( which(ConcoPro[Settings$id,] == 1) , collapse = "," ),"]")
 ConcoPro <- paste( which(ConcoPro[Settings$id,] == 1) , collapse = "," )
 
 
@@ -107,10 +106,6 @@ filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",year
 
 Numbers2File( ConcoReg, paste0(path$Concordance,filename$ConcoReg)) # Save region aggregator 
 
-# Numbers2File( ConcoInd, paste0(path$Concordance,filename$ConcoInd)) # Save industry aggregator 
-# 
-# Numbers2File( ConcoPro, paste0(path$Concordance,filename$ConcoPro)) # Save product aggregator 
-
 Numbers2File( RHS, paste0(path$Processed, filename$RHS)) # Write data to folder 
 
 
@@ -119,27 +114,37 @@ source(paste0(path$Subroutines,"/makeALANGheadline.R")) # Create ALANG header
 
 ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year)) # Create entry
 
-# Write variables:
+# Write command for elements that are not zero:
                  
 ALANG$Value <- paste0("DATAPATH",filename$RHS)
 ALANG$S.E. <- paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";")
+ALANG$`Row grandchild` <- ConcoInd$One
+ALANG$`Column parent` <- paste0("1:e t2 CONCPATH",filename$ConcoReg)
+
+
+# Write command for elements that are zero:
+
+ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year, "Zero elements")) # Create entry
+
+ALANG$Value[2] <- paste0("0")
+ALANG$S.E.[2] <- paste0("0")
+ALANG$`Row grandchild`[2] <- ConcoInd$Zero
+ALANG$`Column parent`[2] <- paste0("1-e")
+
+
+ALANG$`Row parent` <- "1-e"
+ALANG$`Row child` <- "1"
+ALANG$`Column child` <- "2"
+ALANG$`Column grandchild` <- ConcoPro
+
+
 ALANG$`#` <- as.character(1:nrow(ALANG))
 ALANG$Incl <- "Y"
 ALANG$Parts <- "1"
-  
+
 ALANG$Years <- as.character(year-2007)
 ALANG$Margin <- "1"
 ALANG$Coef1 <- "1"
-  
-ALANG$`Row parent` <- "1-e"
-ALANG$`Row child` <- "1"
-#ALANG$`Row grandchild` <- paste0("1:e t1 CONCPATH",filename$ConcoInd)
-ALANG$`Row grandchild` <- ConcoInd
-
-ALANG$`Column parent` <- paste0("1:e t2 CONCPATH",filename$ConcoReg)
-ALANG$`Column child` <- "2"
-#ALANG$`Column grandchild` <- paste0("1:e a CONCPATH",filename$ConcoPro)
-ALANG$`Column grandchild` <- ConcoPro
 
 ALANG$`Pre-map` <- ""
 ALANG$`Post-map` <- ""
