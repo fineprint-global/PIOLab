@@ -68,16 +68,11 @@ data <- data_new
 remove(data_new)
 
 
-# RegAgg <- matrix(1,nrow = n_reg,ncol = n_reg) # Create region aggregator for rows
-# 
-# diag(RegAgg) <- 0 # Set diagonal zero because imports do not reflect domestic (internal) trade
-# 
 ConcoReg <- diag(nrow(root$region)) # Create pseudo aggregator (for columns)
 
 # Set names and paths to data and concordances:
 
 filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",year,".csv"),
-                 "SE" = paste0("/",datafeed_name,"/",datafeed_name,"_SE_",year,".csv"),
                  "ConcoReg" = "/Root2Root_Reg_Concordance.csv")
 
 Numbers2File( t(data$RHS), paste0(path$Processed,filename$RHS)) # Save S2R reg aggregator 

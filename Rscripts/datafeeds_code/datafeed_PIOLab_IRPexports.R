@@ -20,6 +20,12 @@ path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name)
 # Load function to write arrays to files
 source(paste0(path$Subroutines,"/Numbers2File.R"))
 
+# Check if folder with processed data exists, in case delete and create empty one
+
+if(dir.exists(path$df_Processed)) unlink(path$df_Processed,recursive = TRUE) 
+
+dir.create(path$df_Processed)
+
 # Loading raw data
 data <- read.csv(paste0(path$Raw,"/IRP/all_CCC_Exp_ResearchDB.csv"),stringsAsFactors=FALSE)
 colnames(data)[6:49] <- 1970:2013
@@ -44,58 +50,88 @@ data <- data[!is.na(data$Code),] # Mayotte and Farour Isl. are not in root (tbc)
 
 n_reg <- nrow(root$region)
 
-# Add standard errors 
-source(paste0(path$Subroutines,"/SE_LogRegression.R"))
+# Read standard errors: 
+
 RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
-data <- SE_LogRegression(data,RSE$Minimum,RSE$Maximum)
 
-# Create empty ALANG table with header
-source(paste0(path$Subroutines,"/makeALANGheadline.R"))
-# Extend table with additional columns
+data_new <- data.frame("code" = 1:n_reg,"RHS" = 0)
 
-for(i in 1:nrow(data))
-{ 
-  # Get root_code of regions 
-  reg <- data$Code[i]
-  
-  if(reg == 1) reg_range <- paste0("2-",as.character(n_reg))
-  
-  if(reg == 2) reg_range <- paste0("[1,3-",as.character(n_reg),"]")
-  
-  if(reg == n_reg) reg_range <- paste0("1-",as.character(n_reg-1))
-  
-  if(reg == (n_reg-1)) reg_range <- paste0("[1-",as.character(n_reg-2),",",as.character(n_reg),"]")
-  
-  if(reg > 2 & reg < (n_reg-1)) {
-    reg_range <- paste0("[1-",as.character(reg-1),",",as.character(reg+1),"-",
-                        as.character(n_reg),"]") }
-  
-  # Read import value
-  value <- as.character(data$Quantity[i])
-  # Set SE
-  SE <- as.character(data$SE[i])
-  reg_name <- root$region$Name[reg]
-  reg <- as.character(reg)
-  
-  # Add command for domestic Use table
-  ALANG <- add_row(ALANG,'1' = paste0("DataFeed IRP exports from  ",reg_name),
-                   Value = value,S.E. = SE,
-                   'Row parent' = reg,'Row child' = "2",'Row grandchild' = "1-e",
-                   'Column parent' = reg_range,'Column child' = "[1,3]",'Column grandchild' = "1-e")
-}
-# Add other variables
+data_new$RHS[data$Code] <- data$Quantity
+
+data <- data_new
+
+remove(data_new)
+
+
+ConcoReg <- diag(nrow(root$region)) # Create pseudo aggregator (for columns)
+
+# Set names and paths to data and concordances:
+
+filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",year,".csv"),
+                 "ConcoReg" = "/Root2Root_Reg_Concordance.csv")
+
+Numbers2File( t(data$RHS), paste0(path$Processed,filename$RHS)) # Save S2R reg aggregator 
+
+Numbers2File( ConcoReg, paste0(path$Concordance,filename$ConcoReg)) # Save S2R reg aggregator 
+
+
+# Create empty ALANG table with header:
+
+source(paste0(path$Subroutines,"/makeALANGheadline.R")) # Create ALANG header
+
+ALANG <- ALANG[,c(1:19,11:19)]  # Extend table with additional columns
+
+ALANG <- add_row(ALANG,'1' = "DataFeed IRP export")  # Create command
+
+ALANG$Value <- paste0("DATAPATH",filename$RHS)
+
+ALANG$S.E. <- paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";")
+
+
+# Write first 8-tuple (sum of domestic use and imports for each region)
+
+ALANG$Coef1 <- "-1"
+
+ALANG$Years <- "1"
+ALANG$Margin <- "1"
+
+ALANG$`Row parent` <- paste0("1:e a CONCPATH",filename$ConcoReg)
+ALANG$`Row child` <- "2"
+ALANG$`Row grandchild` <- "1-e"
+
+ALANG$`Column parent` <- "1:e~3"
+ALANG$`Column child` <- "1"
+ALANG$`Column grandchild` <- "1-e"
+
+# Write second 8-tuple (subtract sum of domestic use table)
+
+ALANG$Coef1.1 <- "1"
+
+ALANG$Years.1 <- "1"
+ALANG$Margin.1 <- "1"
+
+ALANG$`Row parent.1` <- "1:e"
+ALANG$`Row child.1` <- "2"
+ALANG$`Row grandchild.1` <- "1-e"
+
+ALANG$`Column parent.1` <- "1-e"
+ALANG$`Column child.1` <- "1-e"
+ALANG$`Column grandchild.1` <- "1-e"
+
 ALANG$`#` <- as.character(1:nrow(ALANG))
 ALANG$Incl <- "Y"
-ALANG$Parts <- "1"
+ALANG$Parts <- "2"
+
 ALANG$`Pre-map` <- ""
 ALANG$`Post-map` <- ""
 ALANG$`Pre-Map` <- ""
 ALANG$`Post-Map` <- ""
-ALANG$Years <- "1"
-ALANG$Margin <- "1"
-ALANG$Coef1 <- "1"
+
 
 # Call script that writes the ALANG file to the repsective folder in the root
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
 
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
+
+rm(list = ls()) # clear workspace
+
