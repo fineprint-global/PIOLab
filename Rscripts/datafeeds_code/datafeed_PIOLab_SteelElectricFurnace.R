@@ -4,7 +4,7 @@
 # Author: hanspeter.wieland@wu.ac.at
 # Date: 10.03.2020 
 
-datafeed_name <- "SteelElectricFurnaces" # Set name of feed 
+datafeed_name <- "SteelElectricFurnace" # Set name of feed 
 
 # Determine loaction of root folder
 ################################################################################

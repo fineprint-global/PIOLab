@@ -43,7 +43,7 @@ IEDataProcessing_PIOLab_AligningDataV2 <- function(year,path)
   
   Ingots <- list("Production" = read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_Ingots.csv")))
   
-  Ingots[["Code"]] <- filter(base$product, Name == "Ingots") %>% pull(Code)
+  Ingots[["Code"]] <- filter(base$flow, Name == "Ingots") %>% pull(Code)
   
   Ingots[["Export"]] <- filter(BACI, Product == Ingots$Code) %>% select(-Product) %>%
     group_by(From) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(From)

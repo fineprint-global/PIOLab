@@ -18,7 +18,7 @@
 ################################################################################
 # 1. Set up environment for building the initial estimate
 
-IEdatafeed_name <- "Ind30Pro40v1" 
+IEdatafeed_name <- "Ind30Pro39v1" 
 
 print(paste0("Start of ",IEdatafeed_name," InitialEstimate."))
 
@@ -30,12 +30,17 @@ if(Sys.info()[1] == "Linux"){
   root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
 
 # Initializing R script (load R packages and set paths to folders etc.)
-
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
-# Read base regions, products and codes from mat-file if available
-
+# Read base classification settings (region, processe and flow codes) 
 source(paste0(path$root,"Rscripts/Subroutines/Read_BaseClassification.R"))
+
+# Read root to mother sector aggregators
+source(paste0(path$root,"Rscripts/Subroutines/Load_Root2Mother_sectors.R"))
+
+# Read root to mother region aggregator (from mat-file if available)
+# source(paste0(path$root,"Rscripts/Subroutines/Load_Root2Mother_regions.R"))
+
 
 # Read region aggregation from classification to set the right path for the IE data
 
@@ -119,7 +124,6 @@ IEDataProcessing_PIOLab_AligningDataV2(year,path) # Align WSA, IRP extraction
 IEDataProcessing_PIOLab_WasteMFAIOExtensionV2(year,path) # Compile extension for WIO  
 
 IEDataProcessing_PIOLab_WasteMFAIOModelRunV2(year,path) # Run WIO Model calculation
-
 
 
 # Compile domestic SUTs

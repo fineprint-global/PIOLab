@@ -11,14 +11,14 @@ if(file.exists(reg_path))
   unlink(reg_path)  # Delete the file
   
   # Import matrix
-  RegionAggregator <- read.csv(reg_map,stringsAsFactors=FALSE, sep = ",",header = FALSE)  
+  R2M <- list("region" = as.matrix( read.csv(reg_map,stringsAsFactors=FALSE, sep = ",",header = FALSE) ) )  
   
   # Read the number of regions from the name of the aggregator 
   RegionAgg <- substr(reg_map,nchar(reg_map)-23,nchar(reg_map)-21)
   
   base <- list("region" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",RegionAgg,"_BaseRegionClassification.xlsx"),sheet = 1),
-               "industry" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 1),
-               "product" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 2),
+               "process" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 1),
+               "flow" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 2),
                "demand" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 3),
                "input" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 4))
   
@@ -32,39 +32,25 @@ if(file.exists(reg_path))
   if(!exists("test_regagg")) test_regagg <- "005"
   
   # Import matrix
-  RegionAggregator <- read.csv(paste0(path$Concordance,"/Region Aggregators/",test_regagg,"_RegionAggregator.csv"),
-                      stringsAsFactors=FALSE, sep = ",",header = FALSE)  
+  R2M <<- list("region" = as.matrix( read.csv(paste0(path$Concordance,"/Region Aggregators/",test_regagg,"_RegionAggregator.csv"),
+                                              stringsAsFactors=FALSE, sep = ",",header = FALSE)
+                                    )
+              )
   
-  base <- list("region" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",test_regagg,"_BaseRegionClassification.xlsx"),sheet = 1),
-               "industry" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 1),
-               "product" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 2),
-               "demand" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 3),
-               "input" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 4))
+  base <<- list("region" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",test_regagg,"_BaseRegionClassification.xlsx"),sheet = 1),
+                "process" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 1),
+                "flow" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 2),
+                "demand" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 3),
+                "input" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 4))
   
   remove(test_regagg)
 }
 
-# Import product aggregator for different cases
-
-if(IEdatafeed_name == "Ind20Pro22v1")
-{
-  ProductAggregator <- read.csv(paste0(path$Concordance,"/Sector Aggregators/22ProV1_SectorAggregatorProducts.csv"),
-                                stringsAsFactors=FALSE, sep = ",",header = FALSE)
-                                
-  IndustryAggregator <- read.csv(paste0(path$Concordance,"/Sector Aggregators/20IndV1_SectorAggregatorIndustries.csv"),
-                                 stringsAsFactors=FALSE, sep = ",",header = FALSE)
-}
-
-if(IEdatafeed_name == "Ind30Pro40v1")
-{
-  
-  ProductAggregator <- read.csv(paste0(path$Concordance,"/Sector Aggregators/40ProV1_SectorAggregatorProducts.csv"),
-                                stringsAsFactors=FALSE, sep = ",",header = FALSE)
-  
-  IndustryAggregator <- read.csv(paste0(path$Concordance,"/Sector Aggregators/30IndV1_SectorAggregatorIndustries.csv"),
-                                 stringsAsFactors=FALSE, sep = ",",header = FALSE)
-}
-
-
+num <<- list("flow" = nrow(base$flow),
+             "process" = nrow(base$process),
+             "region" = nrow(base$region),
+             "input" = nrow(base$input),
+             "demand" = nrow(base$demand) 
+             )
 
 remove(reg_path)

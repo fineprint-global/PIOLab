@@ -18,15 +18,16 @@ IEFeed_PIOLab_Grades <- function(path)
 
   # Load root classification and use 2-digit ISOCode to look-up country codes
   root_class <- root$region  %>% select(Code,ISO2digitCode) 
-  # Warning messages are turned off for the following join
-  options(warn = -1)
+  
+  
+  options(warn = -1)  # Warning messages are turned off for the following join
   data <- left_join(data,root_class,by = c("ISOAlpha.2" = "ISO2digitCode"),copy = FALSE) %>% 
     select(Code, Concentration)
-  # Turned on again
-  options(warn = 0)
+  options(warn = 0)  # Turned on again
+  
   # Load region aggregator and filter for all non-RoW countries
   source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-  reg_agg <- Root2Base_RegionAggregator(RegionAggregator) 
+  reg_agg <- Root2Base_RegionAggregator(R2M$region) 
   #reg_agg <- reg_agg %>% filter(base != max(reg_agg$base))
   
   # Look-up base classification codes

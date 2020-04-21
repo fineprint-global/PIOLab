@@ -12,11 +12,11 @@ IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables <- function(year,path)
   
   # Define general variables:
   
-  num <- list("pro" = nrow(base$product),
-              "ind" = nrow(base$industry),
-              "reg" = nrow(base$region),
-              "va" = nrow(base$input),
-              "fd" = nrow(base$demand) )
+  # num <- list("pro" = nrow(base$product),
+  #             "ind" = nrow(base$industry),
+  #             "reg" = nrow(base$region),
+  #             "va" = nrow(base$input),
+  #             "fd" = nrow(base$demand) )
   
   # Wrapper for writing files to folder
   
@@ -51,38 +51,38 @@ IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables <- function(year,path)
   n_she <- 1
   n_yea <- 1
   # Number of 8-tuples in domestic supply tables
-  n_sup <- num$reg * num$pro * num$ind
+  n_sup <- num$region * num$flow * num$process
   # Number of 8-tuples in use tables (domestic + trade) 
-  n_use <- num$reg^2 * num$pro * num$ind
+  n_use <- num$region^2 * num$flow * num$process
   # Number of final demand categories
-  fin <- num$fd
+  fin <- num$demand
   # Number of 8-tuples in final demand block (domestic + trade)
-  n_fd <- num$reg^2 * num$ind * fin
+  n_fd <- num$region^2 * num$process * fin
   # Number of primary inputs
-  pi <- num$va
+  pi <- num$input
   # Number of 8-tuples in primary input block
-  n_va <- num$reg * num$ind * pi
+  n_va <- num$region * num$process * pi
   
-  S8_sup <- data.frame("index" = 1:n_sup,"x1" = n_yea,"x2" = n_she,"x3" = rep(1:num$reg,each = num$pro*num$ind),
-                       "x4" = 1, "x5" = 1:num$ind, "x6" = rep(1:num$reg,each = num$pro*num$ind), 
-                       "x7" = 2, "x8" = rep(1:num$pro,each = num$ind),"t" = NA)
+  S8_sup <- data.frame("index" = 1:n_sup,"x1" = n_yea,"x2" = n_she,"x3" = rep(1:num$region,each = num$flow*num$process),
+                       "x4" = 1, "x5" = 1:num$process, "x6" = rep(1:num$region,each = num$flow*num$process), 
+                       "x7" = 2, "x8" = rep(1:num$flow,each = num$process),"t" = NA)
   
-  S8_use <- data.frame("index" = 1:n_use,"x1" = n_yea,"x2" = n_she,"x3" = rep(1:num$reg,each = num$pro*num$ind),
-                       "x4" = 2,"x5" = 1:num$pro, "x6" = rep(1:num$reg,each = num$reg*num$pro*num$ind), 
-                       "x7" = 1, "x8" = rep(1:num$ind,each = num$pro),"t" = NA)
+  S8_use <- data.frame("index" = 1:n_use,"x1" = n_yea,"x2" = n_she,"x3" = rep(1:num$region,each = num$flow*num$process),
+                       "x4" = 2,"x5" = 1:num$flow, "x6" = rep(1:num$region,each = num$region*num$flow*num$process), 
+                       "x7" = 1, "x8" = rep(1:num$process,each = num$flow),"t" = NA)
   
-  S8_fd <- data.frame("index" = 1:n_fd,"x1" = n_yea, "x2" = n_she, "x3" = rep(1:num$reg,each = num$ind*fin),
-                      "x4" = 1, "x5" = 1:num$ind, "x6" = rep(1:num$reg,each = num$reg*num$ind*fin), 
-                      "x7" = 3, "x8" = rep(1:fin,each = num$ind),"t" = NA)
+  S8_fd <- data.frame("index" = 1:n_fd,"x1" = n_yea, "x2" = n_she, "x3" = rep(1:num$region,each = num$process*fin),
+                      "x4" = 1, "x5" = 1:num$process, "x6" = rep(1:num$region,each = num$region*num$process*fin), 
+                      "x7" = 3, "x8" = rep(1:fin,each = num$process),"t" = NA)
   
-  S8_va <- data.frame("index" = 1:n_va,"x1" = n_yea, "x2" = n_she, "x3" = rep(1:num$reg,each = (num$ind*pi)),
-                      "x4" = 3, "x5" = rep(1:pi,num$ind), "x6" = rep(1:num$reg,each = (num$ind*pi)), 
-                      "x7" = 1, "x8" = rep(1:num$ind,each = pi),"t" = NA)
+  S8_va <- data.frame("index" = 1:n_va,"x1" = n_yea, "x2" = n_she, "x3" = rep(1:num$region,each = (num$process*pi)),
+                      "x4" = 3, "x5" = rep(1:pi,num$process), "x6" = rep(1:num$region,each = (num$process*pi)), 
+                      "x7" = 1, "x8" = rep(1:num$process,each = pi),"t" = NA)
   
   
   # Note by HP: Try to remove the message that follows here. Doesn't mean anything.
   
-  for(r in 1:num$reg)
+  for(r in 1:num$region)
   {
     # Load and write domestic supply tables
     SUP <- read.table(file = paste0(path_source,year,"_Supply_Region",r,".csv"),sep = ",")
@@ -109,7 +109,7 @@ IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables <- function(year,path)
     
     
     # Write trade blocks
-    for(s in (1:num$reg)[-r])
+    for(s in (1:num$region)[-r])
     {
       # Trade intermediates (Use tables)
       USE <- read.table(file = paste0(path_source,year,"_IntermediateTrade_",s,"_",r,".csv"),sep = ",")
@@ -129,10 +129,15 @@ IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables <- function(year,path)
   S8_fd <- S8_fd[,2:10]
   S8_va <- S8_va[,2:10]
   
+  S8 <- bind_rows(S8_sup,S8_use,S8_fd,S8_va)  # All-in-one for consistency analyses
+  
+  S8 <- S8[S8$t != 0,]  # Remove alle zero elements
+  
   # Arrange IO elements differently to write standard errors more specificly
   zero <- rbind(S8_sup[S8_sup$t == 0,],
                 S8_fd[S8_fd$t == 0,],
                 S8_va[S8_va$t == 0,])
+  
   # Note that the use table still includes zeros because the use side will be treated with more caution
   # meaning SE are higher
   
@@ -140,13 +145,13 @@ IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables <- function(year,path)
   use <- S8_use
   fd <- S8_fd[S8_fd$t != 0,]
   # Separate waste from final demand
-  wa <- fd[fd$x8 != 1,]
-  fd <- fd[fd$x8 == 1,]
+  wa <- fd[fd$x8 %in% base$demand$Code[base$demand$Type == "Waste"],]  
+  fd <- fd[!fd$x8 %in% base$demand$Code[base$demand$Type == "Waste"],]
   # Separate primary inputs
   va <- S8_va[S8_va$t != 0,]
-  ore <- va[va$x5 == 1,]
-  eol <- va[va$x5 == 2,]
-  res <- va[va$x5 %in% 3:5,]
+  ore <- va[va$x5 == base$input$Code[base$input$Name == "Crude Ore"],]
+  eol <- va[va$x5 == base$input$Code[base$input$Name == "End-of-Life Scrap"],]
+  res <- va[va$x5 %in% base$input$Code[base$input$Name %in% c("Flux","Coke","Air")],]
   
   # test if number of rows add up
   nrow(sup)+nrow(use)+nrow(fd)+nrow(ore)+nrow(eol)+nrow(zero)+nrow(res)+nrow(wa)
@@ -164,6 +169,7 @@ IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables <- function(year,path)
   write_file(res,"OtherInput")
   write_file(wa,"Waste")
   write_file(zero,"Zero")
+  write_file(S8,"AllInOne")
   
   print(paste0("IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables finished"))
   

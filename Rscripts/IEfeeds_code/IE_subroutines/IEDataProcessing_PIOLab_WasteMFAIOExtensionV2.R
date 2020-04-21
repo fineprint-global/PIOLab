@@ -44,16 +44,24 @@ IEDataProcessing_PIOLab_WasteMFAIOExtensionV2 <- function(year,path)
   
   # Select codes for finished steel:
   
-  Code <- list("base" = list("Finished" = filter(base$product,Type == 'Finished') %>% pull(Code),
-                             "Final" = filter(base$product,Type == 'Final') %>% pull(Code),
-                             "Forgings" = base$product$Code[base$product$Name == 'Forgings'],
-                             "CoilSheetStrip" = base$product$Code[base$product$Name == "Hot rolled coil-sheet-strip"]),
+  Code <- list("base" = list("Finished" = filter(base$flow,Type == 'Finished') %>% pull(Code),
+                             "Final" = filter(base$flow,Type == 'Final') %>% pull(Code),
+                             "Forgings" = base$flow$Code[base$flow$Name == 'Forgings'],
+                             "CoilSheetStrip" = base$flow$Code[base$flow$Name == "Hot rolled coil-sheet-strip"]),
                "WSA" = Settings %>% filter(Type == 'Finished') %>% pull(id) )
   
  
   # Run syntax to load Source2Root maps:
   
-  Source2Root <-list("WSA" = as.matrix( read.csv(paste0(path$Concordance,"/WSA/WSA_Source2Root_Product.csv"),header = FALSE) ))
+  set <- read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"),sheet = 2)
+  
+  path_sel <- list("flow" = paste0(path$Concordance,"/WSA/",
+                                   set$date[set$aggregator == "product"],"_WSA_Source2Root_Product.csv"),
+                   "process" = paste0(path$Concordance,"/WSA/",
+                                      set$date[set$aggregator == "industry"],"_WSA_Source2Root_Industry.csv")
+                   )
+  
+  Source2Root <-list("WSA" = as.matrix( read.csv(path_sel$flow,header = FALSE) ))
   
   Source2Root$WSA <- Source2Root$WSA[Code$WSA,]  # Select only finished steel
   
@@ -64,7 +72,7 @@ IEDataProcessing_PIOLab_WasteMFAIOExtensionV2 <- function(year,path)
   
   # Compile Source to mother concordance for finished steel products
   
-  Source2Mother <- list("WSA" = Source2Root$WSA %*% as.matrix(ProductAggregator[,Code$base$Finished]) )
+  Source2Mother <- list("WSA" = Source2Root$WSA %*% as.matrix(R2M$flow[,Code$base$Finished]) )
   
   # Load WSA Source2Source map for estimate final use of hot rolled coil-sheet-strip
   
@@ -103,8 +111,8 @@ IEDataProcessing_PIOLab_WasteMFAIOExtensionV2 <- function(year,path)
   )
   )
   
-  Source2Mother[["Cullen"]] <- list("EndUse" =  Source2Root_Map$Cullen$EndUse %*% as.matrix(ProductAggregator[,Code$base$Final]),
-                                    "Product" = Source2Root_Map$Cullen$Product %*% as.matrix(ProductAggregator[,Code$base$Finished])
+  Source2Mother[["Cullen"]] <- list("EndUse" =  Source2Root_Map$Cullen$EndUse %*% as.matrix(R2M$flow[,Code$base$Final]),
+                                    "Product" = Source2Root_Map$Cullen$Product %*% as.matrix(R2M$flow[,Code$base$Finished])
   )
   
   Source2Mother$Cullen$Yields <- Source2Mother$Cullen$EndUse  # Add concordance for yields
@@ -122,7 +130,7 @@ IEDataProcessing_PIOLab_WasteMFAIOExtensionV2 <- function(year,path)
   
   Products2EndUse <- t(Source2Mother$Cullen$Product)  %*% Products2EndUse %*% Source2Mother$Cullen$EndUse
   
-  
+  rownames(Products2EndUse) <- Code$base$Finished
   
   # Load Yield data from Cullen et al.:
   
@@ -144,7 +152,7 @@ IEDataProcessing_PIOLab_WasteMFAIOExtensionV2 <- function(year,path)
   
   Q <- R <- as.data.frame(matrix(0,length(Code$base$Finished),nrow(IO.codes)))
   
-  rownames(Q) <- rownames(R) <- base$product$Name[Code$base$Finished]
+  rownames(Q) <- rownames(R) <- base$flow$Name[Code$base$Finished]
   
   
   # Loop over base regions:
@@ -175,7 +183,6 @@ IEDataProcessing_PIOLab_WasteMFAIOExtensionV2 <- function(year,path)
     }
     
     # Load forging production
-    
     data <- read.csv(paste0(path$IE_Processed,"/AligningData/Forgings_",year,".csv"))
     
     if(r %in% data$base) # Check if region exists in production account
@@ -215,10 +222,6 @@ IEDataProcessing_PIOLab_WasteMFAIOExtensionV2 <- function(year,path)
     df$Use <- df$Production + df$Import - df$Export
     
    
-    
-    
-    
-    
     # Subtract production values of cold rolled products from hot rolled coil-sheet-strip
     
     Subtract <- sum(Mother2Mother$WSA[rownames(Mother2Mother$WSA) == Code$base$CoilSheetStrip,] * df$Production)
@@ -243,7 +246,7 @@ IEDataProcessing_PIOLab_WasteMFAIOExtensionV2 <- function(year,path)
     colnames(map) <- IO.codes$commodity[IO.codes$base == r]
     
 
-    map[rownames(map) == "Forgings",c(1,2,7,8)] <- 1  # Add forgings (no information)
+    map[rownames(map) == Code$base$Forgings, c(1,2,7,8)] <- 1  # Add forgings (no information)
     
     map <- ( map / rowSums(map) ) * df$Use  # Create map and add material use
     
@@ -251,7 +254,7 @@ IEDataProcessing_PIOLab_WasteMFAIOExtensionV2 <- function(year,path)
     
     # Write into data frame with base industry codes
     
-    Scrap <- data.frame("base" = base$industry$Code[base$industry$Type == "Final"],
+    Scrap <- data.frame("base" = base$process$Code[base$process$Type == "Final"],
                         "Quantity" = Scrap)
     
     rownames(Scrap) <- NULL 

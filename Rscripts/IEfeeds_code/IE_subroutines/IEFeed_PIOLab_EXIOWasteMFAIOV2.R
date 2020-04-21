@@ -29,19 +29,19 @@ IEFeed_PIOLab_EXIOWasteMFAIOV2 <- function(year,path)
   Source2Root <- read.csv(paste0(path$Concordance,"/EXIOBASE/Source2Root_Region_EXIOBASE.csv"),
                           header = FALSE)
   
-  Root2Mother <- as.matrix(RegionAggregator)
+  # Root2Mother <- as.matrix(RegionAggregator)
   
   Source2Root <- as.matrix(Source2Root)
   
-  # Create map from concordance
+ 
   
-  Source2Root <- Source2Root/rowSums(Source2Root)
+  Source2Root <- Source2Root/rowSums(Source2Root)   # Create map from concordance
   
-  Root2Mother <- as.matrix(Root2Mother)
+  # Root2Mother <- as.matrix(Root2Mother)
   
   # Create Source-to-base matrix
   
-  Source2Mother <- Source2Root %*% Root2Mother
+  Source2Mother <- Source2Root %*% R2M$region
   
   # Create concordance
   
@@ -76,7 +76,7 @@ IEFeed_PIOLab_EXIOWasteMFAIOV2 <- function(year,path)
   
   n_ind <- max(Code$Source$Industry$MotherIndustryCode)  # Number of manufacturing industries
   
-  n_reg <- ncol(Root2Mother)  # Number of regions
+  n_reg <- ncol(R2M$region)  # Number of regions
   
   
   # 1. Load EXIOBASE 3.6 mrSUTs

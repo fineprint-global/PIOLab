@@ -48,21 +48,25 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
   
   # Load WSA Source2Root concordances
   
-  S2R <- list( "WSA" = list( "industry" = as.matrix( read.csv(paste0(path$Concordance,"/WSA/WSA_Source2Root_Industry.csv"),
-                                                              header = FALSE) 
-                                                    ),
-                             "product" = as.matrix( read.csv(paste0(path$Concordance,"/WSA/WSA_Source2Root_Product.csv"),
-                                                             header = FALSE) 
-                                                  )
+  set <- read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"),sheet = 2)
+  
+  path_sel <- list("flow" = paste0(path$Concordance,"/WSA/",
+                                   set$date[set$aggregator == "product"],"_WSA_Source2Root_Product.csv"),
+                   "process" = paste0(path$Concordance,"/WSA/",
+                                      set$date[set$aggregator == "industry"],"_WSA_Source2Root_Industry.csv")
+                   )
+  
+  S2R <- list( "WSA" = list( "industry" = as.matrix( read.csv(path_sel$process,header = FALSE) ),
+                             "product" = as.matrix( read.csv(path_sel$flow,header = FALSE) )
                             )
               )
   
   # Store root to mother concordances in list object:
   
-  R2M <- list( "WSA" = list( "industry" = as.matrix(IndustryAggregator),
-                             "product" = as.matrix(ProductAggregator)
-                            ) 
-              )
+  R2M_sel <- list( "WSA" = list( "industry" = R2M$process,
+                                 "product" = R2M$flow
+                                 ) 
+                   )
   
   # Normalize source to root concordances (create maps)
   
@@ -72,12 +76,12 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
   
   # Create Source to mother map:
   
-  for(j in 1:2) S2M$WSA[[j]] <- S2R$WSA[[j]] %*% R2M$WSA[[j]]
+  for(j in 1:2) S2M$WSA[[j]] <- S2R$WSA[[j]] %*% R2M_sel$WSA[[j]]
   
   # Load SUT templates
   
-  SUT_temp <- list( "Supply" = as.matrix( read.xlsx(path$IE_classification, sheet = 5,colNames = FALSE) ),
-                    "Use" = as.matrix( read.xlsx(path$IE_classification, sheet = 6,colNames = FALSE) )
+  SUT_temp <- list( "Supply" = as.matrix( read.xlsx(path$IE_classification, sheet = 5,rowNames = TRUE) ),
+                    "Use" = as.matrix( read.xlsx(path$IE_classification, sheet = 6,rowNames = TRUE) )
                   )
   
   # Load allocation function
@@ -86,11 +90,11 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
   
   # Define general variables:
   
-  num <- list("pro" = nrow(base$product),
-              "ind" = nrow(base$industry),
-              "reg" = nrow(base$region),
-              "va" = nrow(base$input),
-              "fd" = nrow(base$demand) )
+  # num <- list("pro" = nrow(base$product),
+  #             "ind" = nrow(base$industry),
+  #             "reg" = nrow(base$region),
+  #             "va" = nrow(base$input),
+  #             "fd" = nrow(base$demand) )
              
   for(i in 1:num$reg)
   {
@@ -98,14 +102,14 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     # Create empty SUT:
     
-    SUT <- data.frame(matrix(0,(num$pro + num$ind + num$va),(num$pro + num$ind + num$fd)))
+    SUT <- data.frame(matrix(0,(num$flow + num$process + num$input),(num$flow + num$process + num$demand)))
     
-    colnames(SUT) <- c(base$industry$Name,
-                       base$product$Name,
+    colnames(SUT) <- c(base$process$Name,
+                       base$flow$Name,
                        base$demand$Name)
     
-    rownames(SUT) <- c(base$industry$Name,
-                       base$product$Name,
+    rownames(SUT) <- c(base$process$Name,
+                       base$flow$Name,
                        base$input$Name)
     
     SUT <- as.matrix(SUT) # Transform to matrix write numbers using matrix indices
@@ -122,8 +126,8 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     # Store matrix index in list:
     
-    index <- list("row" = num$ind + filter(base$product,Type == "Finished") %>% pull(Code),
-                  "col" = filter(base$industry,Type == "Final") %>% pull(Code))
+    index <- list("row" = num$process + filter(base$flow,Type == "Finished") %>% pull(Code),
+                  "col" = filter(base$process,Type == "Final") %>% pull(Code))
   
     SUT[index$row,index$col] <- as.matrix(data_sel)  # Write into table
         
@@ -135,7 +139,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     # Matrix indices in list:
     
     index <- list("row" = data_sel$base,
-                  "col" = num$ind + filter(base$product, Name == "Fabrication scrap") %>% pull(Code))
+                  "col" = num$process + filter(base$flow, Name == "Fabrication scrap") %>% pull(Code))
     
     SUT[index$row,index$col] <- data_sel$Quantity  # Write scrap flows into table
     
@@ -146,8 +150,8 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     # Store matrix index in list:
     
-    index <- as.matrix(data.frame("row" = filter(base$industry,Type == "Final") %>% pull(Code),
-                                  "col" = num$ind + filter(base$product,Type == "Final") %>% pull(Code)
+    index <- as.matrix(data.frame("row" = filter(base$process,Type == "Final") %>% pull(Code),
+                                  "col" = num$process + filter(base$flow,Type == "Final") %>% pull(Code)
                                   )
                        )
 
@@ -162,8 +166,8 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     # Read base sector codes:
     
-    index <-data.frame( "row" = num$ind + filter(base$product,Type == "Final") %>% pull(Code),
-                        "col" = filter(base$industry,Type == "Final") %>% pull(Code) )
+    index <-data.frame( "row" = num$process + filter(base$flow,Type == "Final") %>% pull(Code),
+                        "col" = filter(base$process,Type == "Final") %>% pull(Code) )
                        
     data_sel$sector.from <- index$row[data_sel$sector.from]  # Exchange WIO codes with base row codes
     
@@ -184,11 +188,11 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     # Read base sector codes:
     
-    index <-data.frame( "row" = filter(base$industry,Type == "Final") %>% pull(Code))
+    index <-data.frame( "row" = filter(base$process,Type == "Final") %>% pull(Code))
     
     data_sel$sector <- index$row[data_sel$sector]  # Exchange WIO code with base sector code
     
-    data_sel$demand <- data_sel$demand + num$ind + num$pro  # Exchange WIO with base sector code
+    data_sel$demand <- data_sel$demand + num$process + num$flow  # Exchange WIO with base sector code
     
     index <- as.matrix( data_sel[,c("sector","demand")] )  # Create matrix for indices
     
@@ -223,15 +227,15 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     # Read indices of steelmaking sector outputs
     
-    index <- list( "row" = filter(base$industry,Type %in% c("Primary","Secondary","Finished")) %>% pull(Code),
-                   "col" = filter(base$product,Type %in% c("Primary","Secondary","Finished")) %>% pull(Code) 
+    index <- list( "row" = filter(base$process,Type %in% c("Primary","Secondary","Finished")) %>% pull(Code),
+                   "col" = filter(base$flow,Type %in% c("Primary","Secondary","Finished")) %>% pull(Code) 
                   )
     
     Value[["Supply"]] <- SUT_temp$Supply %*% diag(Value$Mother) # Allocate products to industries
     
     # Write values into SUT (note addition of number of industries to column indices):
     
-    SUT[index$row, num$ind + index$col] <- Value$Supply[index$row,index$col]
+    SUT[index$row, num$process + index$col] <- Value$Supply[index$row,index$col]
     
     ### Add forging production ###
     
@@ -242,8 +246,8 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     # Read indices of secondary i.e. crude steel:
     
-    index <- data.frame("industry" = filter(base$industry,Name %in% paste("Continuous casting of",c("slabs","billets","blooms"))) %>% pull(Code),
-                        "product" = filter(base$product,Name %in% c("Slabs","Billets","Blooms")) %>% pull(Code)
+    index <- data.frame("industry" = filter(base$process,Name %in% paste("Continuous casting of",c("slabs","billets","blooms"))) %>% pull(Code),
+                        "product" = filter(base$flow,Name %in% c("Slabs","Billets","Blooms")) %>% pull(Code)
                         )
 
     
@@ -255,9 +259,9 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     # Estimate crude steel demand/output:
     
-    Value <- colSums( Map *  rowSums(SUT[base$industry$Code, num$ind + base$product$Code]) )
+    Value <- colSums( Map *  rowSums(SUT[base$process$Code, num$process + base$flow$Code]) )
     
-    index$product <- index$product + num$ind  # Change product (col) code to write in SUT
+    index$product <- index$product + num$process  # Change product (col) code to write in SUT
     
     SUT[as.matrix(index)] <- Value  # Write value
     
@@ -266,11 +270,11 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     # indices of forming processes:
     
-    index <- list( "industry" = filter(base$industry, Type == "Finished") %>% pull(Code) )
+    index <- list( "industry" = filter(base$process, Type == "Finished") %>% pull(Code) )
     
     # Output of forming processes:
     
-    Value <- rowSums(SUT[index$industry, num$ind + base$product$Code])
+    Value <- rowSums(SUT[index$industry, num$process + base$flow$Code])
     
     # Scrap = ( Useful output / yield ) - Useful output: 
     
@@ -312,8 +316,8 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     # Read sector indices: 
     
-    index <- data.frame("industry" = filter(base$industry, Name %in% c("Basic oxygen converter","Open hearth furnace")) %>% pull(Code),
-                        "product" = num$ind + filter(base$product, Name %in% c("Liquid steel OBF","Liquid steel OHF")) %>% pull(Code)
+    index <- data.frame("industry" = filter(base$process, Name %in% c("Basic oxygen converter","Open hearth furnace")) %>% pull(Code),
+                        "product" = num$process + filter(base$flow, Name %in% c("Liquid steel OBF","Liquid steel OHF")) %>% pull(Code)
                         )
     
     # Write flow to landfill:
@@ -334,8 +338,8 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     factor <- filter( data$Yield,Process %in% c("Slab caster yield","Billet caster yield") ) %>% pull(Average)
     
-    index <- data.frame("industry" = filter(base$industry,Name %in% paste("Continuous casting of",c("slabs","billets"))) %>% pull(Code),
-                        "product" = num$ind + filter(base$product,Name %in% c("Slabs","Billets") ) %>% pull(Code)
+    index <- data.frame("industry" = filter(base$process,Name %in% paste("Continuous casting of",c("slabs","billets"))) %>% pull(Code),
+                        "product" = num$process + filter(base$flow,Name %in% c("Slabs","Billets") ) %>% pull(Code)
                         )
     
     
@@ -346,8 +350,8 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     factor <- filter( data$Yield,Process == "Bloom caster yield" ) %>% pull(Average)
     
-    index <- data.frame("industry" = filter(base$industry,Name %in% c("Continuous casting of blooms","Ingot casting")) %>% pull(Code),
-                        "product" = num$ind + filter(base$product,Name %in% c("Blooms","Ingots") ) %>% pull(Code)
+    index <- data.frame("industry" = filter(base$process,Name %in% c("Continuous casting of blooms","Ingot casting")) %>% pull(Code),
+                        "product" = num$process + filter(base$flow,Name %in% c("Blooms","Ingots") ) %>% pull(Code)
                         )
     
     SUT[index$industry,"Forming scrap"] <- ( SUT[as.matrix(index)] / factor ) - SUT[as.matrix(index)] 
@@ -361,9 +365,9 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     # Read indices of products that are used by these processes 
     # Note: Hot rolled coil-sheet-strip is handled separatly:
     
-    index <- list( "product" = filter( base$product, Name %in% c("Slabs","Billets","Blooms","Ingots") ) %>% pull(Code),
-                   "industry" = filter( base$industry, Type == "Finished" ) %>% pull(Code),
-                   "interind" = filter( base$industry, Type == "Secondary" ) %>% pull(Code)
+    index <- list( "product" = filter( base$flow, Name %in% c("Slabs","Billets","Blooms","Ingots") ) %>% pull(Code),
+                   "industry" = filter( base$process, Type == "Finished" ) %>% pull(Code),
+                   "interind" = filter( base$process, Type == "Secondary" ) %>% pull(Code)
                   )
     
     # Read domestic output of intermediate inputs and of process:
@@ -412,16 +416,16 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
      
     # Mulitply with map and write in use table
     
-    SUT[num$ind + index$product, index$industry] <- Map * Value
+    SUT[num$process + index$product, index$industry] <- Map * Value
     
     
     # Estimate use of hot rolled coil-sheet-strip products:
     # Note that the use of hot rolled CSS by manufacturing is already accounted for by the WIO model extension
     
-    index <- list( "product" = filter( base$product, Name == "Hot rolled coil-sheet-strip" ) %>% pull(Code),
-                   "rolling" = filter( base$industry, Name %in% c("Tube welding","Cold rolling mill") ) %>% pull(Code),
-                   "manufacturing" = filter( base$industry, Type == "Final" ) %>% pull(Code),
-                   "interind" = filter( base$industry, Name == "Hot strip mill" ) %>% pull(Code)
+    index <- list( "product" = filter( base$flow, Name == "Hot rolled coil-sheet-strip" ) %>% pull(Code),
+                   "rolling" = filter( base$process, Name %in% c("Tube welding","Cold rolling mill") ) %>% pull(Code),
+                   "manufacturing" = filter( base$process, Type == "Final" ) %>% pull(Code),
+                   "interind" = filter( base$process, Name == "Hot strip mill" ) %>% pull(Code)
                   )
     
     # Read domestic output of intermediate inputs (product) and of relevant processes:
@@ -431,14 +435,14 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
                     "manufacturing" = sum(SUT[index$interind,])
                   )
     
-    SUT[num$ind + index$product, index$rolling] <- DomOut$rolling
+    SUT[num$process + index$product, index$rolling] <- DomOut$rolling
     
     
     # Estimate liquid steel use of casting:
     
-    index <- list( "product" = filter( base$product, Name %in% paste("Liquid steel",c("OBF","OHF","EAF")) ) %>% pull(Code),
-                   "industry" = filter( base$industry, Type == "Secondary" ) %>% pull(Code),
-                   "interind" = filter( base$industry, Name %in% c("Basic oxygen converter","Open hearth furnace","Electric arc furnace") ) %>% pull(Code)
+    index <- list( "product" = filter( base$flow, Name %in% paste("Liquid steel",c("OBF","OHF","EAF")) ) %>% pull(Code),
+                   "industry" = filter( base$process, Type == "Secondary" ) %>% pull(Code),
+                   "interind" = filter( base$process, Name %in% c("Basic oxygen converter","Open hearth furnace","Electric arc furnace") ) %>% pull(Code)
                   )
     
     # Read domestic output of intermediate inputs and of process:
@@ -457,7 +461,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     Value <- Map * DomOut$Interind      # Multiply map with steel production
     
-    SUT[num$ind + index$product,index$industry] <- Value  # Write into table
+    SUT[num$process + index$product,index$industry] <- Value  # Write into table
     
     
     ### Primary inputs ###
@@ -508,11 +512,11 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
  
     ### Allocate iron ore use to ironmaking ###
     
-    index <- list( "supply" = data.frame("industry" = filter(base$industry, Name %in% c("Blast furnace","Direct reduction")) %>% pull(Code),
-                                         "product" = num$ind + filter(base$product, Name %in% c("Pig iron","Sponge iron")) %>% pull(Code)
+    index <- list( "supply" = data.frame("industry" = filter(base$process, Name %in% c("Blast furnace","Direct reduction")) %>% pull(Code),
+                                         "product" = num$process + filter(base$flow, Name %in% c("Pig iron","Sponge iron")) %>% pull(Code)
                                          ),
-                   "use" =  data.frame("industry" = filter(base$industry, Name == "Mining") %>% pull(Code),
-                                       "product" = num$ind + filter(base$product, Name == "Iron ore") %>% pull(Code)
+                   "use" =  data.frame("industry" = filter(base$process, Name == "Mining") %>% pull(Code),
+                                       "product" = num$process + filter(base$flow, Name == "Iron ore") %>% pull(Code)
                                       )
                   )
     
@@ -530,7 +534,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     {
       # Read export of iron ore:
       
-      export <- filter(data$BACI,From == i,Product %in% (index$use$product-num$ind) ) %>% select(Product,Quantity) %>% 
+      export <- filter(data$BACI,From == i,Product %in% (index$use$product-num$process) ) %>% select(Product,Quantity) %>% 
         group_by(Product) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(Product) %>% pull(Quantity)
       
       if( length(export) == 0 ) export <- 0  # Check if exports are unavailable and if so set to zero
@@ -551,8 +555,8 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     ### Add forming and scrap use by steelmaking ###
     
-    steel <- data.frame("ind" = filter(base$industry, Name %in% c("Basic oxygen converter","Electric arc furnace")) %>% pull(Code),
-                        "pro" = num$ind + filter(base$product, Name %in% paste("Liquid steel",c("OBF","EAF"))) %>% pull(Code)
+    steel <- data.frame("ind" = filter(base$process, Name %in% c("Basic oxygen converter","Electric arc furnace")) %>% pull(Code),
+                        "pro" = num$process + filter(base$flow, Name %in% paste("Liquid steel",c("OBF","EAF"))) %>% pull(Code)
                         )
     
     # Read scrap per unit output factors:
@@ -585,13 +589,13 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     # Read exports of steel scrap:
     
-    index <- list("industry" = filter(base$industry, Name %in% c("Basic oxygen converter","Electric arc furnace")) %>% pull(Code),
-                  "product" = num$ind + filter(base$product, Name == "Steel scrap") %>% pull(Code)
+    index <- list("industry" = filter(base$process, Name %in% c("Basic oxygen converter","Electric arc furnace")) %>% pull(Code),
+                  "product" = num$process + filter(base$flow, Name == "Steel scrap") %>% pull(Code)
                   )
     
     DomOut <- SUT["Scrap preparation","Steel scrap"]  # Read domestic production of steel scrap
     
-    export <- filter(data$BACI,From == i,Product %in% (index$product-num$ind) ) %>% select(Product,Quantity) %>% 
+    export <- filter(data$BACI,From == i,Product %in% (index$product-num$process) ) %>% select(Product,Quantity) %>% 
       group_by(Product) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(Product) %>% pull(Quantity)
     
   
@@ -613,16 +617,16 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     ### Allocate pig and sponge iron to steelmaking ###
     
-    index <- list("industry" = filter(base$industry, Name %in% c("Basic oxygen converter","Open hearth furnace","Electric arc furnace")) %>% pull(Code),
-                  "product" = filter(base$product, Name %in% c("Pig iron","Sponge iron") ) %>% pull(Code)
+    index <- list("industry" = filter(base$process, Name %in% c("Basic oxygen converter","Open hearth furnace","Electric arc furnace")) %>% pull(Code),
+                  "product" = filter(base$flow, Name %in% c("Pig iron","Sponge iron") ) %>% pull(Code)
                   )
     
-    steel <- data.frame("ind" = filter(base$industry, Name %in% c("Basic oxygen converter","Open hearth furnace","Electric arc furnace")) %>% pull(Code),
-                        "pro" = num$ind + filter(base$product, Name %in% paste("Liquid steel",c("OBF","OHF","EAF"))) %>% pull(Code)
+    steel <- data.frame("ind" = filter(base$process, Name %in% c("Basic oxygen converter","Open hearth furnace","Electric arc furnace")) %>% pull(Code),
+                        "pro" = num$process + filter(base$flow, Name %in% paste("Liquid steel",c("OBF","OHF","EAF"))) %>% pull(Code)
                         )
     
-    iron <- data.frame("ind" = filter(base$industry, Name %in% c("Blast furnace","Direct reduction") ) %>% pull(Code),
-                       "pro" = num$ind + filter(base$product, Name %in% c("Pig iron","Sponge iron") ) %>% pull(Code)
+    iron <- data.frame("ind" = filter(base$process, Name %in% c("Blast furnace","Direct reduction") ) %>% pull(Code),
+                       "pro" = num$process + filter(base$flow, Name %in% c("Pig iron","Sponge iron") ) %>% pull(Code)
                         )
     
     # Estimate steel and iron outputs:
@@ -633,10 +637,10 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     # Read export of pig iron and sponge iron:
     
-    export <- filter(data$BACI,From == i,Product %in% (iron$pro - num$ind) ) %>% select(Product,Quantity) %>% 
+    export <- filter(data$BACI,From == i,Product %in% (iron$pro - num$process) ) %>% select(Product,Quantity) %>% 
       group_by(Product) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(Product)
     
-    offset <- min(iron$pro - num$ind)-1
+    offset <- min(iron$pro - num$process)-1
     
     if(length(export) >= 1)
     {
@@ -663,7 +667,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     Value <- Map * Value  # Allocate values with map to use
     
-    SUT[(index$pro + num$ind), index$industry] <- Value  # Write value in table
+    SUT[(index$pro + num$process), index$industry] <- Value  # Write value in table
     
     
     ### Save SUT ###
@@ -682,17 +686,17 @@ IEDataProcessing_PIOLab_BuildingDomesticTablesV2 <- function(year,path)
     
     # Decompose SUT into single elements, that is supply, use, final demand, inputs from nature and eol scrap
     
-    Use <- SUT[base$product$Name,base$industry$Name]
+    Use <- SUT[base$flow$Name,base$process$Name]
     
-    Supply <- SUT[base$industry$Name,base$product$Name]
+    Supply <- SUT[base$process$Name,base$flow$Name]
     
     # Final output (= final demand + landfill + atmosphere):
     
-    FinalOutput <- SUT[base$industry$Name,base$demand$Name]
+    FinalOutput <- SUT[base$process$Name,base$demand$Name]
 
     # Primary inputs:
     
-    PrimaryInput <- SUT[base$input$Name,base$industry$Name]
+    PrimaryInput <- SUT[base$input$Name,base$process$Name]
 
     # Remove all column and row names:
     

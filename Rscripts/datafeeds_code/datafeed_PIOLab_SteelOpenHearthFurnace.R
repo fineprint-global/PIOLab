@@ -4,7 +4,7 @@
 # Author: hanspeter.wieland@wu.ac.at
 # Date: 19.03.2020 
 
-datafeed_name <- "SteelOpenHearthFurnaces"
+datafeed_name <- "SteelOpenHearthFurnace"
 
 # Determine loaction of root folder
 ################################################################################

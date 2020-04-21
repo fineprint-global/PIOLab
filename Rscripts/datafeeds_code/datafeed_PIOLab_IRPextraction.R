@@ -62,26 +62,6 @@ ALANG <- add_row(ALANG,
                  Value = paste0("DATAPATH",filename$RHS),
                  S.E. = paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";") )
  
-# for(i in data$Code) 
-# {
-#   sel <- df
-#   sel[-i,] <- NaN
-#   
-#   filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",year,
-#                                   "_",root$region$RootCountryAbbreviation[i],".csv"),
-#                    "SE" = paste0("/",datafeed_name,"/",datafeed_name,"_SE_",year,
-#                                  "_",root$region$RootCountryAbbreviation[i],".csv"))
-#   
-#   # Write RHS and SE data to folder
-#   Numbers2File(sel$RHS,paste0(path$Processed,filename$RHS)) 
-#   Numbers2File(sel$SE,paste0(path$Processed,filename$SE)) 
-#   
-#   ALANG <- add_row( ALANG,
-#                    '1' = paste0("DataFeed IRP Extraction ",year," ",root$region$Name[i]),
-#                    'Value' = paste0("DATAPATH",filename$RHS),
-#                    'S.E.' = paste0("DATAPATH",filename$SE) )
-# }
-
 ALANG$`#` <- 1:nrow(ALANG)
 ALANG$Coef1 <- "1"
 ALANG$Years <- "1"
@@ -89,7 +69,7 @@ ALANG$Margin <- "1"
 
 ALANG$`Row parent` <- "1-e"
 ALANG$`Row child` <- "3"
-ALANG$`Row grandchild` <- "1"
+ALANG$`Row grandchild` <- "4"
 
 ALANG$`Column parent` <- paste0("1:e t2 CONCPATH",filename_RegAgg)
 ALANG$`Column child` <- "1"

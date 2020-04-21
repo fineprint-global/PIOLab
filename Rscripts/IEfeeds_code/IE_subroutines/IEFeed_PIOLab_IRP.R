@@ -13,7 +13,7 @@ IEFeed_PIOLab_IRP <- function(year,path)
   
   # To aggregate from root to base classification, load region aggregator first
   source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-  reg_agg <- Root2Base_RegionAggregator(RegionAggregator)
+  reg_agg <- Root2Base_RegionAggregator(R2M$region)
   
   data <- left_join(data,reg_agg,by = c("Code" = "root"),copy = FALSE) %>% select(base,Quantity)
   data <- data %>% group_by(base) %>% summarise(Quantity = sum(Quantity))

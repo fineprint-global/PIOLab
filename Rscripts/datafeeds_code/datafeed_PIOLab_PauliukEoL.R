@@ -127,7 +127,7 @@ ALANG$Coef1 <- "1"
 
 ALANG$`Row parent` <- "1-e"
 ALANG$`Row child` <- "3"
-ALANG$`Row grandchild` <- "2"
+ALANG$`Row grandchild` <- "1"
 
 ALANG$`Column parent` <- paste0("1:e t2 CONCPATH",filename_RegAgg)
 ALANG$`Column child` <- "1"

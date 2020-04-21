@@ -13,11 +13,11 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   
   # Define general variables:
   
-  num <- list("pro" = nrow(base$product),
-              "ind" = nrow(base$industry),
-              "reg" = nrow(base$region),
-              "va" = nrow(base$input),
-              "fd" = nrow(base$demand) )
+  # num <- list("pro" = nrow(base$product),
+  #             "ind" = nrow(base$industry),
+  #             "reg" = nrow(base$region),
+  #             "va" = nrow(base$input),
+  #             "fd" = nrow(base$demand) )
 
   # Load WSA settings (for codes and feed names):
   
@@ -43,24 +43,31 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
 
   # Select codes for finished steel:
   
-  Code <- list("base" = list("Finished" = filter(base$product,Type == 'Finished') %>% pull(Code),
-                             "Final" = filter(base$product,Type == 'Final') %>% pull(Code),
-                             "Forgings" = base$product$Code[base$product$Name == 'Forgings'],
-                             "CoilSheetStrip" = base$product$Code[base$product$Name == "Hot rolled coil-sheet-strip"]),
-               "industry" = list("manu" = filter(base$industry,Type == 'Final') %>% pull(Code),
-                                 "others" = filter(base$industry,Type != 'Final') %>% pull(Code)),
+  Code <- list("base" = list("Finished" = filter(base$flow,Type == 'Finished') %>% pull(Code),
+                             "Final" = filter(base$flow,Type == 'Final') %>% pull(Code),
+                             "Forgings" = base$flow$Code[base$flow$Name == 'Forgings'],
+                             "CoilSheetStrip" = base$flow$Code[base$flow$Name == "Hot rolled coil-sheet-strip"]),
+               "industry" = list("manu" = filter(base$process,Type == 'Final') %>% pull(Code),
+                                 "others" = filter(base$process,Type != 'Final') %>% pull(Code)),
                "WSA" = Settings %>% filter(Type == 'Finished') %>% pull(id))
   
   # Load SUT templates
   
-  SUT_temp <- list( "Supply" = as.matrix( read.xlsx(path$IE_classification, sheet = 5,colNames = FALSE) ),
-                    "Use" = as.matrix( read.xlsx(path$IE_classification, sheet = 6,colNames = FALSE) )
-                  )
+  SUT_temp <- list( "Supply" = as.matrix( read.xlsx(path$IE_classification, sheet = 5,rowNames = TRUE) ),
+                    "Use" = as.matrix( read.xlsx(path$IE_classification, sheet = 6,rowNames = TRUE) )
+                    )
   
   # Run syntax to load Source2Root maps:
   
+  set <- read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"),sheet = 2)
   
-  Source2Root <-list("WSA" = as.matrix( read.csv(paste0(path$Concordance,"/WSA/WSA_Source2Root_Product.csv"),header = FALSE) ))
+  path_sel <- list("flow" = paste0(path$Concordance,"/WSA/",
+                                   set$date[set$aggregator == "product"],"_WSA_Source2Root_Product.csv"),
+                   "process" = paste0(path$Concordance,"/WSA/",
+                                      set$date[set$aggregator == "industry"],"_WSA_Source2Root_Industry.csv")
+                   )
+  
+  Source2Root <- list("WSA" = as.matrix( read.csv(path_sel$flow,header = FALSE) ))
   
   Source2Root$WSA <- Source2Root$WSA[Code$WSA,]  # Select only finished steel
   
@@ -71,7 +78,7 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   
   # Compile Source to mother concordance for finished steel products
   
-  Source2Mother <- list("WSA" = Source2Root$WSA %*% as.matrix(ProductAggregator[,Code$base$Finished]) )
+  Source2Mother <- list("WSA" = Source2Root$WSA %*% as.matrix(R2M$flow[,Code$base$Finished]) )
   
   # Load WSA Source2Source map for estimate final use of hot rolled coil-sheet-strip
   
@@ -110,8 +117,8 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   )
   )
   
-  Source2Mother[["Cullen"]] <- list("EndUse" =  Source2Root_Map$Cullen$EndUse %*% as.matrix(ProductAggregator[,Code$base$Final]),
-                                    "Product" = Source2Root_Map$Cullen$Product %*% as.matrix(ProductAggregator[,Code$base$Finished])
+  Source2Mother[["Cullen"]] <- list("EndUse" =  Source2Root_Map$Cullen$EndUse %*% as.matrix(R2M$flow[,Code$base$Final]),
+                                    "Product" = Source2Root_Map$Cullen$Product %*% as.matrix(R2M$flow[,Code$base$Finished])
   )
   
   Source2Mother$Cullen$Yields <- Source2Mother$Cullen$EndUse  # Add concordance for yields
@@ -121,9 +128,9 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   
   # Add mother sector names to maps:
   
-  colnames(Source2Mother$Cullen$EndUse) <- base$product$Name[Code$base$Final]
+  colnames(Source2Mother$Cullen$EndUse) <- base$flow$Name[Code$base$Final]
   
-  colnames(Source2Mother$Cullen$Product) <- base$product$Name[Code$base$Finished]
+  colnames(Source2Mother$Cullen$Product) <- base$flow$Name[Code$base$Finished]
   
   # Translate product to end-use map to base classification of mother table: 
   
@@ -139,11 +146,11 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   
   CreateUse <- function() 
   {
-    x <- data.frame(matrix(0,num$pro,num$ind))
+    x <- data.frame(matrix(0,num$flow,num$process))
     
-    colnames(x) <- base$industry$Name
+    colnames(x) <- base$process$Name
     
-    rownames(x) <- base$product$Name
+    rownames(x) <- base$flow$Name
     
     x <- as.matrix(x)
     
@@ -152,11 +159,11 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   
   CreateOutput <- function() 
   {
-    x <- data.frame( matrix(0,num$ind,num$fd) )
+    x <- data.frame( matrix(0,num$process,num$demand) )
     
     colnames(x) <- base$demand$Name
     
-    rownames(x) <- base$industry$Name
+    rownames(x) <- base$process$Name
     
     x <- as.matrix(x)
     
@@ -166,7 +173,7 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   
   # j refers to the column and i to the row view. j loops through all country codes
   
-  for(j in 1:num$reg)
+  for(j in 1:num$region)
   {
     print(paste("Imports of",base$region$Name[j]))
     
@@ -178,7 +185,7 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
     
     # i loops only over the regions where i != j
     
-    for(i in (1:num$reg)[-j])
+    for(i in (1:num$region)[-j])
     {
       Use <- CreateUse()  # Create empty use table
       
@@ -191,7 +198,7 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       
       # Read production of intermed. fabrication in region i:
       
-      filter <- Supply[filter(base$industry,Type == "Final") %>% pull(Code)] 
+      filter <- Supply[filter(base$process,Type == "Final") %>% pull(Code)] 
       
       filter[filter > 1] <- 1  # Set to one for filtering the map
       
@@ -203,7 +210,7 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       
       Value <- Map * vec$Quantity  # Map values to sectors
       
-      Use[vec$Product,filter(base$industry,Type == "Final") %>% pull(Code)] <- Value
+      Use[vec$Product,filter(base$process,Type == "Final") %>% pull(Code)] <- Value
   
       
       ### Allocate manufacturing intermediate imports to manufacturing use ###
@@ -225,7 +232,7 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       
       # Read concordance for all other industries except manufacturing:
       
-      Map <- SUT_temp$Use[base$product$Code,]
+      Map <- SUT_temp$Use[base$flow$Code,]
       
       Map <- Prorate(Map,Supply)
       

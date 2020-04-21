@@ -4,7 +4,7 @@
 # Author: hanspeter.wieland@wu.ac.at
 # Date: 19.03.2020 
 
-datafeed_name <- "SteelOxygenBlownConverters"  # Set name of feed 
+datafeed_name <- "SteelOxygenBlownConverter"  # Set name of feed 
 
 # Determine loaction of root folder
 ################################################################################

@@ -74,12 +74,22 @@ concord <- read.xlsx(xlsxFile = paste0(path$Concordance,"/WSA/WSA_RegionConcorda
 
 # Load concordance for sourc2root industries and products
 
-ConcoInd <- read.table(paste0(path$Concordance,"/WSA/WSA_Source2Root_Industry.csv"),sep = ",")
+set <- read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"),sheet = 2)
+
+path_sel <- list("flow" = paste0(path$Concordance,"/WSA/",
+                                 set$date[set$aggregator == "product"],"_WSA_Source2Root_Product.csv"),
+                 "process" = paste0(path$Concordance,"/WSA/",
+                                    set$date[set$aggregator == "industry"],"_WSA_Source2Root_Industry.csv")
+                 )
+
+ConcoInd <- read.table(path_sel$process,sep = ",")
 
 ConcoInd <- list("One" = paste( which(ConcoInd[Settings$id,] == 1) , collapse = "," ),
                  "Zero" = paste( which(ConcoInd[Settings$id,] == 0) , collapse = "," ) )
                  
-ConcoPro <- read.table(paste0(path$Concordance,"/WSA/WSA_Source2Root_Product.csv"),sep = ",")
+
+
+ConcoPro <- read.table(path_sel$flow,sep = ",")
 
 ConcoPro <- paste( which(ConcoPro[Settings$id,] == 1) , collapse = "," )
 

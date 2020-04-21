@@ -27,7 +27,7 @@ IEFeed_PIOLab_IEA <- function(year,path)
   
   # Load region aggregator and look up base table codes
   source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-  reg_agg <- Root2Base_RegionAggregator(RegionAggregator)
+  reg_agg <- Root2Base_RegionAggregator(R2M$region)
   
   data <- left_join(data,reg_agg,by = c("Code" = "root"),copy = FALSE) %>% 
     select(base,PRODUCT,PRODUCT.1,FLOW,FLOW.1,Value)

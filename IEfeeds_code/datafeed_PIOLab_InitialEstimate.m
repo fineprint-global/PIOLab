@@ -8,7 +8,7 @@ function [RegMap,IndMap,ProdMap] = datafeed_PIOLab_InitialEstimate(handles)
        
     elseif handles.nonsurvey == 2    
     
-       [RegMap,IndMap,ProdMap]=Ind30Pro40v1_InitialEstimate(handles);
+       [RegMap,IndMap,ProdMap]=Ind30Pro39v1_InitialEstimate(handles);
 
     end
 
