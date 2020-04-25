@@ -41,8 +41,6 @@ df$SE[data$Code] <- data$SE
 if(dir.exists(path$df_Processed)) unlink(path$df_Processed,recursive = TRUE) 
 dir.create(path$df_Processed)
 
-filename_RegAgg <- "/Root2Root_Reg_Concordance.csv" # Define name of file
-
 filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",
                                 year,".csv"),
                  "SE" = paste0("/",datafeed_name,"/",datafeed_name,"_SE_",
@@ -67,7 +65,7 @@ ALANG$`Row parent` <- "1-e"
 ALANG$`Row child` <- "3"
 ALANG$`Row grandchild` <- "4"
 
-ALANG$`Column parent` <- paste0("1:e t2 CONCPATH",filename_RegAgg)
+ALANG$`Column parent` <- "1:e t2 CONCPATH/Root2Root_Reg_Concordance.csv"
 ALANG$`Column child` <- "1"
 ALANG$`Column grandchild` <- "1-4"
 
