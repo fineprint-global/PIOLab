@@ -39,6 +39,10 @@ pro_max <- nrow(root$flow)
 n_yea <- "1"
 n_she <- "1"
 
+# Read trade pairs
+
+index <- select(data,From,To,Quantity) %>% group_by(From,To) %>% 
+  summarise(Q = sum(Quantity)) %>% ungroup(From,To) %>% select(From,To)
 
 ### 1. Create ALANG sheets
 
@@ -46,15 +50,15 @@ n_she <- "1"
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
 
 # Set length of ALANG file
-ALANG_new <- as.data.frame( matrix(NA,nrow = reg_max ,ncol = ncol(ALANG) ) )
+ALANG_new <- as.data.frame( matrix(NA,nrow = nrow(index) ,ncol = ncol(ALANG) ) )
 colnames(ALANG_new) <- colnames(ALANG)
 ALANG <- ALANG_new
 remove(ALANG_new)
 
 # Prepare ALANG sheet for adding raw data:
 
-ALANG$`Row parent` <- 1:reg_max
-ALANG$`Column parent` <- "1:e"
+ALANG$`Row parent` <- index$From
+ALANG$`Column parent` <- index$To
 ALANG$`Row child` <- 2
 ALANG$`Row grandchild` <- "1:e"
 ALANG$`Column child` <- 1
@@ -76,63 +80,39 @@ ALANG$`Post-Map` <- ""
 ALANG <- list("RHS" = ALANG, "SE" = ALANG )
 ALANG$RHS$S.E. <- ALANG$SE$Value <- ""
 
-ALANG$RHS$`1` <- paste( year,"BACI_RHS for exports of", root$region$Name )
-ALANG$SE$`1` <- paste( year,"BACI_SE for exports of", root$region$Name )
+ALANG$RHS$`1` <- ALANG$SE$`1` <- paste0( year," BACI RHS_", root$region$Name[ALANG$RHS$`Row parent`],
+                                         " to ", root$region$Name[ALANG$RHS$`Column parent`] )
 
-# Remove "own-trade" entries:
-#ALANG$RHS <- ALANG$RHS[ ALANG$RHS$`Row parent` != ALANG$RHS$`Column parent`, ]
-#ALANG$SE <- ALANG$SE[ ALANG$SE$`Row parent` != ALANG$SE$`Column parent`, ]
+# Write datapath into AISHA command:
+ALANG$RHS$Value <- paste0("DATAPATH/",datafeed_name,"/",ALANG$RHS$`1`,".csv")
+ALANG$SE$S.E. <- paste0("DATAPATH/",datafeed_name,"/",ALANG$SE$`1`,".csv")
 
-# vec <- data.frame("reg" = rep(1:reg_max,each = pro_max),
-#                   "pro" = rep(1:pro_max, reg_max),
-#                   "RHS" = 0,
-#                   "SE" = 0 )
-
-mat <- matrix( NA, nrow = pro_max, ncol = reg_max)
+vec <- data.frame("pro" = 1:pro_max,
+                  "RHS" = NA,
+                  "SE" = NA)
 
 ### 2. Write commands by looping over export regions:
 
-for( r in 1:reg_max ) 
+for( i in 1:nrow(index) ) 
 {
-  sel <- filter(data, From == r) %>% select(Product, To, Quantity, SE)  # Select import data of region r
+  sel <- filter(data, From == index$From[i], To == index$To[i] ) # Select exporter
   
-  sel <- as.matrix(sel) # Make matrix for indexing
-  
-  # Create empty object for data storage:
-  m <- list("RHS" = mat,
-            "SE" = mat )
-  
-  # m$RHS[,r] <- NA  # Set RHS of products of region r to NA 
-  # m$SE[,r] <- NA   # Set SE of products of region r to NA
-  # m$RHS[256:266,] <- NA # Set RHS of manufacturing trade NA
-  # m$SE[256:266,] <- NA  # Set SE of manufacturing trade NA
-  
-  # v$RHS[v$reg == r] <- NA  # Set RHS of products of region r to NA 
-  # v$SE[v$reg == r] <- NA   # Set SE of products of region r to NA
-  # v$RHS[v$pro %in% 256:266] <- NA # Set RHS of manufacturing trade NA
-  # v$SE[v$pro %in% 256:266] <- NA # Set SE of manufacturing trade NA
-  
-  # index <- apply(sel[,1:2], 1, indexing)  # Read indices of root region-product pairs
-  
-  m$RHS[sel[,1:2]] <- sel[,3]  # Write RHS into matrix
-  m$SE[sel[,1:2]] <- sel[,4]  # Write SE into matrix
-  
-  # v$RHS[index] <- sel$Quantity   # Write RHS into vector
-  # v$SE[index] <- sel$SE          # Write SE into vector 
-  
+  v <- vec  # Create empty object for data storage
+    
+  v$RHS[sel$Product] <- sel$Quantity
+  v$SE[sel$Product] <- sel$SE
+    
   # Set filenames:
-  filename <- list("RHS" = paste0(path$set,"/",ALANG$RHS$`1`[r],".csv"),
-                   "SE" = paste0(path$set,"/",ALANG$SE$`1`[r],".csv") )
-    
+  filename <- list("RHS" = paste0(path$set,"/",ALANG$RHS$`1`[i],".csv"),
+                   "SE" = paste0(path$set,"/",ALANG$SE$`1`[i],".csv") )
+ 
   # Write values to file:
-  Numbers2File( table = m$RHS, filename$RHS )
-  Numbers2File( table = m$SE, filename$SE )
-    
-  # Write path into AISHA command:
-  ALANG$RHS$Value[r] <- paste0("DATAPATH/",datafeed_name,"/",ALANG$RHS$`1`[r],".csv")
-  ALANG$SE$S.E.[r] <- paste0("DATAPATH/",datafeed_name,"/",ALANG$SE$`1`[r],".csv")
+  Numbers2File( table = v$RHS, filename$RHS )
+  Numbers2File( table = v$SE, filename$SE )
   
 }
+  
+
 
 ### 3. Merge ALANG sheets and complete missing entries 
 
