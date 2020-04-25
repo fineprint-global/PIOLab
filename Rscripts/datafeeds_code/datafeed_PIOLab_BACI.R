@@ -60,7 +60,7 @@ remove(ALANG_new)
 ALANG$`Row parent` <- index$From
 ALANG$`Column parent` <- index$To
 ALANG$`Row child` <- 2
-ALANG$`Row grandchild` <- "1:e"
+ALANG$`Row grandchild` <- "1:e t2 CONCPATH/Root2Root_Pro_Concordance.csv"
 ALANG$`Column child` <- 1
 ALANG$`Column grandchild` <- "1-e"
 
