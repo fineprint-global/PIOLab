@@ -41,11 +41,7 @@ df$SE[data$Code] <- data$SE
 if(dir.exists(path$df_Processed)) unlink(path$df_Processed,recursive = TRUE) 
 dir.create(path$df_Processed)
 
-Conco <- diag(nrow(root$region)) # Create pseudo aggregator
-
 filename_RegAgg <- "/Root2Root_Reg_Concordance.csv" # Define name of file
-
-Numbers2File(Conco,paste0(path$Concordance,filename_RegAgg)) # Save aggregator 
 
 filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",
                                 year,".csv"),
