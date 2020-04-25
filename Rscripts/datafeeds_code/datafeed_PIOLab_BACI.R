@@ -106,9 +106,9 @@ for( i in 1:nrow(index) )
   filename <- list("RHS" = paste0(path$set,"/",ALANG$RHS$`1`[i],".csv"),
                    "SE" = paste0(path$set,"/",ALANG$SE$`1`[i],".csv") )
  
-  # Write values to file:
-  Numbers2File( table = v$RHS, filename$RHS )
-  Numbers2File( table = v$SE, filename$SE )
+  # Write values as row vectors to file:
+  Numbers2File( table = t(v$RHS), filename$RHS )
+  Numbers2File( table = t(v$SE), filename$SE )
   
 }
   
