@@ -57,14 +57,21 @@ path <- list("Raw" = paste0(root_folder,"RawDataRepository"),
              "root" = root_folder,
              "mother" = mother,
              "Settings" = paste0(root_folder,"Settings"),
-             "RSE_settings" = paste0(root_folder,"Settings/datafeeds_settings/RSE_settings.xlsx"))
+             "RSE_settings" = paste0(root_folder,"Settings/datafeeds_settings/df_RSE_settings.xlsx"))
 
 # Set the year
 year <- 2008
 
 # Read root region, industry and products
-root <- list("region" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/PIOLab_RootClassification.xlsx"),sheet = 1),
-             "process" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/PIOLab_RootClassification.xlsx"),sheet = 2)[,1:2],
-             "flow" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/PIOLab_RootClassification.xlsx"),sheet = 3))
 
-remove(mother,OnServer,root_folder)
+path_rootclass <- paste0(path$Settings,"/Root/Legends/PIOLab_RootClassification.xlsx")
+
+root <- list("region" = read.xlsx(path_rootclass,sheet = 1),
+             "process" = read.xlsx(path_rootclass,sheet = 2)[,1:2],
+             "flow" = read.xlsx(path_rootclass,sheet = 3),
+             "demand" = read.xlsx(path_rootclass,sheet = 4),
+             "input" = read.xlsx(path_rootclass,sheet = 5) )
+
+
+
+remove(mother,OnServer,root_folder, path_rootclass)

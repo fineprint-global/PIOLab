@@ -171,8 +171,6 @@ IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables <- function(year,path)
   write_file(zero,"Zero")
   write_file(S8,"AllInOne")
   
-  print(paste0("IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables finished"))
-  
 }
 
 

@@ -41,5 +41,4 @@ IEFeed_PIOLab_WSA <- function(year,path)
               file = paste0(path_set,"/WSA_",year,"_",item_name,".csv"),
               row.names = FALSE)
   }
-  print("IEFeed_PIOLab_WSA finished.")
 }

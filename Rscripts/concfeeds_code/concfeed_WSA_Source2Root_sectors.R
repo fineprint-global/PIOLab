@@ -19,9 +19,8 @@ source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 # Load function to write tables to file
 source(paste0(path$root,"Rscripts/Subroutines/Numbers2File.R"))
 
-S2R <- list("process" =  read.xlsx(paste0(path$Concordance,"/WSA/WSA_Source2Root_WithLabelsV3.xlsx"), sheet = 1),
-            "flow" = read.xlsx(paste0(path$Concordance,"/WSA/WSA_Source2Root_WithLabelsV3.xlsx"), sheet = 2)
-            )
+S2R <- list("process" =  read.xlsx(paste0(path$Concordance,"/WSA/WSA_Source2Root_WithLabelsV4.xlsx"), sheet = 1),
+            "flow" = read.xlsx(paste0(path$Concordance,"/WSA/WSA_Source2Root_WithLabelsV4.xlsx"), sheet = 2) )
 
 # Read WSA settings to get exact number of feeds
 Settings <- read.xlsx(paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"))

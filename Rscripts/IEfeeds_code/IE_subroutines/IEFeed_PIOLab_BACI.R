@@ -36,8 +36,7 @@ IEFeed_PIOLab_BACI <- function(year,path)
   write.csv(data_clean,file = paste0(path_set,"BACI_",year,".csv"),row.names = FALSE)
     
   # Note that trade flows are measured in metric tons of material 
-  
-  print("IEFeed_PIOLab_BACI finished.")
+
 }
 
 

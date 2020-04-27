@@ -14,7 +14,7 @@ if(Sys.info()[1] == "Linux"){
   .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
   # Define location for root directory
   root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
-    root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
+  root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
 
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
@@ -25,18 +25,24 @@ source(paste0(path$root,"Rscripts/Subroutines/Read_BaseClassification.R"))
 # Load function to write tables to file
 source(paste0(path$root,"Rscripts/Subroutines/Numbers2File.R"))
 
+set <- read.xlsx(paste0(path$Settings,"/Base/IE_settings.xlsx"),sheet = 2)
+
 # Load Source to root sector aggregator of (i) WSA and (ii) IRP accounts 
 # and (iii) additionally pseudo S2R where no raw data is available 
 # Note that all tables are transposed (i.e. in root to source format):
 
-S2R <- list("WSA" = list("process" =  read.xlsx(paste0(path$Concordance,"/WSA/WSA_Source2Root_WithLabelsV3.xlsx"), sheet = 1),
-                         "flow" = read.xlsx(paste0(path$Concordance,"/WSA/WSA_Source2Root_WithLabelsV3.xlsx"), sheet = 2)
+path_wsa <- paste0(path$Concordance,"/WSA/WSA_Source2Root_WithLabels",set$date[set$aggregator == "WSA"],".xlsx")
+path_IRP <- paste0(path$Concordance,"/IRP/",set$date[set$aggregator == "sector"],"_IRP_Extraction_SecConc.xlsx")
+path_add <- paste0(path$Concordance,"/Additional/",set$date[set$aggregator == "Additional"],"_Additional_Root2Mother_Sec_Ind30Pro39v1.xlsx")
+  
+S2R <- list("WSA" = list("process" =  read.xlsx(path_wsa, sheet = 1),
+                         "flow" = read.xlsx(path_wsa, sheet = 2)
                          ),
-            "IRP" = list("process" =  read.xlsx(paste0(path$Concordance,"/IRP/20200420_IRP_Extraction_SecConc.xlsx"), sheet = 1),
-                         "flow" = read.xlsx(paste0(path$Concordance,"/IRP/20200420_IRP_Extraction_SecConc.xlsx"), sheet = 2)
+            "IRP" = list("process" =  read.xlsx(path_IRP, sheet = 1),
+                         "flow" = read.xlsx(path_IRP, sheet = 2)
                         ),
-            "Add" = list("process" =  read.xlsx(paste0(path$Concordance,"/Additional/20200420_Additional_Root2Mother_Sec_Ind30Pro39v1.xlsx"), sheet = 1),
-                         "flow" = read.xlsx(paste0(path$Concordance,"/Additional/20200420_Additional_Root2Mother_Sec_Ind30Pro39v1.xlsx"), sheet = 2)
+            "Add" = list("process" =  read.xlsx(path_add, sheet = 1),
+                         "flow" = read.xlsx(path_add, sheet = 2)
                         )
             )
 
@@ -56,7 +62,7 @@ Code <- list("WSA" = base$flow[base$flow$feed %in% colnames(S2R$WSA$flow), ],
             
 # Extract Source to root concordances (just to make sure the right subset is selected)
 Conco <- list("WSA" = as.matrix( S2R$WSA$flow[1:nrow(root$flow), Code$WSA$feed] ),
-              "IRP" = S2R$IRP$flow$IRPextraction,
+              "IRP" = S2R$IRP$flow$binary,
               "Add" = as.matrix( S2R$Add$flow[1:nrow(root$flow), as.character( Code$Add$Code )] )
               )
  
@@ -90,7 +96,7 @@ Code <- list("WSA" = base_sel[base_sel$feed_1 %in% colnames(S2R$WSA$process), ],
 
 # Extract Source to root concordances (just to make sure the right subset is selected)
 Conco <- list("WSA" = as.matrix( S2R$WSA$process[1:nrow(root$process), Code$WSA$feed_1] ),
-              "IRP" = S2R$IRP$process$IRPextraction,
+              "IRP" = S2R$IRP$process$binary,
               "Add" = as.matrix( S2R$Add$process[1:nrow(root$process), as.character( Code$Add$Code )] )
               )
 

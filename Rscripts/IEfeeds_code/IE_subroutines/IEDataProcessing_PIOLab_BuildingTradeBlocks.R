@@ -9,30 +9,20 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
 {
   print("IEDataProcessing_PIOLab_BuildingTradeBlocks initiated.")
   
-  path[["IE_classification"]] <- paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx")
+  path[["IE_classification"]] <- paste0(path$Settings,"/Base/",IEdatafeed_name,"_BaseSectorClassification.xlsx")
   
-  # Define general variables:
-  
-  # num <- list("pro" = nrow(base$product),
-  #             "ind" = nrow(base$industry),
-  #             "reg" = nrow(base$region),
-  #             "va" = nrow(base$input),
-  #             "fd" = nrow(base$demand) )
-
   # Load WSA settings (for codes and feed names):
-  
   Settings <- read.xlsx(paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"))
   
   # Load prorating function and Number2File:
   
   source(paste0(path$Subroutines,"/Prorate.R"))
-  
   source(paste0(path$Subroutines,"/Numbers2File.R"))
   
   
-  Setting <- list( "WSA" = read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"), sheet = 1 ),
-                   "IE" = read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/IE_settings.xlsx"), sheet = 1 )
-                  )
+  # Setting <- list( "WSA" = read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"), sheet = 1 ),
+  #                  "IE" = read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/IE_settings.xlsx"), sheet = 1 )
+  #                 )
   
   # Load flow data where all regions are included in one object:
   
@@ -59,12 +49,12 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   
   # Run syntax to load Source2Root maps:
   
-  set <- read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"),sheet = 2)
+  set <- read.xlsx(xlsxFile = paste0(path$Settings,"/Base/IE_settings.xlsx"),sheet = 2)
   
   path_sel <- list("flow" = paste0(path$Concordance,"/WSA/",
-                                   set$date[set$aggregator == "product"],"_WSA_Source2Root_Product.csv"),
+                                   set$date[set$aggregator == "sector"],"_WSA_Source2Root_Product.csv"),
                    "process" = paste0(path$Concordance,"/WSA/",
-                                      set$date[set$aggregator == "industry"],"_WSA_Source2Root_Industry.csv")
+                                      set$date[set$aggregator == "sector"],"_WSA_Source2Root_Industry.csv")
                    )
   
   Source2Root <- list("WSA" = as.matrix( read.csv(path_sel$flow,header = FALSE) ))
@@ -274,5 +264,4 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       
     }
   }
-  print("End of IEDataProcessing_PIOLab_BuildingTradeBlocks.")
 }

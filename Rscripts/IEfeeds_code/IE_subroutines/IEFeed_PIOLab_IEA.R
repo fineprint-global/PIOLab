@@ -76,6 +76,4 @@ IEFeed_PIOLab_IEA <- function(year,path)
             file = paste0(path_set,"/IEA_",year,"_SteelIndustryEnergyConsumption.csv"),
             row.names = FALSE)
   
-  print("IEFeed_PIOLab_IEA finished.")
-  
 }

@@ -6,36 +6,27 @@
 
 
 # Initializing R script (R packages, folders etc.):
-
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
-
 path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name) # Add path for processed data
 
 
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 
 source(paste0(path$Subroutines,"/Numbers2File.R"))  # Load fun. to write arrays to files
-
 source(paste0(path$Subroutines,"/Read_ProductionWSA.R")) # Fun. to align data with root classification
 
 
-
 # Check if folder with processed data exists and in case delete:
-
 if(dir.exists(path$df_Processed)) unlink(path$df_Processed,recursive = TRUE) 
-
 dir.create(path$df_Processed) # Create new (empty) folder
   
 
 # Get relative standard error for smallest and largest values in the data set:
-
 RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
 
   
 # Read settings (e.g. page in the specific yearbook) for WSA data feeds:
-
 Settings <- read.xlsx(paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"))
-  
 Settings <- Settings[Settings$FeedName == datafeed_name,] # Select which feed
   
 
@@ -74,12 +65,12 @@ concord <- read.xlsx(xlsxFile = paste0(path$Concordance,"/WSA/WSA_RegionConcorda
 
 # Load concordance for sourc2root industries and products
 
-set <- read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"),sheet = 2)
+set <- read.xlsx(xlsxFile = paste0(path$Settings,"/Base/IE_settings.xlsx"),sheet = 2)
 
 path_sel <- list("flow" = paste0(path$Concordance,"/WSA/",
-                                 set$date[set$aggregator == "product"],"_WSA_Source2Root_Product.csv"),
+                                 set$date[set$aggregator == "sector"],"_WSA_Source2Root_Product.csv"),
                  "process" = paste0(path$Concordance,"/WSA/",
-                                    set$date[set$aggregator == "industry"],"_WSA_Source2Root_Industry.csv")
+                                    set$date[set$aggregator == "sector"],"_WSA_Source2Root_Industry.csv")
                  )
 
 ConcoInd <- read.table(path_sel$process,sep = ",")
@@ -104,7 +95,7 @@ RHS <- matrix(0,nrow = 1,ncol = n_reg) # vector for RHS values all root regions
 
 RHS[1,data$Code] <- data$Quantity  # Write right-hand-side in vector
 
-ConcoReg <- diag(nrow(root$region)) # Create pseudo aggregator
+# ConcoReg <- diag(nrow(root$region)) # Create pseudo aggregator
 
 
 # Set names and paths to data and concordances:
@@ -114,7 +105,7 @@ filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",year
                  "ConcoInd" = paste0("/WSA_Source2Root_Industry_",datafeed_name,".csv"),
                  "ConcoPro" = paste0("/WSA_Source2Root_Product_",datafeed_name,".csv"))
 
-Numbers2File( ConcoReg, paste0(path$Concordance,filename$ConcoReg)) # Save region aggregator 
+# Numbers2File( ConcoReg, paste0(path$Concordance,filename$ConcoReg)) # Save region aggregator 
 
 Numbers2File( RHS, paste0(path$Processed, filename$RHS)) # Write data to folder 
 
@@ -134,13 +125,14 @@ ALANG$`Column parent` <- paste0("1:e t2 CONCPATH",filename$ConcoReg)
 
 # Write command for elements that are zero:
 
-ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year, "Zero elements")) # Create entry
+# ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year, "Zero elements")) # Create entry
+# 
+# ALANG$Value[2] <- paste0("0")
+# ALANG$S.E.[2] <- paste0("0")
+# ALANG$`Row grandchild`[2] <- ConcoInd$Zero
+# ALANG$`Column parent`[2] <- paste0("1-e")
 
-ALANG$Value[2] <- paste0("0")
-ALANG$S.E.[2] <- paste0("0")
-ALANG$`Row grandchild`[2] <- ConcoInd$Zero
-ALANG$`Column parent`[2] <- paste0("1-e")
-
+# Write other variables
 
 ALANG$`Row parent` <- "1-e"
 ALANG$`Row child` <- "1"

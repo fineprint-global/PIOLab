@@ -80,6 +80,4 @@ IEFeed_PIOLab_Cullen <- function(path)
   # Write to file
   
   write.csv(Conco,file = paste0(path_set,"/ProductsToEndUse.csv"))
-  
-  print("IEFeed_PIOLab_Cullen finished.")
 }

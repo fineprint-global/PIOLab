@@ -35,9 +35,6 @@ IEFeed_PIOLab_EOL <- function(year,path)
   write.csv(data_clean,
             file = paste0(path_set,"/EOL_",year,".csv"),
             row.names = FALSE)
-  
-  print("IEFeed_PIOLab_EOL finished.")
-  
 }
 
 

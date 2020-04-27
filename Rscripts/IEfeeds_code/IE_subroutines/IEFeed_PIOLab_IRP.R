@@ -24,6 +24,4 @@ IEFeed_PIOLab_IRP <- function(year,path)
   
   # Export data to folder (note that the unit is metric tons)
   write.csv(data,file = paste0(path_set,"/IRP_",year,".csv"),row.names = FALSE)
-  
-  print("IEFeed_PIOLab_IRP finished")
 }

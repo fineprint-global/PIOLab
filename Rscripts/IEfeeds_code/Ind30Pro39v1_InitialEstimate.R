@@ -7,7 +7,7 @@
 ###############################################
 # IE feed for 20 industries/processes and 22 products base classifications
 # hanspeter.wieland@wu.ac.at (c)
-# 02.19.2020 
+# 04.16.2020 
 
 # In case the code is executed not on the server (and the GUI) for debugging, 
 # the user can choose the desired region aggregator by setting the following variable
@@ -16,7 +16,7 @@
 # test_regagg <- "049"
 
 ################################################################################
-# 1. Set up environment for building the initial estimate
+### 1. Set up workplace for building the initial estimate
 
 IEdatafeed_name <- "Ind30Pro39v1" 
 
@@ -37,10 +37,6 @@ source(paste0(path$root,"Rscripts/Subroutines/Read_BaseClassification.R"))
 
 # Read root to mother sector aggregators
 source(paste0(path$root,"Rscripts/Subroutines/Load_Root2Mother_sectors.R"))
-
-# Read root to mother region aggregator (from mat-file if available)
-# source(paste0(path$root,"Rscripts/Subroutines/Load_Root2Mother_regions.R"))
-
 
 # Read region aggregation from classification to set the right path for the IE data
 
@@ -64,13 +60,10 @@ remove(regagg)
 if(!dir.exists(path$Agg_Processed)) dir.create(path$Agg_Processed)
 
 # Check whether output folder for processed data for the specific aggregation exists, if yes, delete it
-
 if(dir.exists(path$IE_Processed)) unlink(path$IE_Processed,recursive = TRUE) 
-
 dir.create(path$IE_Processed)
 
 # Check if ALANG files of old initial estimate exist and delete
-
 source(paste0(path$Subroutines,"/DeleteALANGfilesOfOldIEfeeds.R"))
 
 # Functions to process raw data for Initial Estimate
@@ -82,68 +75,48 @@ IE_fun <- list("/IEFeed_PIOLab_WSA.R",
                "/IEFeed_PIOLab_Grades.R",
                "/IEFeed_PIOLab_EOL.R",
                "/IEFeed_PIOLab_IEA.R",
-               "/IEFeed_PIOLab_EXIOWasteMFAIOV2.R",
+               "/IEFeed_PIOLab_EXIOWasteMFAIO.R",
                "/IEFeed_PIOLab_Cullen.R",
-               "/IEDataProcessing_PIOLab_AligningDataV2.R",
-               "/IEDataProcessing_PIOLab_WasteMFAIOExtensionV2.R",
-               "/IEDataProcessing_PIOLab_WasteMFAIOModelRunV2.R",
-               "/IEDataProcessing_PIOLab_BuildingDomesticTablesV2.R",
+               "/IEDataProcessing_PIOLab_AligningData.R",
+               "/IEDataProcessing_PIOLab_WasteMFAIOExtension.R",
+               "/IEDataProcessing_PIOLab_WasteMFAIOModelRun.R",
+               "/IEDataProcessing_PIOLab_BuildingDomesticTables.R",
                "/IEDataProcessing_PIOLab_BuildingTradeBlocks.R",
                "/IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables.R")
 
 IE_fun <- paste0(path$IE_Subroutines,IE_fun)  # Add path to functions
+lapply(IE_fun,source)                         # Load functions into workspace
 
-lapply(IE_fun,source)  # Load functions into workspace
 
+### 2. Commencing data pre-processing (from source to root classification)
 
-# 2. Commencing data pre-processing (from source to root classification)
-
-IEFeed_PIOLab_WSA(year,path)  # WSA production numbers
-
+IEFeed_PIOLab_WSA(year,path)             # WSA production numbers
 IEFeed_PIOLab_SteelIndustryYields(path)  # Yield information
-
-IEFeed_PIOLab_BACI(year,path)  # Trade data
-
-IEFeed_PIOLab_IRP(year,path)  # Extraction data
-
-IEFeed_PIOLab_Grades(path)  # Ore grades
-
-IEFeed_PIOLab_EOL(year,path)  # end-of-life i.e. old scrap
-
-IEFeed_PIOLab_IEA(year,path) # IEA energy data
-
-IEFeed_PIOLab_EXIOWasteMFAIOV2(year,path) # Aggregate EXIOBASE Waste-MFA IO model (WIO)
-
-IEFeed_PIOLab_Cullen(path)  # Fabrication yields from Cullen et al. 2012
+IEFeed_PIOLab_BACI(year,path)            # Trade data
+IEFeed_PIOLab_IRP(year,path)             # Extraction data
+IEFeed_PIOLab_Grades(path)               # Ore grades
+IEFeed_PIOLab_EOL(year,path)             # end-of-life i.e. old scrap
+IEFeed_PIOLab_IEA(year,path)             # IEA energy data
+IEFeed_PIOLab_EXIOWasteMFAIO(year,path)  # Aggregate EXIOBASE Waste-MFA IO model (WIO)
+IEFeed_PIOLab_Cullen(path)               # Fabrication yields from Cullen et al. 2012
 
 
-# 3. Commencing data processing
+### 3. Commencing data processing
 
-IEDataProcessing_PIOLab_AligningDataV2(year,path) # Align WSA, IRP extraction
+IEDataProcessing_PIOLab_AligningData(year,path)        # Align WSA, IRP extraction
+IEDataProcessing_PIOLab_WasteMFAIOExtension(year,path) # Compile extension for WIO  
+IEDataProcessing_PIOLab_WasteMFAIOModelRun(year,path)  # Run WIO Model calculation
 
-IEDataProcessing_PIOLab_WasteMFAIOExtensionV2(year,path) # Compile extension for WIO  
+### 4. Compile domestic SUTs, trade blocks and S8 files thereof
 
-IEDataProcessing_PIOLab_WasteMFAIOModelRunV2(year,path) # Run WIO Model calculation
-
-
-# Compile domestic SUTs
-
-IEDataProcessing_PIOLab_BuildingDomesticTablesV2(year,path)
-
-# Compiling trade blocks
-
+IEDataProcessing_PIOLab_BuildingDomesticTables(year,path)
 IEDataProcessing_PIOLab_BuildingTradeBlocks(year,path)
-
-################################################################################
-# 4. Create S8 files (see AISHA manual annex for further information) for easy data import to AISHA 
-   
 IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables(year,path)
 
-################################################################################
-# 5. Write ALANG commands
-print("Start writing ALANG commands.")
+### 5. Write ALANG commands
 
 # Set up wrapper for adding rows to ALANG
+
 NewALANG <- function(name,SE,ALANG)
 {
   file <- paste0("S8 ",path$mother,"Data/IE/",gsub("-","",Sys.Date()),
@@ -162,7 +135,7 @@ NewALANG <- function(name,SE,ALANG)
 # Create empty file with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
 
-RSE <- read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/IE_RSE_settings.xlsx"))
+RSE <- read.xlsx( paste0(path$Settings,"/Base/IE_settings.xlsx"), sheet = 3 )
 
 # Write ALANG commands
 

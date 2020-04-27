@@ -40,6 +40,4 @@ IEFeed_PIOLab_Grades <- function(path)
   if(!dir.exists(path_set)) dir.create(path_set)
   
   write.csv(data_clean,file = paste0(path_set,"/IronOreGrades.csv"),row.names = FALSE)
-  
-  print("IEFeed_PIOLab_Grades finished.")
 }

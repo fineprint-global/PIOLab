@@ -88,8 +88,10 @@ ALANG$RHS$Value <- paste0("DATAPATH/",datafeed_name,"/",ALANG$RHS$`1`,".csv")
 ALANG$SE$S.E. <- paste0("DATAPATH/",datafeed_name,"/",ALANG$SE$`1`,".csv")
 
 vec <- data.frame("pro" = 1:pro_max,
-                  "RHS" = NA,
-                  "SE" = NA)
+                  "RHS" = 0,
+                  "SE" = 0)
+
+vec[256:266,2:3] <- NA
 
 ### 2. Write commands by looping over export regions:
 
@@ -113,11 +115,10 @@ for( i in 1:nrow(index) )
 }
   
 
-
 ### 3. Merge ALANG sheets and complete missing entries 
 
-ALANG <- rbind(ALANG$RHS,ALANG$SE)  # Combine SE and RHS commands
-ALANG$`#` <- 1:nrow(ALANG) # Add index
+ALANG <- rbind(ALANG$RHS,ALANG$SE)     # Combine SE and RHS commands
+ALANG$`#` <- 1:nrow(ALANG)             # Add index
 ALANG[] <- lapply(ALANG,as.character)  # Convert all entries to character
 
 ### 4. Call script that writes the ALANG file to the repsective folder in the root

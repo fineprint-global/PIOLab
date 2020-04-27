@@ -16,11 +16,14 @@ if(file.exists(reg_path))
   # Read the number of regions from the name of the aggregator 
   RegionAgg <- substr(reg_map,nchar(reg_map)-23,nchar(reg_map)-21)
   
-  base <- list("region" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",RegionAgg,"_BaseRegionClassification.xlsx"),sheet = 1),
-               "process" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 1),
-               "flow" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 2),
-               "demand" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 3),
-               "input" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 4))
+  path_base_reg <- paste0(path$Settings,"/Base/",RegionAgg,"_BaseRegionClassification.xlsx")
+  path_base_sec <- paste0(path$Settings,"/Base/",IEdatafeed_name,"_BaseSectorClassification.xlsx")
+  
+  base <<- list("region" = read.xlsx(path_base_reg,sheet = 1),
+                "process" = read.xlsx(path_base_sec,sheet = 1),
+                "flow" = read.xlsx(path_base_sec,sheet = 2),
+                "demand" = read.xlsx(path_base_sec,sheet = 3),
+                "input" = read.xlsx(path_base_sec,sheet = 4))
   
   remove(reg_map,RegionAgg)
   
@@ -37,11 +40,14 @@ if(file.exists(reg_path))
                                     )
               )
   
-  base <<- list("region" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",test_regagg,"_BaseRegionClassification.xlsx"),sheet = 1),
-                "process" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 1),
-                "flow" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 2),
-                "demand" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 3),
-                "input" = read.xlsx(paste0(path$Concordance,"/LabelsAndCodes/",IEdatafeed_name,"_BaseSectorClassification.xlsx"),sheet = 4))
+  path_base_reg <- paste0(path$Settings,"/Base/",test_regagg,"_BaseRegionClassification.xlsx")
+  path_base_sec <- paste0(path$Settings,"/Base/",IEdatafeed_name,"_BaseSectorClassification.xlsx")
+  
+  base <<- list("region" = read.xlsx(path_base_reg,sheet = 1),
+                "process" = read.xlsx(path_base_sec,sheet = 1),
+                "flow" = read.xlsx(path_base_sec,sheet = 2),
+                "demand" = read.xlsx(path_base_sec,sheet = 3),
+                "input" = read.xlsx(path_base_sec,sheet = 4))
   
   remove(test_regagg)
 }
