@@ -10,387 +10,712 @@
 
 IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
 {
+  # !diagnostics off
+  
   print("IEDataProcessing_PIOLab_BuildingDomesticTables initiated.")
-  # Load region aggregator
-  source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-  reg_agg <- Root2Base_RegionAggregator(RegionAggregator)
-  # Load function to compile end use map
-  source(paste0(path$Subroutines,"/makeEndUseMap.R"))
-  # Load slag rate of blast furnace and coefficient per ton of pig iron output
-  WSA_yield <- read.csv(paste0(path$IE_Processed,"/WSA/SteelIndustryYields.csv")) %>%
-    select(Process,Average)
-  # Load extension of the WasteMFAIO model and IO codes
-  load(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_Q.RData"))
-  load(paste0(path$IE_Processed,"/EXIOWasteMFAIO/IO.codes.RData"))
-  # Load trade data
-  BACI <- read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,".csv"))
+  
+  # Add path to IE classification setting file:
+  
+  path[["IE_classification"]] <- paste0(path$Settings,"/Base/",IEdatafeed_name,"_BaseSectorClassification.xlsx")
+  
+  # Load prorating function and Number2File:
+  
+  source(paste0(path$Subroutines,"/Prorate.R"))
+  
+  source(paste0(path$Subroutines,"/Numbers2File.R"))
+ 
+  
+  Codes <- list( "WIO" = read.csv(file = paste0(path$IE_Processed,"/EXIOWasteMFAIO/IO_codes.csv") ) )
+  
+  Setting <- list( "WSA" = read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"), sheet = 1 ),
+                   "IE" = read.xlsx(xlsxFile = paste0(path$Settings,"/Base/IE_settings.xlsx"), sheet = 1 ))
+  
+  Setting$WSA["path"] <- paste0(path$IE_Processed,"/WSA/WSA_",year,"_",Setting$WSA$FeedName,".csv")
+  
+  
+  # Load flow data where all regions are included in one object:
+  
+  data <- list( "FinalDemand" =  read.csv( paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_","FinalDemand.csv") ),
+                "Fab2Demand" = read.csv( paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_","Fabrication2FinalDemand.csv") ),
+                "BACI" =  read.csv(paste0(path$IE_Processed,"/BACI/BACI_",year,".csv") ),
+                "Eol" = read.csv(paste0(path$IE_Processed,"/EOL/EOL_",year,".csv") ),
+                "IRP" = read.csv(paste0(path$IE_Processed,"/IRP/IRP_",year,".csv") ),
+                "Grade" = read.csv(paste0(path$IE_Processed,"/Grades/IronOreGrades.csv") ),
+                "Yield" = select(read.csv(paste0(path$IE_Processed,"/WSA/SteelIndustryYields.csv")),Process,Average),
+                "WSA" = lapply(X = Setting$WSA$path, FUN = read.csv),
+                "Forgings" = read.csv(paste0(path$IE_Processed,"/AligningData/Forgings_",year,".csv") ) 
+              )
+  
+  # Load WSA Source2Root concordances
+  
+  set <- read.xlsx(xlsxFile = paste0(path$Settings,"/Base/IE_settings.xlsx"),sheet = 2)
+  
+  path_sel <- list("flow" = paste0(path$Concordance,"/WSA/",
+                                   set$date[set$aggregator == "sector"],"_WSA_Source2Root_Product.csv"),
+                   "process" = paste0(path$Concordance,"/WSA/",
+                                      set$date[set$aggregator == "sector"],"_WSA_Source2Root_Industry.csv")
+                   )
+  
+  S2R <- list( "WSA" = list( "industry" = as.matrix( read.csv(path_sel$process,header = FALSE) ),
+                             "product" = as.matrix( read.csv(path_sel$flow,header = FALSE) )
+                            )
+              )
+  
+  # Store root to mother concordances in list object:
+  
+  R2M_sel <- list( "WSA" = list( "industry" = R2M$process,
+                                 "product" = R2M$flow
+                                 ) 
+                   )
+  
+  # Normalize source to root concordances (create maps)
+  
+  for(j in 1:2) S2R$WSA[[j]] <- as.matrix( S2R$WSA[[j]] / rowSums(S2R$WSA[[j]]) ) 
+  
+  S2M <- list("WSA" = list())  # Create empty list to store source to mother maps
+  
+  # Create Source to mother map:
+  
+  for(j in 1:2) S2M$WSA[[j]] <- S2R$WSA[[j]] %*% R2M_sel$WSA[[j]]
+  
+  # Load SUT templates
+  
+  SUT_temp <- list( "Supply" = as.matrix( read.xlsx(path$IE_classification, sheet = 5,rowNames = TRUE) ),
+                    "Use" = as.matrix( read.xlsx(path$IE_classification, sheet = 6,rowNames = TRUE) )
+                  )
+  
   # Load allocation function
-  source(paste0(path$Subroutines,"/AllocateSupply2Use.R"))
   
-  # Define general variables
-  n_pro <- nrow(base$product)
-  n_ind <- nrow(base$industry)
-  n_reg <- nrow(base$region)
-  n_va <- 5
-  n_fd <- 3
+  # source(paste0(path$Subroutines,"/AllocateSupply2Use.R"))
   
-  for(i in 1:n_reg)
+  # Define general variables:
+  
+  # num <- list("pro" = nrow(base$product),
+  #             "ind" = nrow(base$industry),
+  #             "reg" = nrow(base$region),
+  #             "va" = nrow(base$input),
+  #             "fd" = nrow(base$demand) )
+             
+  for(i in 1:num$reg)
   {
-    print(i)
-    # Create empty SUT
-    SUT <- data.frame(matrix(0,(n_pro+n_ind+n_va),(n_pro+n_ind+n_fd)))
-    colnames(SUT) <- c(base$industry$Name,base$product$Name,
-                       "FinalConsumption","Landfill","Atmosphere")
-    rownames(SUT) <- c(base$industry$Name,base$product$Name,
-                       "FerrousMinerals","EOLScrap","Limestone","Coke","Air")
-    SUT <- as.matrix(SUT)
-    ############################################################################
-    # 1. Writing boundary inputs of iron ore extraction and end-of-life scrap to table
+    print(paste("Compiling",base$region$Name[i]))
     
-    # 1.1 EoL scrap 
-    data <- read.csv(paste0(path$IE_Processed,"/EOL/EOL_",year,".csv"))
-    if(i %in% data$base) {
-      value <- data$Quantity[data$base == i]
-      SUT["EOLScrap","Scrap preparation"] <- value }
+    # Create empty SUT:
     
-    # 1.2 IRP iron ore extraction i.e. inputs from nature
-    data <- read.csv(paste0(path$IE_Processed,"/IRP/IRP_",year,".csv"))
-    if(i %in% data$base) {
-      value <- data$Quantity[data$base == i]
-      SUT["FerrousMinerals","Mining"] <- value }
+    SUT <- data.frame(matrix(0,(num$flow + num$process + num$input),(num$flow + num$process + num$demand)))
     
-    ############################################################################
-    # 2. Writing production values into supply table
+    colnames(SUT) <- c(base$process$Name,
+                       base$flow$Name,
+                       base$demand$Name)
     
-    # 2.1 Waste (gangue) output of mining
-    # Read iron ore grades and assume beneficiation to 60% of ore grade
-    data <- read.csv(paste0(path$IE_Processed,"/Grades/IronOreGrades.csv"))  
+    rownames(SUT) <- c(base$process$Name,
+                       base$flow$Name,
+                       base$input$Name)
     
-    # if no ore grades are available for a region, assume 0.6
-    if(i %in% data$base) 
-    {concen <- data$Concentration[data$base == i]}else  
-    {concen <- 0.6}
+    SUT <- as.matrix(SUT) # Transform to matrix write numbers using matrix indices
     
-    if(SUT["FerrousMinerals","Mining"] > 0) {
-    iron <- SUT["FerrousMinerals","Mining"]*concen
-    # iron ore weight with 60% grade, when concentration is higher than 0.6, leave it like it is
-    if(concen <= 0.6) {value_new <- iron/0.6} else
-    {value_new <- iron/concen}
-    # Calculate waste flow to landfill 
-    waste <- value-value_new
-    # Allocate output of iron ore (now 60% grade) to mining
-    SUT["Mining","Iron ore"] <- value_new
-    # Allocate boundary outputs of waste to the supply-side of mining, that is landfill
-    SUT["Mining","Landfill"] <- waste }
     
-    # 2.2 Write pig iron production and use yields to estimate waste/slag flows
-    data <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_PigIron.csv"))
+    ### Flows associated with fabrication ###
     
-    if(i %in% data$base) {
-      value <- data$Quantity[data$base == i]
-      SUT["Blast furnace","Pig iron"] <- value
-      # Take slag rate from WSA
-      yield <- WSA_yield$Average[WSA_yield$Process == 'BF slag rate']/1000
-      # Estimate slag output and allocate to landfill (final use)
-      SUT["Blast furnace","Landfill"] <- value * yield
-      # Estimate output of top gas (1.7 tons per ton oig iron)
-      SUT["Blast furnace","Atmosphere"] <- value *1.7}
     
-    # 2.3 Sponge iron
-    data <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SpongeIron.csv"))
-    if(i %in% data$base) {
-      value <- data$Quantity[data$base == i]
-      SUT["Direct reduction","Sponge iron"] <- value
-      # Allocate slag output assuming losses of 5% of sponge iron output
-      #yield <- 0.05
-      #waste <- value * yield
-      # Alternatively allocate losses including gangue by assuming waste of 600 kg per ton of useful output
-      SUT["Direct reduction","Landfill"] <- value * 0.6 }
-      
-    # 2.4 Write steel production of BOF & OHF
-    data_1 <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelOxygenBlownConverters.csv"))
-    data_2 <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelOpenHearthFurnaces.csv"))
-    data <- rbind(data_1,data_2) %>% group_by(base) %>% summarise(Quantity = sum(Quantity))
-    remove(data_1,data_2)
+    # Load data on fabrication use:
     
-    if(i %in% data$base) {
-      value <- data$Quantity[data$base == i]
-      SUT["Oxygen blown & open hearth furnace","Liquid steel (OBF/OHF)"] <- value
-      # Calculate waste
-      yield <- WSA_yield$Average[WSA_yield$Process == 'BOF yield']
-      waste <- (value/yield)-value
-      SUT["Oxygen blown & open hearth furnace","Landfill"] <- waste }
+    data_sel <- read.csv(paste0(path$IE_Processed,"/Cullen/FabricationUse_",
+                            year,"_",base$region$Name[i],".csv"),
+                     header = FALSE)
     
-    # 2.5 Write steel production of EAF
-    data <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_SteelElectricFurnaces.csv"))
+    # Store matrix index in list:
     
-    if(i %in% data$base) {
-      value <- data$Quantity[data$base == i]
-      SUT["Electric arc furnace","Liquid steel (EAF)"] <- value
-      # Calculate waste
-      yield <- WSA_yield$Average[WSA_yield$Process == 'EAF yield']
-      waste <- (value/yield)-value
-      SUT["Electric arc furnace","Landfill"] <- waste }
+    index <- list("row" = num$process + filter(base$flow,Type == "Finished") %>% pull(Code),
+                  "col" = filter(base$process,Type == "Final") %>% pull(Code))
+  
+    SUT[index$row,index$col] <- as.matrix(data_sel)  # Write into table
+        
+    # Load data on fabrication scrap output
     
-    # 2.6 Write flat rolling production and forming scrap
-    data <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_FlatRolledProducts.csv"))
+    data_sel <- read.csv(paste0(path$IE_Processed,"/Cullen/FabricationScrap_",
+                            year,"_",base$region$Name[i],".csv"))
     
-    if(i %in% data$base) {
-      value <- data$Quantity[data$base == i]
-      SUT["Flat rolling","Flat rolled products"] <- value
-      # Calculate waste
-      yield <- WSA_yield$Average[WSA_yield$Process == 'Slab caster yield']
-      waste <- (value/yield)-value
-      SUT["Flat rolling","Forming & fabrication scrap"] <- waste }
+    # Matrix indices in list:
     
-    # 2.7 Write long rolling production and forming scrap
-    data <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_LongRolledProducts.csv"))
+    index <- list("row" = data_sel$base,
+                  "col" = num$process + filter(base$flow, Name == "Fabrication scrap") %>% pull(Code))
     
-    if(i %in% data$base) {
-      value <- data$Quantity[data$base == i]
-      SUT["Long rolling","Long rolled products"] <- value
-      # Calculate waste
-      yield <- WSA_yield$Average[WSA_yield$Process == 'Bloom caster yield']
-      waste <- (value/yield)-value
-      SUT["Long rolling","Forming & fabrication scrap"] <- waste }
+    SUT[index$row,index$col] <- data_sel$Quantity  # Write scrap flows into table
     
-    # 2.8 Write production of ingots and subsequently fill the gap of the casting
-    # process with slabs (because all feeds into flat rolling)
-    data <- read.csv(paste0(path$IE_Processed,"/WSA/WSA_",year,"_Ingots.csv"))
+    # Read data for useful fabrication output
     
-    if(i %in% data$base) {
-      value <- data$Quantity[data$base == i]
-      SUT["Casting of ingots & slabs","Ingots"] <- value
-      value <- SUT["Flat rolling","Flat rolled products"] - SUT["Casting of ingots & slabs","Ingots"]
-      SUT["Casting of ingots & slabs","Slabs"] <- value
-      yield <- WSA_yield$Average[WSA_yield$Process == 'Slab caster yield']
-      value <- SUT["Flat rolling","Flat rolled products"]
-      waste <- (value/yield)-value
-      SUT["Casting of ingots & slabs","Forming & fabrication scrap"] <- waste }
+    data_sel <- select(data$Fab2Demand,base.from,sector.from,Quantity) %>% filter(base.from == i) %>% 
+      group_by(base.from,sector.from) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(base.from,sector.from)
     
-    # 2.9 For the production value of billets and blooms use the value of long rolling
-      value <- sum(SUT["Long rolling",c("Long rolled products","Forming & fabrication scrap")])
-      SUT["Casting of billets & blooms","Billets & blooms"] <- value
-      # Estimate scrap flows using yield data
-      yield <- WSA_yield$Average[WSA_yield$Process == 'Bloom caster yield']
-      waste <- (value/yield)-value
-      SUT["Casting of billets & blooms","Forming & fabrication scrap"] <- waste 
-      
-    # 2.10 Fabrication i.e. manufacturing output
-    data <- read.csv(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_FabricationToFinalDemand.csv")) %>%
-      filter(From.Region == i) %>% select(From.Product,Quantity) %>% group_by(From.Product) %>%
-      summarise(Quantity = sum(Quantity))
-    # Set up index to write values directly into cells
-    index <- cbind(base$industry$Name[11:20],base$product$Name[13:22])
-    SUT[index] <- data$Quantity
-      
-    # 2.11 Fabrication scarp
-    data <- read.csv(paste0(path$IE_Processed,"/FabricationScrap/FabricationScrap_",year,".csv")) %>%
-      filter(base == i)
-    data <- data.frame("commodity" = as.character(data$commodity),
-                       "Quantity" = data$Quantity,
-                       stringsAsFactors = FALSE)
-    index <- as.data.frame(index,stringsAsFactors = FALSE)
-    colnames(index) <- c("Industry","Product")
-    data <- left_join(index,data,c("Product" = "commodity"),copy = FALSE)
+    # Store matrix index in list:
     
-    SUT[data$Industry,"Forming & fabrication scrap"] <- data$Quantity
+    index <- as.matrix(data.frame("row" = filter(base$process,Type == "Final") %>% pull(Code),
+                                  "col" = num$process + filter(base$flow,Type == "Final") %>% pull(Code)
+                                  )
+                       )
 
-    # 2.12 Estimate production of scrap steel by summing over "forming and fabrication scrap"
-    # and EoL scrap supply
+    SUT[index] <- data_sel$Quantity  # Write fab output to table
     
-    value <- sum(SUT[,"Forming & fabrication scrap"]) + SUT["EOLScrap","Scrap preparation"]
-    SUT["Scrap preparation","Scrap steel"] <- value  
     
-    ############################################################################
-    # 3. Filling use table
-    # IMPORTANT: The allocation follows the logic to source data on exports from the
-    # BACI data set and subtract this value from the domestic production of the upstream process 
-    # to get an estimate for the domestic inputs of each process. Where this results in negative values
-    # for domestic use, we assume that inputs are 50% from foreign source
+    # Read data on intermediate use of manufacturing output
     
-    # 3.1 Steel in final demand
-    data <- read.csv(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_SteelInFinalDemand.csv")) %>%
-      filter(From.Region == i & To.Region == i)
-    index <- base$product$Name[base$product$Code %in% data$Product]
-    SUT[index,"FinalConsumption"] <- data$Quantity
+    data_sel <- data$Fab2Demand %>% filter(base.from == i,base.to == i) %>% 
+      select(sector.from,sector.to,Quantity) %>% group_by(sector.from,sector.to) %>% 
+      summarise(Quantity = sum(Quantity)) %>% ungroup(sector.from,sector.from)
     
-    # 3.2.1 Flat Rolled products used in fabrication
-    item <- "Flat rolled products"
-    # Load map to allocate to end use (fabrication)
-    map <- makeEndUseMap(i,"Flat")
-    map <- map[order(map$index),]
-    share <- map$Share
-    ############################################
-    # The following command may cause problems #
-    ############################################
-    users <- base$industry$Code[11:20][map$index]
-    # Load trade data 
-    data <- filter(BACI,Product == base$product$Code[base$product$Name == item]) %>% select(From,To,Quantity)
-    # Read domestic production
-    pro <- SUT["Flat rolling","Flat rolled products"]
-    # Read domestic use
-    use <- sum(Q["Flat",IO.codes$index[IO.codes$base == i]])
+    # Read base sector codes:
     
-    # Execute function for estimation script to write values
-    SUT <- AllocateSupply2Use(SUT,item,share,users,data,pro,use,i)
+    index <-data.frame( "row" = num$process + filter(base$flow,Type == "Final") %>% pull(Code),
+                        "col" = filter(base$process,Type == "Final") %>% pull(Code) )
+                       
+    data_sel$sector.from <- index$row[data_sel$sector.from]  # Exchange WIO codes with base row codes
     
-    # 3.3.2 Long Rolled products used in fabrication
-    item <- "Long rolled products"
-    # Load map to allocate to end use (fabrication)
-    map <- makeEndUseMap(i,"Long")
-    map <- map[order(map$index),]
-    share <- map$Share
-    users <- base$industry$Code[11:20][map$index]
-    # Load trade data 
-    data <- filter(BACI,Product == base$product$Code[base$product$Name == item]) %>% select(From,To,Quantity)
-    # Read domestic production
-    pro <- SUT["Long rolling",item]
-    # Read domestic use
-    use <- sum(Q["Long",IO.codes$index[IO.codes$base == i]])
+    data_sel$sector.to <- index$col[data_sel$sector.to] # Exchange WIO codes with base col codes
     
-    # Execute function for estimation script to write values
-    SUT <- AllocateSupply2Use(SUT,item,share,users,data,pro,use,i)
+    # Copy base codes into data frame and transform into matrix:
     
-    # 3.4 Use of forming and fabrication scrap by scrap preparation
-    SUT["Forming & fabrication scrap","Scrap preparation"] <- sum(SUT[,"Forming & fabrication scrap"])
+    index <- as.matrix(data_sel[,c("sector.from","sector.to")])   
     
-    # 3.5 Use of billets and blooms by long rolling
-    # Load number for exports of billets and blooms 
-    item <- "Billets & blooms"
-    users <- "Long rolling"
-    share <- 1
-    data <- filter(BACI,Product == base$product$Code[base$product$Name == item]) %>% select(From,To,Quantity)
-    pro <- SUT["Casting of billets & blooms",item]
-    use <- sum(SUT[users,])
+    SUT[index] <- data_sel$Quantity
     
-    # Execute function for estimation script to write values
-    SUT <- AllocateSupply2Use(SUT,item,share,users,data,pro,use,i)
     
-    # 3.6 Use of ingots and slabs by flat rolling
-    # 3.6.1 Ingots
-    export <- filter(BACI,Product == base$product$Code[base$product$Name == "Ingots"]) %>% 
-      select(From,To,Quantity) %>% filter(From == i) 
-    value <- SUT["Casting of ingots & slabs","Ingots"] - sum(export$Quantity)
-    # In case value is negative, assume that 5% of inputs is coming from domestic ingots
-    if(value > 0) {SUT["Ingots","Flat rolling"] <- value} else
-    {SUT["Ingots","Flat rolling"] <- sum(SUT["Flat rolling",]) * 0.05}
+    # Read flows from final production sector (manuf.) to final demand category:
     
-    # 3.6.2 Slabs
-    export <-  filter(BACI,Product == base$product$Code[base$product$Name == "Slabs"]) %>% 
-      select(From,To,Quantity) %>% filter(From == i) 
-    # Domestic production of slabs minus exports = domestic use
-    value <- SUT["Casting of ingots & slabs","Slabs"] - sum(export$Quantity)
-    if(value > 0) {SUT["Slabs","Flat rolling"] <- value} else
-    {SUT["Slabs","Flat rolling"] <-  sum(SUT["Flat rolling",]) * 0.45}
+    data_sel <- data$FinalDemand %>% filter(base.from == i,base.to == i) %>% 
+      select(sector,demand,Quantity) %>% group_by(sector,demand) %>% 
+      summarise(Quantity = sum(Quantity)) %>% ungroup(sector,sector,demand)
     
-    # 3.7 Casting of billets and blooms and casting of ingots and slabs
-    # The only input to casting is liquid steel which is not a traded commodity, 
-    # The inputs to casting are therefor estimated by using the production/output value
-    # of the respective furnace
+    # Read base sector codes:
     
-    # Steel from Electric arc furnace
-    SUT["Liquid steel (EAF)","Casting of billets & blooms"] <- SUT["Electric arc furnace","Liquid steel (EAF)"]
-    # Fill remaining gap with OBF steel   
-    gap <- sum(SUT["Casting of billets & blooms",]) - SUT["Liquid steel (EAF)","Casting of billets & blooms"]
-    if(gap > 0) SUT["Liquid steel (OBF/OHF)","Casting of billets & blooms"] <- gap
+    index <-data.frame( "row" = filter(base$process,Type == "Final") %>% pull(Code))
     
-    # Steel from oxygen blown converter  
-    SUT["Liquid steel (OBF/OHF)","Casting of ingots & slabs"] <- sum(SUT["Casting of ingots & slabs",])
+    data_sel$sector <- index$row[data_sel$sector]  # Exchange WIO code with base sector code
     
-    # 3.8 Sponge iron used by EAF
-    export <- filter(BACI,Product == base$product$Code[base$product$Name == "Sponge iron"],From == i)
+    data_sel$demand <- data_sel$demand + num$process + num$flow  # Exchange WIO with base sector code
     
-    if(SUT["Direct reduction","Sponge iron"] != 0) 
+    index <- as.matrix( data_sel[,c("sector","demand")] )  # Create matrix for indices
+    
+    SUT[index] <- data_sel$Quantity
+    
+    
+    ### Output of steelmaking sector ###
+    
+    # Read WSA id's of processed data that is relevant:
+    
+    Code_sel <- Setting$WSA %>% filter(Type %in% c("Primary","Secondary","Finished")) %>% 
+      select(id, FeedName, Type)
+    
+    # Use id to extract a list containing the processed data:
+    
+    data_sel <- data$WSA[Code_sel$id]
+    
+    # Create vector in list to store the data for country i:
+    
+    Value <- list( "Source" = vector( mode="integer", length= length(data_sel) ) )
+    
+    # Write production numbers in vector:
+    
+    for( j in 1:nrow(Code_sel) ) 
     {
-      value <- SUT["Direct reduction","Sponge iron"] - sum(export$Quantity)
-      if(value > 0) {SUT["Sponge iron","Electric arc furnace"] <- value} else
-      {SUT["Sponge iron","Electric arc furnace"] <- sum(SUT["Direct reduction","Sponge iron"])/2}
+      if(i %in% data_sel[[j]]$base) Value$Source[j] <- filter(data_sel[[j]],base == i) %>% pull(Quantity)
     }
     
-    # 3.9 Allocating iron ores used by direct reduction
-    SUT["Iron ore","Direct reduction"] <- sum(SUT["Direct reduction",])
+    # Map raw data to mother product classification:
     
-    # 3.10 Allocate iron ores used by Blast furnace 
-    export <- filter(BACI,Product == base$product$Code[base$product$Name == "Iron ore"],From == i)
-    value <- SUT["Mining","Iron ore"] - sum(export$Quantity)
-    if(value > 0) {SUT["Iron ore","Blast furnace"] <- value} else
-    {SUT["Iron ore","Blast furnace"] <- sum(SUT["Blast furnace",])/2}
+    Value[["Mother"]] <- colSums( S2M$WSA[[2]][Code_sel$id,] * Value$Source )
     
-    # 3.10.1
-    # Allocate other inputs used by blast furnace
-    if(SUT["Blast furnace","Pig iron"] > 0)
+    # Read indices of steelmaking sector outputs
+    
+    index <- list( "row" = filter(base$process,Type %in% c("Primary","Secondary","Finished")) %>% pull(Code),
+                   "col" = filter(base$flow,Type %in% c("Primary","Secondary","Finished")) %>% pull(Code) 
+                  )
+    
+    Value[["Supply"]] <- SUT_temp$Supply %*% diag(Value$Mother) # Allocate products to industries
+    
+    # Write values into SUT (note addition of number of industries to column indices):
+    
+    SUT[index$row, num$process + index$col] <- Value$Supply[index$row,index$col]
+    
+    ### Add forging production ###
+    
+    if(i %in% data$Forgings$base)
     {
-      pro <- SUT["Blast furnace","Pig iron"]
-      # Limestone and fluxes assuming 300 kg per ton of pig iron
-      SUT["Limestone","Blast furnace"] <- pro *0.3
-      # 600 kg coke or coal per ton pig iron
-      SUT["Coke","Blast furnace"] <- pro * 0.6
-      # (Hot) air of approx. 800 kg per ton
-      SUT["Air","Blast furnace"] <- pro * 0.8
+      SUT["Steel casting and forging","Forgings"] <- filter(data$Forgings,base == i) %>% pull(Quantity)
     }
     
-    # 3.11 Allocating pig iron to BOF
-    export <- filter(BACI,Product == base$product$Code[base$product$Name == "Pig iron"],From == i)
-    value <- SUT["Blast furnace","Pig iron"] - sum(export$Quantity)
-    if(value > 0) {SUT["Pig iron","Oxygen blown & open hearth furnace"] <- value} else
-    {SUT["Pig iron","Oxygen blown & open hearth furnace"] <- sum(SUT["Oxygen blown & open hearth furnace",])*0.4}
+    # Read indices of secondary i.e. crude steel:
     
-    # 3.12 Allocate Scrap steel to BOF and EAF
-    SUT["Scrap steel","Oxygen blown & open hearth furnace"] <- sum(SUT["Oxygen blown & open hearth furnace",])*0.15
-    SUT["Scrap steel","Electric arc furnace"] <- sum(SUT["Electric arc furnace",]) - SUT["Direct reduction","Electric arc furnace"]
+    index <- data.frame("industry" = filter(base$process,Name %in% paste("Continuous casting of",c("slabs","billets","blooms"))) %>% pull(Code),
+                        "product" = filter(base$flow,Name %in% c("Slabs","Billets","Blooms")) %>% pull(Code)
+                        )
+
     
-    # 4. Save SUT
+    # Create map to calculate crude steel (secondary) output by estimating demand of downstream processes:
+    
+    Map <- t( SUT_temp$Use[index$product,] ) / colSums( SUT_temp$Use[index$product,] ) 
+    
+    Map[is.na(Map)] <- 0
+    
+    # Estimate crude steel demand/output:
+    
+    Value <- colSums( Map *  rowSums(SUT[base$process$Code, num$process + base$flow$Code]) )
+    
+    index$product <- index$product + num$process  # Change product (col) code to write in SUT
+    
+    SUT[as.matrix(index)] <- Value  # Write value
+    
+    
+    ### Estimate forming scrap  ###
+    
+    # indices of forming processes:
+    
+    index <- list( "industry" = filter(base$process, Type == "Finished") %>% pull(Code) )
+    
+    # Output of forming processes:
+    
+    Value <- rowSums(SUT[index$industry, num$process + base$flow$Code])
+    
+    # Scrap = ( Useful output / yield ) - Useful output: 
+    
+    Value <- ( Value / filter(data$Yield, Process == "Hot rolling yield") %>% pull(Average) ) - Value
+    
+    SUT[index$industry,"Forming scrap"] <- Value  # Write values in SUT
+    
+    ##############################################
+    ### Estimate final outputs of steel sector ###
+    ##############################################
+    
+    # Read process factor for top gas per pig iron:
+    
+    factor <- filter(Setting$IE, item == "TopGasPerPigIron") %>% pull(value)
+    
+    
+    # Write emissions in final output quadrant:
+    
+    SUT["Blast furnace","Atmosphere"] <- SUT["Blast furnace","Pig iron"] * factor
+    
+    
+    # Read slag per unit pig iron and allocate amount to output to landfill
+    
+    factor <- filter(Setting$IE, item == "SlagPerPigIron") %>% pull(value)
+    
+    SUT["Blast furnace","Landfill"] <- SUT["Blast furnace","Pig iron"] * factor
+    
+    
+    # Read gangue per unit sponge iron factor and add amount to landfill:
+    
+    factor <- filter(Setting$IE, item == "GanguePerSpongeIron") %>% pull(value)
+    
+    SUT["Direct reduction","Landfill"] <- SUT["Direct reduction","Sponge iron"] * factor
+    
+    
+    # Read oxygen blown furnace yield and use this for both OBF and open hearth furnace:
+    
+    factor <- filter(data$Yield,Process == "BOF yield") %>% pull(Average)
+    
+    # Read sector indices: 
+    
+    index <- data.frame("industry" = filter(base$process, Name %in% c("Basic oxygen converter","Open hearth furnace")) %>% pull(Code),
+                        "product" = num$process + filter(base$flow, Name %in% c("Liquid steel OBF","Liquid steel OHF")) %>% pull(Code)
+                        )
+    
+    # Write flow to landfill:
+    
+    SUT[index$industry,"Landfill"] <- ( SUT[as.matrix(index)] / factor ) - SUT[as.matrix(index)] 
+    
+    
+    # Read electric arc furnace yield and estimate waste flow:
+    
+    factor <- filter(data$Yield,Process == "EAF yield") %>% pull(Average)
+    
+    Value <- SUT["Electric arc furnace","Liquid steel EAF"] # EAF steel production
+    
+    SUT["Electric arc furnace","Landfill"] <- ( Value / factor ) - Value
+    
+    
+    # Read slab and billet caster yields:
+    
+    factor <- filter( data$Yield,Process %in% c("Slab caster yield","Billet caster yield") ) %>% pull(Average)
+    
+    index <- data.frame("industry" = filter(base$process,Name %in% paste("Continuous casting of",c("slabs","billets"))) %>% pull(Code),
+                        "product" = num$process + filter(base$flow,Name %in% c("Slabs","Billets") ) %>% pull(Code)
+                        )
+    
+    
+    SUT[index$industry,"Forming scrap"] <- ( SUT[as.matrix(index)] / factor ) - SUT[as.matrix(index)]
+    
+    
+    # Read bloom caster yield and use this for both blooms and ingost:
+    
+    factor <- filter( data$Yield,Process == "Bloom caster yield" ) %>% pull(Average)
+    
+    index <- data.frame("industry" = filter(base$process,Name %in% c("Continuous casting of blooms","Ingot casting")) %>% pull(Code),
+                        "product" = num$process + filter(base$flow,Name %in% c("Blooms","Ingots") ) %>% pull(Code)
+                        )
+    
+    SUT[index$industry,"Forming scrap"] <- ( SUT[as.matrix(index)] / factor ) - SUT[as.matrix(index)] 
+    
+    
+    ########################################################
+    ### Fill use table of forming processes (= Finished) ###
+    ########################################################
+
+    
+    # Read indices of products that are used by these processes 
+    # Note: Hot rolled coil-sheet-strip is handled separatly:
+    
+    index <- list( "product" = filter( base$flow, Name %in% c("Slabs","Billets","Blooms","Ingots") ) %>% pull(Code),
+                   "industry" = filter( base$process, Type == "Finished" ) %>% pull(Code),
+                   "interind" = filter( base$process, Type == "Secondary" ) %>% pull(Code)
+                  )
+    
+    # Read domestic output of intermediate inputs and of process:
+    
+    DomOut <- list( "Process" = rowSums(SUT[index$industry,]),
+                    "Intermed" = rowSums(SUT[index$interind,])
+                  )
+    
+    # Read use structure from template and create map:
+    
+    Map <- SUT_temp$Use[index$product, index$industry]  
+    
+    # Create prorated map:
+    
+    Map <- Prorate(Map, DomOut$Process)
+    
+    Map[is.na(Map)] <- 0
+    
+    
+    # Read export of intermediates:
+    
+    export <- filter(data$BACI,From == i,Product %in% index$product) %>% select(Product,Quantity) %>% 
+      group_by(Product) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(Product)
+    
+    
+    offset <- min(index$product)-1  # Offset product codes to write in Map
+    
+    if(length(export) >= 1)
+    {
+      Value <- DomOut$Intermed
+      Value[export$Product-offset] <- DomOut$Intermed[export$Product-offset] - export$Quantity
+    }
+    
+    # Check if exports are unavailable and if so set to zero:
+    
+    if( length(export) == 0 )
+    {
+      Value <- DomOut$Intermed
+    }
+    
+    
+    
+    # Check if negatives exists and replace them with domestic production:
+    
+    for(j in 1:length(Value)) if(Value[j] < 0) Value[j] <- DomOut$Intermed[j]  
+     
+    # Mulitply with map and write in use table
+    
+    SUT[num$process + index$product, index$industry] <- Map * Value
+    
+    
+    # Estimate use of hot rolled coil-sheet-strip products:
+    # Note that the use of hot rolled CSS by manufacturing is already accounted for by the WIO model extension
+    
+    index <- list( "product" = filter( base$flow, Name == "Hot rolled coil-sheet-strip" ) %>% pull(Code),
+                   "rolling" = filter( base$process, Name %in% c("Tube welding","Cold rolling mill") ) %>% pull(Code),
+                   "manufacturing" = filter( base$process, Type == "Final" ) %>% pull(Code),
+                   "interind" = filter( base$process, Name == "Hot strip mill" ) %>% pull(Code)
+                  )
+    
+    # Read domestic output of intermediate inputs (product) and of relevant processes:
+    
+    DomOut <- list( "rolling" = rowSums(SUT[index$rolling,]),
+                    "interind" = sum(SUT[index$interind,]),
+                    "manufacturing" = sum(SUT[index$interind,])
+                  )
+    
+    SUT[num$process + index$product, index$rolling] <- DomOut$rolling
+    
+    
+    # Estimate liquid steel use of casting:
+    
+    index <- list( "product" = filter( base$flow, Name %in% paste("Liquid steel",c("OBF","OHF","EAF")) ) %>% pull(Code),
+                   "industry" = filter( base$process, Type == "Secondary" ) %>% pull(Code),
+                   "interind" = filter( base$process, Name %in% c("Basic oxygen converter","Open hearth furnace","Electric arc furnace") ) %>% pull(Code)
+                  )
+    
+    # Read domestic output of intermediate inputs and of process:
+    
+    DomOut <- list( "industry" = rowSums(SUT[index$industry,]),
+                    "Interind" = rowSums(SUT[index$interind,])
+                  )
+    
+    # Read use structure from template and create map:
+    
+    Map <- SUT_temp$Use[index$product, index$industry]  
+    
+    Map[is.na(Map)] <- 0
+    
+    Map <- Prorate( Map,  DomOut$industry)  # Prorate map
+    
+    Value <- Map * DomOut$Interind      # Multiply map with steel production
+    
+    SUT[num$process + index$product,index$industry] <- Value  # Write into table
+    
+    
+    ### Primary inputs ###
+    
+    factor <- filter(Setting$IE, item == "AirPerPigIron") %>% pull(value)
+    
+    SUT["Air","Blast furnace"] <- SUT["Blast furnace","Pig iron"] * factor
+    
+    factor <- filter(Setting$IE, item == "CokePerPigIron") %>% pull(value)
+    
+    SUT["Coke","Blast furnace"] <- SUT["Blast furnace","Pig iron"] * factor
+    
+    factor <- filter(Setting$IE, item == "FluxPerPigIron") %>% pull(value)
+    
+    SUT["Flux","Blast furnace"] <- SUT["Blast furnace","Pig iron"] * factor
+    
+    # EoL scrap: 
+    
+    if(i %in% data$Eol$base) SUT["End-of-Life Scrap","Scrap preparation"] <- data$Eol$Quantity[data$Eol$base == i] 
+    
+    # IRP iron ore extraction
+    
+    if(i %in% data$IRP$base) 
+    {
+      crude <- data$IRP$Quantity[data$IRP$base == i]
+      
+      SUT["Crude Ore","Mining"] <- crude
+      
+      # if no ore grades are available for a region, assume 0.6:
+      
+      if(i %in% data$Grade$base) concen <- data$Grade$Concentration[data$Grade$base == i]
+      
+      if(!i %in% data$Grade$base) concen <- 0.6
+      
+      # Calculate iron content:
+      
+      iron <- crude * concen
+      
+      if(concen <= 0.6) ore <- iron / 0.6  # iron ore weight when 60% grade (ready for shipping) 
+      
+      if(concen > 0.6) ore <- iron / concen  # when concentration is > 0.6: not change
+      
+      SUT["Mining","Landfill"] <- crude - ore  # Waste to landfill (supply-side of mining)
+      
+      SUT["Mining","Iron ore"] <- ore  # Supply of iron ore (now 60% grade) by mining
+    }
+    
+ 
+    ### Allocate iron ore use to ironmaking ###
+    
+    index <- list( "supply" = data.frame("industry" = filter(base$process, Name %in% c("Blast furnace","Direct reduction")) %>% pull(Code),
+                                         "product" = num$process + filter(base$flow, Name %in% c("Pig iron","Sponge iron")) %>% pull(Code)
+                                         ),
+                   "use" =  data.frame("industry" = filter(base$process, Name == "Mining") %>% pull(Code),
+                                       "product" = num$process + filter(base$flow, Name == "Iron ore") %>% pull(Code)
+                                      )
+                  )
+    
+    # Read factors for iron ore inputs:
+    
+    factor <- filter(Setting$IE, item %in% c("OrePerPigIron","OrePerSpongeIron") ) %>% pull(value)
+    
+    # Read primary iron output and estimate total iron ore input with factors:
+    
+    TotIn <- SUT[ as.matrix(index$supply) ] * factor 
+    
+    DomOut <- SUT[as.matrix(index$use)]  # Read domestic production of iron ore
+    
+    if(DomOut > 0)
+    {
+      # Read export of iron ore:
+      
+      export <- filter(data$BACI,From == i,Product %in% (index$use$product-num$process) ) %>% select(Product,Quantity) %>% 
+        group_by(Product) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(Product) %>% pull(Quantity)
+      
+      if( length(export) == 0 ) export <- 0  # Check if exports are unavailable and if so set to zero
+      
+      Value <- DomOut - export  
+      
+      if(Value < 0) Value <- DomOut  # Set to domestic production if exports too large
+      
+      Map <- (TotIn/sum(TotIn))  # Create map
+      
+      Map[is.na(Map)] <- 1  # Set 1 if NA
+      
+      # Write values into table using map:
+      
+      SUT[index$use$product,index$supply$industry] <- Map * Value
+      
+    }
+    
+    ### Add forming and scrap use by steelmaking ###
+    
+    steel <- data.frame("ind" = filter(base$process, Name %in% c("Basic oxygen converter","Electric arc furnace")) %>% pull(Code),
+                        "pro" = num$process + filter(base$flow, Name %in% paste("Liquid steel",c("OBF","EAF"))) %>% pull(Code)
+                        )
+    
+    # Read scrap per unit output factors:
+    
+    factor <- filter(Setting$IE, item %in% c("ScrapPerBOFsteel","ScrapPerEAFsteel") ) %>% pull(value)
+    
+    # Create map from output values:
+    
+    Map <- ( SUT[as.matrix(steel)] * factor ) / sum(SUT[as.matrix(steel)] * factor)
+    
+    Map[is.na(Map)] <- 0
+    
+    # Multiply with forming scrap supply and write in table 
+    
+    SUT["Forming scrap",steel$ind] <- Map * sum(SUT[,"Forming scrap"])
+    
+    
+    
+    ### Write fabrication scrap use of waste management (scrap preparation) ###
+    
+    SUT["Fabrication scrap","Scrap preparation"] <- sum(SUT[,"Fabrication scrap"])
+    
+    
+    ### Write steel scrap output in supply table ###
+    
+    SUT["Scrap preparation","Steel scrap"] <- sum(SUT[,"Scrap preparation"])
+    
+    
+    ### Write steel scrap use by steelmaking ###
+    
+    # Read exports of steel scrap:
+    
+    index <- list("industry" = filter(base$process, Name %in% c("Basic oxygen converter","Electric arc furnace")) %>% pull(Code),
+                  "product" = num$process + filter(base$flow, Name == "Steel scrap") %>% pull(Code)
+                  )
+    
+    DomOut <- SUT["Scrap preparation","Steel scrap"]  # Read domestic production of steel scrap
+    
+    export <- filter(data$BACI,From == i,Product %in% (index$product-num$process) ) %>% select(Product,Quantity) %>% 
+      group_by(Product) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(Product) %>% pull(Quantity)
+    
+  
+    
+    if(length(export) >= 1)
+    {
+      Value <- DomOut - export
+    }
+    
+    if( length(export) == 0 ) # Check if exports are unavailable and if so set to zero
+    {
+      Value <- DomOut
+    }
+   
+    if(Value < 0) Value <- DomOut  # Check if exports are larger
+    
+    SUT[index$product,index$industry] <- Map * Value  # Write into table 
+    
+    
+    ### Allocate pig and sponge iron to steelmaking ###
+    
+    index <- list("industry" = filter(base$process, Name %in% c("Basic oxygen converter","Open hearth furnace","Electric arc furnace")) %>% pull(Code),
+                  "product" = filter(base$flow, Name %in% c("Pig iron","Sponge iron") ) %>% pull(Code)
+                  )
+    
+    steel <- data.frame("ind" = filter(base$process, Name %in% c("Basic oxygen converter","Open hearth furnace","Electric arc furnace")) %>% pull(Code),
+                        "pro" = num$process + filter(base$flow, Name %in% paste("Liquid steel",c("OBF","OHF","EAF"))) %>% pull(Code)
+                        )
+    
+    iron <- data.frame("ind" = filter(base$process, Name %in% c("Blast furnace","Direct reduction") ) %>% pull(Code),
+                       "pro" = num$process + filter(base$flow, Name %in% c("Pig iron","Sponge iron") ) %>% pull(Code)
+                        )
+    
+    # Estimate steel and iron outputs:
+    
+    DomOut <- list("steel" = SUT[as.matrix(steel)],
+                   "iron" = SUT[as.matrix(iron)]
+                   )
+    
+    # Read export of pig iron and sponge iron:
+    
+    export <- filter(data$BACI,From == i,Product %in% (iron$pro - num$process) ) %>% select(Product,Quantity) %>% 
+      group_by(Product) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(Product)
+    
+    offset <- min(iron$pro - num$process)-1
+    
+    if(length(export) >= 1)
+    {
+      Value <- DomOut$iron
+      Value[export$Product-offset] <- DomOut$iron[export$Product-offset] - export$Quantity
+    }
+    
+    # Check if exports are unavailable and if so set to zero:
+    
+    if( length(export) == 0 )
+    {
+      Value <- DomOut$iron
+    }
+    
+    for(j in 1:length(Value)) if(Value[j] < 0) Value[j] <- DomOut$iron[j]  
+    
+    factor <- filter(Setting$IE, item %in% c("PigIronPerBOFsteel","SpongeIronPerEAFsteel") ) %>% pull(value)
+    
+    Map <- SUT_temp$Use[index$pro,index$ind]  # Create map for allocation
+    
+    Demand <- DomOut$steel * c( factor[1],1,factor[2] )  # Estimate iron demand
+    
+    Map <- Prorate(Map,Demand) # prorate the map
+    
+    Value <- Map * Value  # Allocate values with map to use
+    
+    SUT[(index$pro + num$process), index$industry] <- Value  # Write value in table
+    
+    
+    ### Save SUT ###
+    
     # Check if subfolder in processed data exists and if not create it
+    
     path_set <- paste0(path$IE_Processed,"/SUT")
+    
     if(!dir.exists(path_set)) dir.create(path_set)
+    
     # Setting decimals to two digits
+    
     SUT <- round(SUT,2)
+    
     print(min(SUT))
+    
     # Decompose SUT into single elements, that is supply, use, final demand, inputs from nature and eol scrap
-    Use <- SUT[base$product$Name,base$industry$Name]
-    Supply <- SUT[base$industry$Name,base$product$Name]
-    # What is final demand in monetary IO is called hereafter boundary output
-    BoundaryOutput <- SUT[c(base$industry$Name,base$product$Name),c("FinalConsumption","Landfill","Atmosphere")]
     
-    # What is value added in monetary IO is called hereafter boundary input
-    pi <- c("FerrousMinerals","EOLScrap","Air","Limestone","Coke")
-    BoundaryInput <- matrix(SUT[pi,base$industry$Name],length(pi),nrow(base$industry))
+    Use <- SUT[base$flow$Name,base$process$Name]
     
-    # Remove all column and row names
+    Supply <- SUT[base$process$Name,base$flow$Name]
+    
+    # Final output (= final demand + landfill + atmosphere):
+    
+    FinalOutput <- SUT[base$process$Name,base$demand$Name]
+
+    # Primary inputs:
+    
+    PrimaryInput <- SUT[base$input$Name,base$process$Name]
+
+    # Remove all column and row names:
+    
     colnames(Use) <- NULL
     rownames(Use) <- NULL
     colnames(Supply) <- NULL
     rownames(Supply) <- NULL
-    colnames(BoundaryOutput) <- NULL
-    rownames(BoundaryOutput) <- NULL
-    colnames(BoundaryInput) <- NULL
-    rownames(BoundaryInput) <- NULL
-    
-    # Write Supply, Use, In- and Output to root folder, note that because write.csv will always export colnames
-    # had to use the write.tabel function.
-    
-    write.table(Supply,file = paste0(path_set,"/",year,"_DomesticSupply_Region",i,".csv"),
-                col.names = FALSE,
-                row.names = FALSE,
-                sep = ",")
-    
-    write.table(Use,file = paste0(path_set,"/",year,"_DomesticUse_Region",i,".csv"),
-                col.names = FALSE,
-                row.names = FALSE,
-                sep = ",")
-    
-    write.table(BoundaryOutput,file = paste0(path_set,"/",year,"_BoundaryOutput_Region",i,".csv"),
-                col.names = FALSE,
-                row.names = FALSE,
-                sep = ",")
-    
-    write.table(BoundaryInput,file = paste0(path_set,"/",year,"_BoundaryInput_Region",i,".csv"),
-                col.names = FALSE,
-                row.names = FALSE,
-                sep = ",")
+    colnames(FinalOutput) <- NULL
+    rownames(FinalOutput) <- NULL
+    colnames(PrimaryInput) <- NULL
+    rownames(PrimaryInput) <- NULL
+
+    # Write tables to folder:
+
+    Numbers2File(Supply, paste0(path_set,"/",year,"_Supply_Region",i,".csv") )
+    Numbers2File(Use, paste0(path_set,"/",year,"_Use_Region",i,".csv") )
+    Numbers2File(FinalOutput, paste0(path_set,"/",year,"_FinalOutput_Region",i,".csv") )
+    Numbers2File(PrimaryInput, paste0(path_set,"/",year,"_PrimaryInput_Region",i,".csv") )
     
     print(paste0("Minimum value: ",min(SUT)))
   }
-  print("IEDataProcessing_PIOLab_BuildingDomesticTables finished.")
 }

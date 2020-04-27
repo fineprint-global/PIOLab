@@ -16,6 +16,5 @@ IEFeed_PIOLab_SteelIndustryYields <- function(path)
   
   # Write to folder 
   write.csv(data,file = paste0(path$IE_Processed,"/WSA/SteelIndustryYields.csv"),row.names = FALSE)
-  
-  print("IEFeed_PIOLab_SteelIndustryYields finished.")
+
 }

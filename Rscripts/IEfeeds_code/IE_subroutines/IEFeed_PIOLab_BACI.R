@@ -11,10 +11,10 @@ IEFeed_PIOLab_BACI <- function(year,path)
   source(paste0(path$Subroutines,"/Load_BACI.R"))
   # Load region aggregator
   source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-  reg_agg <- Root2Base_RegionAggregator(RegionAggregator)
+  reg_agg <- Root2Base_RegionAggregator(R2M$region)
   # Load product aggregation matrix
   source(paste0(path$Subroutines,"/Root2Base_ProductAggregator.R"))
-  prod_agg <- Root2Base_ProductAggregator(ProductAggregator)
+  prod_agg <- Root2Base_ProductAggregator(R2M$flow)
   
   # Aggregate trade data from the root (245 reg and 266 prod) to the base classification
   data_clean <- left_join(data,reg_agg,by = c("From" = "root"),copy = FALSE)
@@ -36,8 +36,7 @@ IEFeed_PIOLab_BACI <- function(year,path)
   write.csv(data_clean,file = paste0(path_set,"BACI_",year,".csv"),row.names = FALSE)
     
   # Note that trade flows are measured in metric tons of material 
-  
-  print("IEFeed_PIOLab_BACI finished.")
+
 }
 
 

@@ -69,13 +69,16 @@ Read_ProductionWSA <- function(path,year,item_page,yb,concord)
   # Filter specific countries from the full concordance table
   concord_country <- concord_country %>% filter(!is.na(ISO3digitCode)) %>% 
     select(index,countries,ISO3digitCode)
+  
   # Filter country data and a specific year from the WSA data 
   data_clean <- cbind(concord_country,data[concord_country$index,as.character(year)]) %>% 
     select(-countries,-index)
   colnames(data_clean)[2] <- "Quantity"
+  
   # Look up root classification code and filter specific year
   data_clean <- left_join(data_clean,root$region,by = c("ISO3digitCode" = "RootCountryAbbreviation"),copy = FALSE) %>% 
     select(Code,Quantity)
+  
   # Translate quantities into metric tons
   data_clean$Quantity <- data_clean$Quantity * 1000
   

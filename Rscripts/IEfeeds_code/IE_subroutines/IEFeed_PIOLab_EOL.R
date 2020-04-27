@@ -16,7 +16,7 @@ IEFeed_PIOLab_EOL <- function(year,path)
   
   # Load region aggregator
   source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-  reg_agg <- Root2Base_RegionAggregator(RegionAggregator)
+  reg_agg <- Root2Base_RegionAggregator(R2M$region)
   
   # Look up base table codes
   data <- left_join(data,reg_agg,by = c("Code" = "root"),copy = FALSE) 
@@ -35,9 +35,6 @@ IEFeed_PIOLab_EOL <- function(year,path)
   write.csv(data_clean,
             file = paste0(path_set,"/EOL_",year,".csv"),
             row.names = FALSE)
-  
-  print("IEFeed_PIOLab_EOL finished.")
-  
 }
 
 

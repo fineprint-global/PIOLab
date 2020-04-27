@@ -26,7 +26,7 @@ data <- filter(data,!from == 711) %>% filter(!to == 711)
 data <- filter(data,!from == 260) %>% filter(!to == 260)
 
 # Filter products that belong to the PIOLab root
-data <- filter(data,hs6 %in% root$product$BACI[!is.na(root$product$BACI)])  
+data <- filter(data,hs6 %in% root$flow$BACI[!is.na(root$flow$BACI)])  
 
 # Look up baci country codes
 data <- left_join(data,classi$region[c("iso3","i")],
@@ -49,7 +49,7 @@ data <- data[!is.na(data$Code.x),]
 data <- data[!is.na(data$Code.y),]
 
 # Look up root product code
-data <- left_join(data,root$product[c("BACI","Code")],
+data <- left_join(data,root$flow[c("BACI","Code")],
                   by = c("hs6" = "BACI"),copy = FALSE)
 
 # Delete old baci codes

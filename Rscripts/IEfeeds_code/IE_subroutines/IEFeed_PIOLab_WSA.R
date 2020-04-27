@@ -18,7 +18,7 @@ IEFeed_PIOLab_WSA <- function(year,path)
   
   # Load region aggregator and look up base table codes
   source(paste0(path$Subroutines,"/Root2Base_RegionAggregator.R"))
-  reg_agg <- Root2Base_RegionAggregator(RegionAggregator)
+  reg_agg <- Root2Base_RegionAggregator(R2M$region)
   
   # Loop over selected items 
   for(i in 1:length(items))
@@ -41,5 +41,4 @@ IEFeed_PIOLab_WSA <- function(year,path)
               file = paste0(path_set,"/WSA_",year,"_",item_name,".csv"),
               row.names = FALSE)
   }
-  print("IEFeed_PIOLab_WSA finished.")
 }

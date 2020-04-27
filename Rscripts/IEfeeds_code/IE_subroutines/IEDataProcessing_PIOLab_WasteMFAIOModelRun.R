@@ -8,69 +8,119 @@
 
 IEDataProcessing_PIOLab_WasteMFAIOModelRun <- function(year,path)
 {
+  
   print("IEDataProcessing_PIOLab_WasteMFAIOModelRun initiated.")
   
-  # Load Waste IO Model variables
-  load(paste0(path$IE_Processed,"/EXIOWasteMFAIO/IO.codes.RData"))    
-  IO.codes <- select(IO.codes,base,commodity,Key)
-  load(paste0(path$IE_Processed,"/EXIOWasteMFAIO/Y.codes.RData"))
   
-  x <- read.table(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_x.csv"),col.names = FALSE,sep = ",")
-  x <- x[,1] 
-  L <- read.csv(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_L.csv"),header = FALSE)
-  colnames(L) <- IO.codes$Key
-  rownames(L) <- IO.codes$Key
-  Y <- read.csv(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_Y.csv"),header = FALSE)
-  rownames(Y) <- IO.codes$Key 
-  colnames(Y) <- Y.codes$base
-  load(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_Q.RData"))
+  # Load codes and indices of model:
   
-  # 1. Calculate multipliers
-  E <- colSums(Q)/x
+  IO.codes <- read.csv( paste0(path$IE_Processed,"/EXIOWasteMFAIO/IO_codes.csv"))
+  
+  IO.codes["Key"] <- paste0(IO.codes$base,"-",IO.codes$sector)
+  
+  Y.codes <- read.csv( paste0(path$IE_Processed,"/EXIOWasteMFAIO/Y_codes.csv"))
+  
+  Y.codes["Key"] <- paste0(Y.codes$base,"-",Y.codes$demand)
+  
+  
+  # Load model variables:
+  
+  Q <- as.matrix( read.csv(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_Q.csv"),
+                           header = FALSE) )
+  
+  L <- as.matrix( read.csv(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_L.csv"),
+                           header = FALSE) )
+  
+  Y <- as.matrix( read.csv(paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_Y.csv"),
+                           header = FALSE) )
+  
+  x <- rowSums( L %*% Y )  # Calculate gross output
+  
+  
+  
+  E <- colSums(Q)/x  # Calculate direct intensity
+  
   E[is.na(E)] <- 0
-  MP <- L*E
   
-  # 2. Estimate flows from fabrication to final product
-  FP <- t(t(MP)*rowSums(Y))
-  FP <- melt(FP)
+  MP <- L*E  # Calculate material mulitplier
+  
+  # 1. Estimate flows from fabrication to final product
+  
+  FP <- MP %*% diag( rowSums(Y) )
+  
+  colnames(FP) <- rownames(FP) <- IO.codes$Key
+  
+  FP <- melt(FP)  # Transfrom from wide to long format (pivot-like list) 
+  
   colnames(FP) <- c("From","To","Quantity")
   
-  # Look up base product classification codes
-  # Warning messages are turned off for the following join section
-  options(warn = -1)
-  FP <- left_join(FP,IO.codes,c("From" = "Key"),copy = FALSE)
-  FP <- left_join(FP,base$product,c("commodity" = "Name"),copy = FALSE) %>%
-    select(base,Code,To,Quantity)
-  colnames(FP)[1:2] <- c("From.Region","From.Product")
-  FP <- left_join(FP,IO.codes,c("To" = "Key"),copy = FALSE)
-  FP <- left_join(FP,base$product,c("commodity" = "Name"),copy = FALSE) %>%
-    select(From.Region,From.Product,base,Code,Quantity)
-  colnames(FP)[3:4] <- c("To.Region","To.Product")
-  options(warn = 0)
+  FP[,c("From","To")] <- apply(FP[,c("From","To")], c(2), as.character)
   
-  FabricationToFinal <- FP
   
-  # 3. Estimate steel in final demand
-  # Create empty array to store data
-  SteelInFinalDemand <- Y
-  SteelInFinalDemand[1:nrow(Y),1:ncol(Y)] <- 0
-  for(i in 1:ncol(Y)) SteelInFinalDemand[,i] <- rowSums(t(MP)*Y[,i])
-  SteelInFinalDemand <- tibble::rownames_to_column(SteelInFinalDemand, "Key")
-  SteelInFinalDemand <- melt(SteelInFinalDemand,id.vars = "Key")
-  colnames(SteelInFinalDemand) <- c("Key","To.Region","Quantity")
-  # Warning messages are turned off for the following join
-  options(warn = -1)
-  SteelInFinalDemand <- left_join(SteelInFinalDemand,IO.codes,c("Key"),copy = FALSE) %>%
-    select(base,To.Region,commodity,Quantity)
-  options(warn = 0)
-  colnames(SteelInFinalDemand)[c(1,3)] <- c("From.Region","Commodity")
-  SteelInFinalDemand <- left_join(SteelInFinalDemand,base$product,c("Commodity" = "Name"),copy = FALSE) %>%
-    select(From.Region,To.Region,Code,Quantity)
-  colnames(SteelInFinalDemand)[3] <- "Product"
+  # Differentiate sector and region codes (from and to):
+  
+  FP <- left_join( x = FP, y = select(IO.codes,base,sector,Key), 
+                   by = c("From" = "Key"), 
+                   copy = FALSE, 
+                   suffix = c(".from",".to") ) 
+  
+  FP <- left_join( x = FP, y = select(IO.codes,base,sector,Key), 
+                   by = c("To" = "Key"), 
+                   copy = FALSE, 
+                   suffix = c(".from",".to") ) 
+  
+  Fabrication2Final <- select(FP,-From,-To) # Remove key (not needed anymore)
+  
+  
+  # 2. Estimate steel in final demand
+  
+  
+  FP <- Y # Create object to store data
+  
+  # Set col and row names:
+  
+  colnames(FP) <- Y.codes$Key
+  
+  rownames(FP) <- IO.codes$Key
+  
+  FP[1:nrow(Y),1:ncol(Y)] <- 0  # Set values to zero
+  
+  
+  # Calculate flows:
+  
+  for( i in 1:ncol(Y) ) FP[,i] <- rowSums( t(MP)*Y[,i] )
+  
+  
+  FP <- melt(FP)  # Transfrom from wide to long format (pivot-like list) 
+  
+  colnames(FP) <- c("From","To","Quantity")
+  
+  FP[,c("From","To")] <- apply(FP[,c("From","To")], c(2), as.character)
+  
+  
+  # Differentiate sector and region codes (from and to):
+  
+  FP <- left_join( x = FP, y = select(IO.codes,base,sector,Key), 
+                   by = c("From" = "Key"), 
+                   copy = FALSE, 
+                   suffix = c(".from",".to") ) 
+  
+  FP <- left_join( x = FP, y = select(Y.codes,base,demand,Key), 
+                   by = c("To" = "Key"), 
+                   copy = FALSE, 
+                   suffix = c(".from",".to") ) 
+  
+  FinalDemand <- select(FP,-From,-To) # Remove key (not needed anymore)
   
   # 4. Save results to folder 
-  write.csv(FabricationToFinal,file = paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_FabricationToFinalDemand.csv"),row.names = FALSE)
-  write.csv(SteelInFinalDemand,file = paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_SteelInFinalDemand.csv"),row.names = FALSE)
   
-  print("DataProcessing_PIOLab_WasteMFAIOModelRun finished.")
+  write.csv(Fabrication2Final,
+            file = paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_Fabrication2FinalDemand.csv"),
+            row.names = FALSE)
+  
+  write.csv(FinalDemand,
+            file = paste0(path$IE_Processed,"/EXIOWasteMFAIO/",year,"_FinalDemand.csv"),
+            row.names = FALSE)
+  
+  
 }

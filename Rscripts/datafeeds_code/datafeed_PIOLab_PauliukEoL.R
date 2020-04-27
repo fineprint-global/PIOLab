@@ -13,13 +13,17 @@ if(Sys.info()[1] == "Linux"){
 ################################################################################
 
 # Initializing R script (load R packages and set paths to folders etc.)
+
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
+
 path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name)
 
-# Load function to write arrays to files
-source(paste0(path$Subroutines,"/Numbers2File.R"))
+
+source(paste0(path$Subroutines,"/Numbers2File.R")) # Load fun. to write arrays to files
+
 
 # Load Pauliuk data in quasi root classification 
+
 source(paste0(path$Subroutines,"/Load_PauliukEoL.R"))
 
 # Check whether NA exist and add artificial code until later processing in this script
@@ -87,12 +91,14 @@ filename_RegAgg <- "/PauliukEoL_Reg_Source2Root.csv" # Define name of file
 
 Numbers2File(Conco,paste0(path$Concordance,filename_RegAgg)) # Save aggregator 
 
+
 # Check if folder with processed data exists, in case delete and create empty one
+
 if(dir.exists(path$df_Processed)) unlink(path$df_Processed,recursive = TRUE) 
+
 dir.create(path$df_Processed)
 
-# Create empty ALANG table with header
-source(paste0(path$Subroutines,"/makeALANGheadline.R"))
+
 
 filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",
                                 year,".csv"),
@@ -104,46 +110,13 @@ data <- data[,-1] # Remove codes
 
 Numbers2File( t(data$RHS) , paste0( path$Processed, filename$RHS ) ) 
 
+
+source(paste0(path$Subroutines,"/makeALANGheadline.R")) # Create ALANG header
+
 ALANG <- add_row(ALANG,
                  '1' = paste("Pauliuk EoL",year),
                  Value = paste0("DATAPATH",filename$RHS),
                  S.E. = paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";") )
-
-
-# for(i in data$Code)
-# { 
-#   
-#   if(i == 666)
-#   {
-#     reg_name <- "NEC"
-#   } else
-#   {
-#     reg_name <- root$region$Name[i] # Read name of region
-#   }
-#     
-#   sel <- data[,-1]    # Create copy of data array
-#   
-#   row_num <- which(data$Code == i)
-#   
-#   sel[-row_num,] <- 0 # Write only values of target region
-#   
-#   # Define filenames of arrays:
-#   
-#   filename_sel <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",year,
-#                                   "_",reg_name,".csv"),
-#                    "SE" = paste0("/",datafeed_name,"/",datafeed_name,"_SE_",year,
-#                                  "_",reg_name,".csv"))
-#   
-#   # Write RHS and SE data to folder (with transposition from col to row vector)
-#   
-#   Numbers2File( t(sel$RHS) , paste0( path$Processed, filename_sel$RHS ) ) 
-#   Numbers2File( t(sel$SE) ,paste0(path$Processed,filename_sel$SE)) 
-# 
-#   ALANG <- add_row(ALANG,
-#                    '1' = paste("Pauliuk EoL",reg_name,year),
-#                    Value = paste0("DATAPATH",filename_sel$RHS),
-#                    S.E. = paste0("DATAPATH",filename_sel$SE) )
-# }
 
 # Add other variables
 ALANG$`#` <- as.character(1:nrow(ALANG))
@@ -154,7 +127,7 @@ ALANG$Coef1 <- "1"
 
 ALANG$`Row parent` <- "1-e"
 ALANG$`Row child` <- "3"
-ALANG$`Row grandchild` <- "2"
+ALANG$`Row grandchild` <- "1"
 
 ALANG$`Column parent` <- paste0("1:e t2 CONCPATH",filename_RegAgg)
 ALANG$`Column child` <- "1"
