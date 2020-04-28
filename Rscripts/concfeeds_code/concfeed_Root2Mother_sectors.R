@@ -32,8 +32,8 @@ set <- read.xlsx(paste0(path$Settings,"/Base/IE_settings.xlsx"),sheet = 2)
 # Note that all tables are transposed (i.e. in root to source format):
 
 path_wsa <- paste0(path$Concordance,"/WSA/WSA_Source2Root_WithLabels",set$date[set$aggregator == "WSA"],".xlsx")
-path_IRP <- paste0(path$Concordance,"/IRP/",set$date[set$aggregator == "sector"],"_IRP_Extraction_SecConc.xlsx")
-path_add <- paste0(path$Concordance,"/Additional/",set$date[set$aggregator == "Additional"],"_Additional_Root2Mother_Sec_Ind30Pro39v1.xlsx")
+path_IRP <- paste0(path$Concordance,"/IRP/20200426_IRP_Extraction_SecConc.xlsx")
+path_add <- paste0(path$Concordance,"/Additional/20200426_Additional_Root2Mother_Sec_Ind30Pro39v1.xlsx")
   
 S2R <- list("WSA" = list("process" =  read.xlsx(path_wsa, sheet = 1),
                          "flow" = read.xlsx(path_wsa, sheet = 2)
