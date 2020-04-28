@@ -119,6 +119,7 @@ ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year)) # Create entry
 ALANG$Value <- paste0("DATAPATH",filename$RHS)
 ALANG$S.E. <- paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";")
 ALANG$`Row grandchild` <- ConcoInd$One
+ALANG$`Row parent` <- "1-e"
 ALANG$`Column parent` <- paste0("1:e t2 CONCPATH",filename$ConcoReg)
 
 
@@ -129,11 +130,12 @@ ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year, "Zero elements")) # Creat
 ALANG$Value[2] <- paste0("0")
 ALANG$S.E.[2] <- paste0("0")
 ALANG$`Row grandchild`[2] <- ConcoInd$Zero
-ALANG$`Column parent`[2] <- paste0("1-e")
+ALANG$`Row parent`[2] <- "1:e"
+ALANG$`Column parent`[2] <- paste0("1:e~3")
 
 # Write other variables
 
-ALANG$`Row parent` <- "1-e"
+
 ALANG$`Row child` <- "1"
 ALANG$`Column child` <- "2"
 ALANG$`Column grandchild` <- ConcoPro
