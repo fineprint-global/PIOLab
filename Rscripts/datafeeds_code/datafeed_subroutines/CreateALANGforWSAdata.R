@@ -9,7 +9,6 @@
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name) # Add path for processed data
 
-
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 
 source(paste0(path$Subroutines,"/Numbers2File.R"))  # Load fun. to write arrays to files
@@ -125,12 +124,12 @@ ALANG$`Column parent` <- paste0("1:e t2 CONCPATH",filename$ConcoReg)
 
 # Write command for elements that are zero:
 
-# ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year, "Zero elements")) # Create entry
-# 
-# ALANG$Value[2] <- paste0("0")
-# ALANG$S.E.[2] <- paste0("0")
-# ALANG$`Row grandchild`[2] <- ConcoInd$Zero
-# ALANG$`Column parent`[2] <- paste0("1-e")
+ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year, "Zero elements")) # Create entry
+
+ALANG$Value[2] <- paste0("0")
+ALANG$S.E.[2] <- paste0("0")
+ALANG$`Row grandchild`[2] <- ConcoInd$Zero
+ALANG$`Column parent`[2] <- paste0("1-e")
 
 # Write other variables
 
