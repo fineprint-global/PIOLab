@@ -79,6 +79,8 @@ R2M$flow[, Code$Add$Code ] <- Conco$Add[ , as.character( Code$Add$Code ) ]
 filename <- paste0(path$Concordance,"/Sector Aggregators/",gsub("-","",Sys.Date()),
                    "_",num$flow,"Products_SectorAggregator.csv")
 
+if( sum(R2M$flow) > nrow(root$flow) ) print("Warning: Sum of R2M-flow conco is more than in root deifned.")
+
 Numbers2File(R2M$flow,filename)  # Write R2M for flows to folder in concordance library
 
 ## 2. Process concordance
@@ -153,6 +155,14 @@ for(i in 1:nrow(base_sel))
 # Set filename and path to R2M process concordance 
 filename <- paste0(path$Concordance,"/Sector Aggregators/",gsub("-","",Sys.Date()),
                    "_",num$process,"Industries_SectorAggregator.csv")
+
+if( sum(R2M$process) > nrow(root$process) )
+{
+  print("Warning: Sum of R2M-process conco is more than in root deifned -> Normalizing conco !")
+  R2M$process <- R2M$process / rowSums(R2M$process)
+  
+}
+  
 
 Numbers2File(R2M$process,filename)  # Write R2M for flows to folder in concordance library
 
