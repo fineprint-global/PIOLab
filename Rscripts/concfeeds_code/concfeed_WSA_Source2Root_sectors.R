@@ -19,8 +19,15 @@ source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 # Load function to write tables to file
 source(paste0(path$root,"Rscripts/Subroutines/Numbers2File.R"))
 
-S2R <- list("process" =  read.xlsx(paste0(path$Concordance,"/WSA/WSA_Source2Root_WithLabelsV4.xlsx"), sheet = 1),
-            "flow" = read.xlsx(paste0(path$Concordance,"/WSA/WSA_Source2Root_WithLabelsV4.xlsx"), sheet = 2) )
+# Load function to write tables to file
+source(paste0(path$root,"Rscripts/Subroutines/Numbers2File.R"))
+
+set <- read.xlsx(paste0(path$Settings,"/Base/IE_settings.xlsx"),sheet = 2)
+
+set <- set[set$aggregator == "WSA",]
+
+S2R <- list("process" =  read.xlsx(paste0(path$Concordance,"/WSA/WSA_Source2Root_WithLabels",set$date,".xlsx"), sheet = 1),
+            "flow" = read.xlsx(paste0(path$Concordance,"/WSA/WSA_Source2Root_WithLabels",set$date,".xlsx"), sheet = 2) )
 
 # Read WSA settings to get exact number of feeds
 Settings <- read.xlsx(paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"))
@@ -37,5 +44,5 @@ Numbers2File(S2R$process,filename)  # Write R2M for flows to folder in concordan
 filename <- paste0(path$Concordance,"/WSA/",gsub("-","",Sys.Date()),
                    "_WSA_Source2Root_Product.csv")
 
-Numbers2File(S2R$flow,filename)  # Write R2M for flows to folder in concordance library
+Numbers2File(S2R$flow,filename)  # Write S2R for flows to folder in concordance library
 
