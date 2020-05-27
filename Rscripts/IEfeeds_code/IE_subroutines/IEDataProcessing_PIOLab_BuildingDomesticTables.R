@@ -138,7 +138,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
       group_by(sector.from) %>% summarise(Quantity = sum(Quantity)) %>% 
       ungroup(sector.from)
     
-    data_sel[["upstr"]] <- data$Fab2Demand %>% filter(base.from != i, base.to == i) %>%
+    data_sel[["upstr"]] <- data$Fab2Demand %>% filter(base.to == i) %>%
       select(sector.to, Quantity) %>% group_by(sector.to) %>% summarise(Quantity = sum(Quantity)) %>% 
       ungroup(sector.to)
     

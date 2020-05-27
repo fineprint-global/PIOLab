@@ -60,7 +60,7 @@ source(paste0(path$Subroutines,"/makeALANGheadline.R"))
 ALANG <- add_row(ALANG,
                  '1' = paste(datafeed_name,year),
                  Value = paste0("DATAPATH",filename$RHS),
-                 S.E. = paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";") )
+                 S.E. = paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,"; CN",RSE$Const,";") )
  
 ALANG$`#` <- 1:nrow(ALANG)
 ALANG$Coef1 <- 1
