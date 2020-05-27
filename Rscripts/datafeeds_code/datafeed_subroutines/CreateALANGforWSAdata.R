@@ -137,11 +137,9 @@ ALANG$Coef1[2] <- 1
 
 # Write other variables
 
-
 ALANG$`Row child` <- 1
 ALANG$`Column child` <- 2
 ALANG$`Column grandchild` <- ConcoPro
-
 
 ALANG$`#` <- 1:nrow(ALANG)
 ALANG$Incl <- "Y"
