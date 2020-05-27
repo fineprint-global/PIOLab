@@ -116,7 +116,7 @@ source(paste0(path$Subroutines,"/makeALANGheadline.R")) # Create ALANG header
 ALANG <- add_row(ALANG,
                  '1' = paste("Pauliuk EoL",year),
                  Value = paste0("DATAPATH",filename$RHS),
-                 S.E. = paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,"; CN",RSE$Const,";") )
+                 S.E. = paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";") )
 
 # Add other variables
 ALANG$`#` <- as.character(1:nrow(ALANG))

@@ -118,7 +118,7 @@ ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year)) # Create entry
 # Write command for elements that are not zero:
 
 ALANG$Value <- paste0("DATAPATH",filename$RHS)
-ALANG$S.E. <- paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,"; CN",RSE$Const,";")
+ALANG$S.E. <- paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";")
 ALANG$`Row grandchild` <- paste0("1:e t2 CONCPATH",filename$ConcoIndOne)
 ALANG$`Row parent` <- "1-e"
 ALANG$`Column parent` <- paste0("1:e t2 CONCPATH",filename$ConcoReg)

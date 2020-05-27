@@ -72,7 +72,7 @@ ALANG$`Post-Map` <- ""
 # read upper and lower error bounds from settings file
 RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
 
-ALANG$S.E. <- paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,"; CN",RSE$Const,";")
+ALANG$S.E. <- paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";")
 
 ALANG$`1` <- paste0( year," BACI RHS_", root$region$RootCountryAbbreviation[ ALANG$`Row parent` ],
                      " to ", root$region$RootCountryAbbreviation[ ALANG$`Column parent` ] )
