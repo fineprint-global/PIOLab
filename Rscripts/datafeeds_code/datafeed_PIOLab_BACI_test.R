@@ -10,7 +10,7 @@ if(Sys.info()[1] == "Linux"){
   .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
   # Define location for root directory
   root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
-  root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
+    root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
 ################################################################################
 
 # Initializing R script (load R packages and set paths to folders etc.)
@@ -28,10 +28,17 @@ path[["set"]] <- paste0(path$root,"ProcessedData/",datafeed_name)
 if(dir.exists(path$set)) unlink(path$set,recursive = TRUE) 
 dir.create(path$set)
 
-# Check if folder with ALANG files ecxists and delte it 
+dir.create( paste0(path$set,"/",year) )   # Create folder for year
+
+
+# Check if folder with ALANG files exists and delte it 
 if( dir.exists(path$ALANG) ) unlink( path$ALANG,recursive = TRUE ) 
 dir.create( path$ALANG )
 
+### Ad-hoc trial to filter only non-RoW regions for feeding ###
+IEdatafeed_name <- "Ind30Pro39v1"
+test_regagg <- "049"
+source(paste0(path$Subroutines,"/Read_BaseClassification.R"))
 
 source(paste0(path$Subroutines,"/Load_BACI.R")) # Loading raw data
 
@@ -46,17 +53,27 @@ n_she <- "1"
 index_all <- select(data,From,To,Quantity) %>% group_by(From,To) %>% 
   summarise(Q = sum(Quantity)) %>% ungroup(From,To) %>% select(From,To)
 
-
-for(d in unique(index_all$From))
+# For testing select only non-RoW regions
+e <- root$region %>% filter( ISO2digitCode %in% base$region$Abbrev ) %>% pull(Code)
+  
+index_NonRoW <- index_all %>% filter(From %in% e & To %in% e)  # Select trade pairs for d
+  
+# index_NonRoW <- index_all
+  
+for( d in unique(index_NonRoW$From) )
 {
+
+  reg_abbr <- root$region$RootCountryAbbreviation[d]
   
-  index <- index_all %>% filter(From == d)  # Select trade pairs of exporter d
+  # Create folder for region d data
+  dir.create( paste0( path$set,"/", year,"/", reg_abbr) )   
   
-  ### 1. Create ALANG sheets
+  # Select export of region d
+  index <- index_NonRoW %>% filter(From == d)
   
   # Create empty ALANG table with header
   source(paste0(path$Subroutines,"/makeALANGheadline.R"))
-  
+
   # Set length of ALANG file
   ALANG_new <- as.data.frame( matrix(NA,nrow = nrow(index) ,ncol = ncol(ALANG) ) )
   colnames(ALANG_new) <- colnames(ALANG)
@@ -65,7 +82,7 @@ for(d in unique(index_all$From))
   
   # Prepare ALANG sheet for adding raw data:
   
-  ALANG$`Row parent` <- root$region$RootCountryAbbreviation[ index$From ]
+  ALANG$`Row parent` <- reg_abbr
   ALANG$`Column parent` <- root$region$RootCountryAbbreviation[ index$To ]
   ALANG$`Row child` <- 2
   ALANG$`Row grandchild` <- "1:e t2 CONCPATH/Root2Root_Pro_Concordance.csv"
@@ -95,15 +112,15 @@ for(d in unique(index_all$From))
   ALANG$`#` <- 1:nrow(ALANG)             # Add index
   
   # Write datapath into AISHA command:
-  ALANG$Value <- paste0("DATAPATH/",datafeed_name,"/",ALANG$`1`,".csv")
+  ALANG$Value <- paste0("DATAPATH/",datafeed_name,"/",year,"/",reg_abbr,"/",ALANG$`1`,".csv")
   
-  vec <- data.frame( "pro" = 1:pro_max, "RHS" = 0 )
+  vec <- data.frame( "pro" = 1:pro_max, "RHS" = NA )
   
-  vec$RHS[256:266] <- NA
+  # vec$RHS[256:266] <- NA
   
   ### 2. Write commands by looping over export regions:
   
-  for( i in 1:nrow(index) ) 
+  for( i in 1:nrow(index) )
   {
     sel <- filter(data, From == index$From[i], To == index$To[i] ) # Select exporter
     
@@ -112,25 +129,23 @@ for(d in unique(index_all$From))
     v$RHS[sel$Product] <- sel$Quantity
     
     # Set filenames:
-    filename <- paste0(path$set,"/",ALANG$`1`[i],".csv")
+    filename <- paste0(path$set,"/",year,"/",reg_abbr,"/",ALANG$`1`[i],".csv")
     
     # Write values as row vectors to file:
     Numbers2File( table = t( v$RHS ) , filename )
   }
   
-  
   ALANG[] <- lapply(ALANG,as.character)  # Convert all entries to character
   
   ### 3. Call script that writes the ALANG file to the repsective folder in the root
   filename <-  paste0(path$ALANG,"/",gsub("-","",Sys.Date()),
-                      "_PIOLab_",root$region$RootCountryAbbreviation[d],
-                      "_000_Constraints-",year,"_000_",datafeed_name,".txt")
+                      "_PIOLab_",root$region$RootCountryAbbreviation[d],"_000_Constraints-",
+                      year,"_000_",datafeed_name,".txt")
   print(filename)  
   
   write.table(ALANG,file = filename, row.names = FALSE, quote = FALSE, sep = "\t")
+
 }
-
-
 
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
 

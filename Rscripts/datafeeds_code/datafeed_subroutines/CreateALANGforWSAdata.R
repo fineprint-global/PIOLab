@@ -90,7 +90,7 @@ data <- Read_ProductionWSA(path,year,pages,out,concord)
 
 n_reg <- nrow(root$region) # Number of regions in root
 
-RHS <- matrix(0,nrow = 1,ncol = n_reg) # vector for RHS values all root regions
+RHS <- matrix(NA,nrow = 1,ncol = n_reg) # vector for RHS values all root regions
 
 RHS[1,data$Code] <- data$Quantity  # Write right-hand-side in vector
 
@@ -130,7 +130,7 @@ ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year, "Zero elements")) # Creat
 
 ALANG$Value[2] <- 0
 ALANG$S.E.[2] <- 0
-ALANG$`Row grandchild`[2] <- paste0("1:e t2 CONCPATH",filename$ConcoIndZero)
+ALANG$`Row grandchild`[2] <- paste0("1:e a CONCPATH",filename$ConcoIndZero)
 ALANG$`Row parent`[2] <- "1:e"
 ALANG$`Column parent`[2] <- paste0("1:e~3")
 ALANG$Coef1[2] <- 1
