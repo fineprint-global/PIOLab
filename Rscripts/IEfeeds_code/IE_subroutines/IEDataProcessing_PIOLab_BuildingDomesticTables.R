@@ -84,18 +84,6 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
                     "Use" = as.matrix( read.xlsx(path$IE_classification, sheet = 6,rowNames = TRUE) )
                   )
   
-  # Load allocation function
-  
-  # source(paste0(path$Subroutines,"/AllocateSupply2Use.R"))
-  
-  # Define general variables:
-  
-  # num <- list("pro" = nrow(base$product),
-  #             "ind" = nrow(base$industry),
-  #             "reg" = nrow(base$region),
-  #             "va" = nrow(base$input),
-  #             "fd" = nrow(base$demand) )
-             
   for(i in 1:num$reg)
   {
     print(paste("Compiling",base$region$Name[i]))
@@ -117,17 +105,16 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     
     ### Flows associated with fabrication ###
     
-    
     # Load data on fabrication use:
     
     data_sel <- read.csv(paste0(path$IE_Processed,"/Cullen/FabricationUse_",
-                            year,"_",base$region$Name[i],".csv"),
-                     header = FALSE)
+                                year,"_",base$region$Name[i],".csv"),
+                         header = FALSE)
     
     # Store matrix index in list:
     
-    index <- list("row" = num$process + filter(base$flow,Type == "Finished") %>% pull(Code),
-                  "col" = filter(base$process,Type == "Final") %>% pull(Code))
+    index <- list("row" = filter(base$flow,Type == "Finished") %>% pull(Name),
+                  "col" = filter(base$process,Type == "Final") %>% pull(Name))
   
     SUT[index$row,index$col] <- as.matrix(data_sel)  # Write into table
         
@@ -138,15 +125,32 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     
     # Matrix indices in list:
     
-    index <- list("row" = data_sel$base,
-                  "col" = num$process + filter(base$flow, Name == "Fabrication scrap") %>% pull(Code))
+    index <- list("row" = base$process$Name[ data_sel$base ],
+                  "col" = filter(base$flow, Name == "Fabrication scrap") %>% pull(Name) )
     
     SUT[index$row,index$col] <- data_sel$Quantity  # Write scrap flows into table
     
-    # Read data for useful fabrication output
+    # Read data on intermediate fabrication output
     
-    data_sel <- select(data$Fab2Demand,base.from,sector.from,Quantity) %>% filter(base.from == i) %>% 
-      group_by(base.from,sector.from) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(base.from,sector.from)
+    data_sel <- list()
+    
+    data_sel[["inter"]] <- data$Fab2Demand %>% filter(base.from == i) %>% select(sector.from,Quantity) %>% 
+      group_by(sector.from) %>% summarise(Quantity = sum(Quantity)) %>% 
+      ungroup(sector.from)
+    
+    data_sel[["upstr"]] <- data$Fab2Demand %>% filter(base.to == i) %>%
+      select(sector.to, Quantity) %>% group_by(sector.to) %>% summarise(Quantity = sum(Quantity)) %>% 
+      ungroup(sector.to)
+    
+    # Create empty df for total of intermediates and upstream inputs
+    data_sel[["total"]] <- data.frame("sector" = 1:length( base$process$Code[base$process$Type == "Final"] ),
+                                      "Quantity" = 0 )
+    
+    # Write intermediates into df
+    data_sel$total$Quantity[data_sel$inter$sector.from] <- data_sel$inter$Quantity
+    # Add upstream inputs to df
+    data_sel$total$Quantity[data_sel$upstr$sector.to] <- data_sel$total$Quantity + data_sel$upstr$Quantity
+    
     
     # Store matrix index in list:
     
@@ -155,7 +159,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
                                   )
                        )
 
-    SUT[index] <- data_sel$Quantity  # Write fab output to table
+    SUT[index] <- data_sel$total$Quantity  # Write fab output to table
     
     
     # Read data on intermediate use of manufacturing output
@@ -188,7 +192,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     
     # Read base sector codes:
     
-    index <-data.frame( "row" = filter(base$process,Type == "Final") %>% pull(Code))
+    index <-data.frame( "row" = num$process + filter(base$flow,Type == "Final") %>% pull(Code) )
     
     data_sel$sector <- index$row[data_sel$sector]  # Exchange WIO code with base sector code
     
@@ -680,7 +684,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     
     # Setting decimals to two digits
     
-    SUT <- round(SUT,2)
+    SUT <- round(SUT,3)
     
     print(min(SUT))
     
@@ -692,7 +696,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     
     # Final output (= final demand + landfill + atmosphere):
     
-    FinalOutput <- SUT[base$process$Name,base$demand$Name]
+    FinalOutput <- SUT[ c( base$process$Name,base$flow$Name ) ,base$demand$Name]
 
     # Primary inputs:
     

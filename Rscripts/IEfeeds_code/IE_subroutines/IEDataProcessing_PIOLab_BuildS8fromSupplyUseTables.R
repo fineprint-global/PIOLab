@@ -10,14 +10,6 @@ IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables <- function(year,path)
 {
   print(paste0("IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables initiated."))
   
-  # Define general variables:
-  
-  # num <- list("pro" = nrow(base$product),
-  #             "ind" = nrow(base$industry),
-  #             "reg" = nrow(base$region),
-  #             "va" = nrow(base$input),
-  #             "fd" = nrow(base$demand) )
-  
   # Wrapper for writing files to folder
   
   write_file <- function(object,name)
@@ -50,30 +42,47 @@ IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables <- function(year,path)
   # Number of sheet and year
   n_she <- 1
   n_yea <- 1
-  # Number of 8-tuples in domestic supply tables
-  n_sup <- num$region * num$flow * num$process
-  # Number of 8-tuples in use tables (domestic + trade) 
-  n_use <- num$region^2 * num$flow * num$process
-  # Number of final demand categories
-  fin <- num$demand
-  # Number of 8-tuples in final demand block (domestic + trade)
-  n_fd <- num$region^2 * num$process * fin
-  # Number of primary inputs
-  pi <- num$input
-  # Number of 8-tuples in primary input block
-  n_va <- num$region * num$process * pi
   
-  S8_sup <- data.frame("index" = 1:n_sup,"x1" = n_yea,"x2" = n_she,"x3" = rep(1:num$region,each = num$flow*num$process),
-                       "x4" = 1, "x5" = 1:num$process, "x6" = rep(1:num$region,each = num$flow*num$process), 
-                       "x7" = 2, "x8" = rep(1:num$flow,each = num$process),"t" = NA)
+  n_sup <- num$region * num$flow * num$process    # Number of 8-tuples in domestic supply tables
+  n_use <- num$region^2 * num$flow * num$process  # Number of 8-tuples in use tables (domestic + trade) 
+  fin <- num$demand                               # Number of final demand categories
+  proflo <- num$process + num$flow                # Total number of unique sectors
+  n_fd <- num$region^2 * proflo * fin             # Number of 8-tuples in final demand block (domestic + trade)
+  pi <- num$input                                 # Number of primary inputs
+  n_va <- num$region * num$process * pi           # Number of 8-tuples in primary input block
   
-  S8_use <- data.frame("index" = 1:n_use,"x1" = n_yea,"x2" = n_she,"x3" = rep(1:num$region,each = num$flow*num$process),
-                       "x4" = 2,"x5" = 1:num$flow, "x6" = rep(1:num$region,each = num$region*num$flow*num$process), 
-                       "x7" = 1, "x8" = rep(1:num$process,each = num$flow),"t" = NA)
+  S8_sup <- data.frame("index" = 1:n_sup,
+                       "x1" = n_yea,
+                       "x2" = n_she,
+                       "x3" = rep(1:num$region,each = num$flow*num$process),
+                       "x4" = 1, 
+                       "x5" = 1:num$process, 
+                       "x6" = rep(1:num$region,each = num$flow*num$process), 
+                       "x7" = 2, 
+                       "x8" = rep(1:num$flow,each = num$process),
+                       "t" = NA )
   
-  S8_fd <- data.frame("index" = 1:n_fd,"x1" = n_yea, "x2" = n_she, "x3" = rep(1:num$region,each = num$process*fin),
-                      "x4" = 1, "x5" = 1:num$process, "x6" = rep(1:num$region,each = num$region*num$process*fin), 
-                      "x7" = 3, "x8" = rep(1:fin,each = num$process),"t" = NA)
+  S8_use <- data.frame("index" = 1:n_use,
+                       "x1" = n_yea,
+                       "x2" = n_she,
+                       "x3" = rep(1:num$region,each = num$flow*num$process),
+                       "x4" = 2,
+                       "x5" = 1:num$flow, 
+                       "x6" = rep(1:num$region,each = num$region*num$flow*num$process), 
+                       "x7" = 1, 
+                       "x8" = rep(1:num$process,each = num$flow),
+                       "t" = NA )
+  
+  S8_fd <- data.frame("index" = 1:n_fd,
+                      "x1" = n_yea, 
+                      "x2" = n_she, 
+                      "x3" = rep(1:num$region,each = proflo *fin),
+                      "x4" = c( rep(1,num$process),rep(2,num$flow) ) , 
+                      "x5" = c(1:num$process,1:num$flow), 
+                      "x6" = rep(1:num$region,each = num$region*proflo*fin), 
+                      "x7" = 3, 
+                      "x8" = rep(1:fin,each = proflo),
+                      "t" = NA )
   
   S8_va <- data.frame("index" = 1:n_va,"x1" = n_yea, "x2" = n_she, "x3" = rep(1:num$region,each = (num$process*pi)),
                       "x4" = 3, "x5" = rep(1:pi,num$process), "x6" = rep(1:num$region,each = (num$process*pi)), 

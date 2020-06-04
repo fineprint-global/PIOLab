@@ -202,7 +202,8 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
                      "Production" = colSums(map),
                      "Import" = 0,
                      "Export" = 0,
-                     "Use" = 0)
+                     "Use" = 0,
+                     "Dom.Use" = 0)
     
     # Read and aggregate exports and imports across trade partners:
     
@@ -218,23 +219,24 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
     # Write trade flows into data frame and estimate domestic use:
     
     df$Import[df$Code %in% BACI_import$Product] <- BACI_import$Quantity
-    
     df$Export[df$Code %in% BACI_export$Product] <- BACI_export$Quantity
     
-    df$Use <- df$Production + df$Import - df$Export
+    df$Dom.Use <- df$Production - df$Export
     
-   
+       
     # Subtract production values of cold rolled products from hot rolled coil-sheet-strip
     
     Subtract <- sum(Mother2Mother$WSA[rownames(Mother2Mother$WSA) == Code$base$CoilSheetStrip,] * df$Production)
     
-    df$Use[df$Code == Code$base$CoilSheetStrip] <- df$Use[df$Code == Code$base$CoilSheetStrip] - Subtract 
+    df$Dom.Use[df$Code == Code$base$CoilSheetStrip] <- df$Dom.Use[df$Code == Code$base$CoilSheetStrip] - Subtract 
+    
     
     print("minimum values before adjustment to domestic production:")
-    print(df[df$Use < 0,])
+    print(df[df$Dom.Use < 0,])
     
-    df$Use[df$Use < 0] <- df$Production[df$Use < 0] # Set use to production where negative
+    df$Dom.Use[df$Dom.Use < 0] <- 0 # Set use to zero where negative
     
+    df$Use <- df$Dom.Use + df$Import
     
     print(paste0("Minimum of ",base$region$Name[r],": ",min(df$Use))) # Check min.
     
@@ -243,16 +245,17 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
     
     x_filter[x_filter > 0] <- 1  # Set non-zero values to 1 for filtering 
     
+    # Create map (including forging)
+    
     map <- Products2EndUse %*% x_filter  # Apply filter
-    
     colnames(map) <- IO.codes$commodity[IO.codes$base == r]
-    
-
     map[rownames(map) == Code$base$Forgings, c(1,2,7,8)] <- 1  # Add forgings (no information)
+    map <- map / rowSums(map)
     
-    map <- ( map / rowSums(map) ) * df$Use  # Create map and add material use
     
-    Scrap <- colSums(map) * (1-Yields)  # Estimate scrap flows
+    map_tot <-  map * df$Use # Create data frame with total material use from map
+    
+    Scrap <- colSums(map_tot) * (1-Yields)  # Estimate scrap flows
     
     # Write into data frame with base industry codes
     
@@ -266,17 +269,19 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
     write.csv(Scrap,file = paste0(path$IE_Processed,"/Cullen/FabricationScrap_",
                                   year,"_",base$region$Name[r],".csv"),row.names = FALSE)
     
-    # Write fabrication-use data to folder
+    map_tot_use <- map_tot %*% diag(Yields)  # Estimate useful output
     
-    Numbers2File(map,paste0(path$IE_Processed,"/Cullen/FabricationUse_",year,
-                            "_",base$region$Name[r],".csv"))
+    Q[,IO.codes$index[IO.codes$base == r]] <- map_tot_use  # Write values into extension
     
-    map <- map %*% diag(Yields)  # Estimate useful output
     
-    Q[,IO.codes$index[IO.codes$base == r]] <- map  # Write values into extension
+    # Create data frame for use of domestic products by domestic fabrication
+    map_dom <-  map * df$Dom.Use # Create data frame with total material use from map
+    
+    # Write domestic use to folder
+    Numbers2File(map_dom,paste0(path$IE_Processed,"/Cullen/FabricationUse_",year,
+                                "_",base$region$Name[r],".csv"))
     
   }
-  
   
   # Save extension of the MFA-Waste-IO Model
   

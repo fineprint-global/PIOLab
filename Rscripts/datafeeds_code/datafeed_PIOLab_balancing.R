@@ -23,27 +23,20 @@ source(paste0(path$Subroutines,"/makeALANGheadline.R"))  # Create ALANG header
 
 ALANG <- ALANG[,c(1:19,11:19)]  # Extend table with additional columns
 
-n_reg <- nrow(root$region)
-
-for(r in 1:n_reg)  
-{
-  reg_name <- root$region$Name[r]
+# Balancing industries
+ALANG <- add_row(ALANG,'1' = "Balancing industries",
+                 Coef1 = "1",'Row parent' = "1-e",'Row child' = "1-e",'Row grandchild' = "1-e",
+                 'Column parent' = "1:e",'Column child' = "1",'Column grandchild' = "1:e",
+                 'Coef1.1' = "-1",'Row parent.1' = "1:e",'Row child.1' = "1",'Row grandchild.1' = "1:e",
+                 'Column parent.1' = "1-e",'Column child.1' = "1-e",'Column grandchild.1' = "1-e")
   
-  # Balancing industries
-  ALANG <- add_row(ALANG,'1' = paste0("Balancing industry: ",reg_name),
-                   Coef1 = "1",'Row parent' = as.character(r),'Row child' = "1",'Row grandchild' = "1:e",
-                   'Column parent' = "1-e",'Column child' = "1-e",'Column grandchild' = "1-e",
-                   'Coef1.1' = "-1",'Row parent.1' = "1-e",'Row child.1' = "1-e",'Row grandchild.1' = "1-e",
-                   'Column parent.1' = as.character(r),'Column child.1' = "1",'Column grandchild.1' = "1:e")
-  
-  # Balancing products
-  ALANG <- add_row(ALANG,'1' = paste0("Balancing products: ",reg_name),
-                   Coef1 = "1",'Row parent' = as.character(r),'Row child' = "2",'Row grandchild' = "1:e",
-                   'Column parent' = "1-e",'Column child' = "1-e",'Column grandchild' = "1-e",
-                   'Coef1.1' = "-1",'Row parent.1' = "1-e",'Row child.1' = "1-e",'Row grandchild.1' = "1-e",
-                   'Column parent.1' = as.character(r),'Column child.1' = "2",'Column grandchild.1' = "1:e")  
+# Balancing products
+ALANG <- add_row(ALANG,'1' = "Balancing product markets",
+                 Coef1 = "1",'Row parent' = "1:e",'Row child' = "1",'Row grandchild' = "1-e",
+                 'Column parent' = "1:e~3",'Column child' = "2",'Column grandchild' = "1:e",
+                 'Coef1.1' = "-1",'Row parent.1' = "1:e",'Row child.1' = "2",'Row grandchild.1' = "1:e",
+                 'Column parent.1' = "1-e",'Column child.1' = "1-e",'Column grandchild.1' = "1-e")  
 
-}
 
 # Add other variables
 ALANG$`#` <- as.character(1:nrow(ALANG))

@@ -39,6 +39,8 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
                              "CoilSheetStrip" = base$flow$Code[base$flow$Name == "Hot rolled coil-sheet-strip"]),
                "industry" = list("manu" = filter(base$process,Type == 'Final') %>% pull(Code),
                                  "others" = filter(base$process,Type != 'Final') %>% pull(Code)),
+               "product" = list("manu" = filter(base$flow,Type == 'Final') %>% pull(Code),
+                                "others" = filter(base$flow,Type != 'Final') %>% pull(Code)),
                "WSA" = Settings %>% filter(Type == 'Finished') %>% pull(id))
   
   # Load SUT templates
@@ -149,11 +151,11 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   
   CreateOutput <- function() 
   {
-    x <- data.frame( matrix(0,num$process,num$demand) )
+    x <- data.frame( matrix(0,num$process + num$flow,num$demand) )
     
     colnames(x) <- base$demand$Name
     
-    rownames(x) <- base$process$Name
+    rownames(x) <- c( base$process$Name, base$flow$Name )
     
     x <- as.matrix(x)
     
@@ -238,7 +240,7 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       Value <- filter(data$FinalDemand, base.from == i, base.to == j) %>% 
         select(Quantity, sector, demand)
         
-      Value$sector <- Code$industry$manu[Value$sector]
+      Value$sector <- Code$product$manu[Value$sector] + num$process
       
       index <- as.matrix( Value[, c("sector","demand") ] )
       
@@ -246,9 +248,9 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       
       # Delete column and row names
       
-      Use <- round(Use,2)
+      Use <- round(Use,3)
       
-      Final <- round(Final,2)
+      Final <- round(Final,3)
       
       colnames(Use) <- NULL
       rownames(Use) <- NULL
@@ -260,7 +262,6 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
       Numbers2File(Use, paste0(path$IE_Processed,"/SUT/",year,"_IntermediateTrade_",i,"_",j,".csv") )
       
       Numbers2File(Final, paste0(path$IE_Processed,"/SUT/",year,"_FinalTrade_",i,"_",j,".csv") )
-      
       
     }
   }
