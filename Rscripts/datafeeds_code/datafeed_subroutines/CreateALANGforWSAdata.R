@@ -56,13 +56,15 @@ if(nchar(pages) > 2) pages <- unlist( strsplit( pages ,",") )
 pages <- as.integer(pages) # Transform to numeric 
 
 
-# load correspondence to match WSA with 3digitISO codes
+# load correspondence to match WSA with 3digitISO region codes
 
 concord <- read.xlsx(xlsxFile = paste0(path$Concordance,"/WSA/WSA_RegionConcordance.xlsx"),
                      sheet = 1)
 
 
-# Load concordance for sourc2root industries and products
+### Load concordance for sourc2root industries and products
+
+# Read settings and define path
 
 set <- read.xlsx(xlsxFile = paste0(path$Settings,"/Base/IE_settings.xlsx"),sheet = 2)
 
@@ -70,21 +72,29 @@ path_sel <- list("flow" = paste0(path$Concordance,"/WSA/",
                                  set$date[set$aggregator == "sector"],"_WSA_Source2Root_Product.csv"),
                  "process" = paste0(path$Concordance,"/WSA/",
                                     set$date[set$aggregator == "sector"],"_WSA_Source2Root_Industry.csv")
-)
+                 )
+
+# Import concordances for industries and products
 
 ConcoInd <- read.table(path_sel$process,sep = ",")
+ConcoPro <- read.table(path_sel$flow,sep = ",")
+
+# Create two concordances, for zeros and ones
 
 ConcoInd <- list("One" = ConcoInd[Settings$id,],
                  "Zero" = ConcoInd[Settings$id,]
                  )
+
 ConcoInd$Zero <- -1 * (ConcoInd$Zero -1)  # Binary invertion of conco for zeros 
 
-ConcoPro <- read.table(path_sel$flow,sep = ",")
+# Transform into ALANG comand
 
+ConcoInd$One <- paste( which(ConcoInd$One == 1) , collapse = "," )
+ConcoInd$Zero <- paste( which(ConcoInd$Zero == 1) , collapse = "," )
 ConcoPro <- paste( which(ConcoPro[Settings$id,] == 1) , collapse = "," )
 
 
-# Read values and align with root classification
+# Read RHS values and align with root classification
 
 data <- Read_ProductionWSA(path,year,pages,out,concord)
 
@@ -107,8 +117,8 @@ filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",year
 Numbers2File( RHS, paste0(path$Processed, filename$RHS)) # Write data to folder 
 
 # Save industry aggregators for zero and one commands
-Numbers2File( ConcoInd$One, paste0(path$Concordance,filename$ConcoIndOne))  
-Numbers2File( ConcoInd$Zero, paste0(path$Concordance,filename$ConcoIndZero))  
+# Numbers2File( ConcoInd$One, paste0(path$Concordance,filename$ConcoIndOne))  
+# Numbers2File( ConcoInd$Zero, paste0(path$Concordance,filename$ConcoIndZero))  
 
 
 source(paste0(path$Subroutines,"/makeALANGheadline.R")) # Create ALANG header
@@ -119,7 +129,7 @@ ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year)) # Create entry
 
 ALANG$Value <- paste0("DATAPATH",filename$RHS)
 ALANG$S.E. <- paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";")
-ALANG$`Row grandchild` <- paste0("1:e t2 CONCPATH",filename$ConcoIndOne)
+ALANG$`Row grandchild` <- ConcoInd$One
 ALANG$`Row parent` <- "1-e"
 ALANG$`Column parent` <- paste0("1:e t2 CONCPATH",filename$ConcoReg)
 ALANG$Coef1 <- RSE$Coef
@@ -130,7 +140,7 @@ ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year, "Zero elements")) # Creat
 
 ALANG$Value[2] <- 0
 ALANG$S.E.[2] <- 0
-ALANG$`Row grandchild`[2] <- paste0("1:e a CONCPATH",filename$ConcoIndZero)
+ALANG$`Row grandchild`[2] <- ConcoInd$Zero
 ALANG$`Row parent`[2] <- "1:e"
 ALANG$`Column parent`[2] <- paste0("1:e~3")
 ALANG$Coef1[2] <- 1
