@@ -17,9 +17,6 @@ suppressMessages(library(openxlsx))
 suppressMessages(library(stringr))
 suppressMessages(library(R.matlab))
 
-# Check which system the code is running, at the moment needed to 
-#Check_Server <- Sys.info()[1]
-
 ################################################################################
 # 1. Set global variables and paths
 
