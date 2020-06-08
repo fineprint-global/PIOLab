@@ -114,7 +114,7 @@ filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",year
                  "ConcoReg" = "/Root2Root_Reg_Concordance.csv")
 
 
-Numbers2File( RHS, paste0(path$Processed, filename$RHS)) # Write data to folder 
+Numbers2File( t( RHS ), paste0(path$Processed, filename$RHS)) # Write data to folder 
 
 # Save industry aggregators for zero and one commands
 # Numbers2File( ConcoInd$One, paste0(path$Concordance,filename$ConcoIndOne))  
@@ -130,8 +130,8 @@ ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year)) # Create entry
 ALANG$Value <- paste0("DATAPATH",filename$RHS)
 ALANG$S.E. <- paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";")
 ALANG$`Row grandchild` <- ConcoInd$One
-ALANG$`Row parent` <- "1-e"
-ALANG$`Column parent` <- paste0("1:e t2 CONCPATH",filename$ConcoReg)
+#ALANG$`Row parent` <- "1-e"
+#ALANG$`Column parent` <- "1:e"
 ALANG$Coef1 <- RSE$Coef
 
 # Write command for elements that are zero:
@@ -141,12 +141,13 @@ ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year, "Zero elements")) # Creat
 ALANG$Value[2] <- 0
 ALANG$S.E.[2] <- 0
 ALANG$`Row grandchild`[2] <- ConcoInd$Zero
-ALANG$`Row parent`[2] <- "1:e"
-ALANG$`Column parent`[2] <- paste0("1:e~3")
+# ALANG$`Row parent`[2] <- "1:e"
+# ALANG$`Column parent`[2] <- paste0("1:e~3")
 ALANG$Coef1[2] <- 1
 
 # Write other variables
-
+ALANG$`Row parent` <- "1:e"
+ALANG$`Column parent` <- "1:e~3"
 ALANG$`Row child` <- 1
 ALANG$`Column child` <- 2
 ALANG$`Column grandchild` <- ConcoPro
