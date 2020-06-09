@@ -25,13 +25,13 @@ source(paste0(path$root,"Rscripts/Subroutines/Read_BaseClassification.R"))
 # Load function to write tables to file
 source(paste0(path$root,"Rscripts/Subroutines/Numbers2File.R"))
 
-set <- read.xlsx(paste0(path$Settings,"/Base/IE_settings.xlsx"),sheet = 2)
+# set <- read.xlsx(paste0(path$Settings,"/Base/IE_settings.xlsx"),sheet = 2)
 
 # Load Source to root sector aggregator of (i) WSA and (ii) IRP accounts 
 # and (iii) additionally pseudo S2R where no raw data is available 
 # Note that all tables are transposed (i.e. in root to source format):
 
-path_wsa <- paste0(path$Concordance,"/WSA/WSA_Source2Root_WithLabels",set$date[set$aggregator == "WSA"],".xlsx")
+path_wsa <- paste0(path$Concordance,"/WSA/WSA_Source2Root_WithLabels.xlsx")
 path_IRP <- paste0(path$Concordance,"/IRP/20200426_IRP_Extraction_SecConc.xlsx")
 path_add <- paste0(path$Concordance,"/Additional/20200426_Additional_Root2Mother_Sec_Ind30Pro39v1.xlsx")
   
@@ -76,8 +76,7 @@ R2M$flow[, Code$IRP$Code ] <- Conco$IRP
 R2M$flow[, Code$Add$Code ] <- Conco$Add[ , as.character( Code$Add$Code ) ]
 
 # Set filename and path to R2M flow concordance 
-filename <- paste0(path$Concordance,"/Sector Aggregators/",gsub("-","",Sys.Date()),
-                   "_",num$flow,"Products_SectorAggregator.csv")
+filename <- paste0(path$Concordance,"/Sector Aggregators/",num$flow,"Products_SectorAggregator.csv")
 
 if( sum(R2M$flow) > nrow(root$flow) ) print("Warning: Sum of R2M-flow conco is more than in root deifned.")
 
@@ -153,8 +152,7 @@ for(i in 1:nrow(base_sel))
 }
 
 # Set filename and path to R2M process concordance 
-filename <- paste0(path$Concordance,"/Sector Aggregators/",gsub("-","",Sys.Date()),
-                   "_",num$process,"Industries_SectorAggregator.csv")
+filename <- paste0(path$Concordance,"/Sector Aggregators/",num$process,"Industries_SectorAggregator.csv")
 
 if( sum(R2M$process) > nrow(root$process) )
 {

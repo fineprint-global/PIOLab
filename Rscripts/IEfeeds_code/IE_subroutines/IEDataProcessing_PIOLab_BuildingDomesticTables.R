@@ -50,10 +50,8 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
   
   set <- read.xlsx(xlsxFile = paste0(path$Settings,"/Base/IE_settings.xlsx"),sheet = 2)
   
-  path_sel <- list("flow" = paste0(path$Concordance,"/WSA/",
-                                   set$date[set$aggregator == "sector"],"_WSA_Source2Root_Product.csv"),
-                   "process" = paste0(path$Concordance,"/WSA/",
-                                      set$date[set$aggregator == "sector"],"_WSA_Source2Root_Industry.csv")
+  path_sel <- list("flow" = paste0(path$Concordance,"/WSA/WSA_Source2Root_Product.csv"),
+                   "process" = paste0(path$Concordance,"/WSA/WSA_Source2Root_Industry.csv")
                    )
   
   S2R <- list( "WSA" = list( "industry" = as.matrix( read.csv(path_sel$process,header = FALSE) ),

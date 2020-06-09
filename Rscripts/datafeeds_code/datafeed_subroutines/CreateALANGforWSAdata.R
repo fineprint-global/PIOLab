@@ -68,11 +68,8 @@ concord <- read.xlsx(xlsxFile = paste0(path$Concordance,"/WSA/WSA_RegionConcorda
 
 set <- read.xlsx(xlsxFile = paste0(path$Settings,"/Base/IE_settings.xlsx"),sheet = 2)
 
-path_sel <- list("flow" = paste0(path$Concordance,"/WSA/",
-                                 set$date[set$aggregator == "sector"],"_WSA_Source2Root_Product.csv"),
-                 "process" = paste0(path$Concordance,"/WSA/",
-                                    set$date[set$aggregator == "sector"],"_WSA_Source2Root_Industry.csv")
-                 )
+path_sel <- list("flow" = paste0(path$Concordance,"/WSA/","WSA_Source2Root_Product.csv"),
+                 "process" = paste0(path$Concordance,"/WSA/","WSA_Source2Root_Industry.csv") )
 
 # Import concordances for industries and products
 
@@ -107,18 +104,11 @@ RHS[1,data$Code] <- data$Quantity  # Write right-hand-side in vector
 
 # Set names and paths to data and concordances:
 
-filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",year,".csv"),
-                 "ConcoIndOne" = paste0("/WSA/WSA_Source2Root_Industry_Ones_",datafeed_name,".csv"),
-                 "ConcoIndZero" = paste0("/WSA/WSA_Source2Root_Industry_Zero_",datafeed_name,".csv"),
-                 "ConcoPro" = paste0("/WSA/WSA_Source2Root_Product_",datafeed_name,".csv"),
-                 "ConcoReg" = "/Root2Root_Reg_Concordance.csv")
+filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",year,".csv") )
 
 
 Numbers2File( t( RHS ), paste0(path$Processed, filename$RHS)) # Write data to folder 
 
-# Save industry aggregators for zero and one commands
-# Numbers2File( ConcoInd$One, paste0(path$Concordance,filename$ConcoIndOne))  
-# Numbers2File( ConcoInd$Zero, paste0(path$Concordance,filename$ConcoIndZero))  
 
 
 source(paste0(path$Subroutines,"/makeALANGheadline.R")) # Create ALANG header
@@ -130,8 +120,6 @@ ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year)) # Create entry
 ALANG$Value <- paste0("DATAPATH",filename$RHS)
 ALANG$S.E. <- paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";")
 ALANG$`Row grandchild` <- ConcoInd$One
-#ALANG$`Row parent` <- "1-e"
-#ALANG$`Column parent` <- "1:e"
 ALANG$Coef1 <- RSE$Coef
 
 # Write command for elements that are zero:
@@ -141,8 +129,6 @@ ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year, "Zero elements")) # Creat
 ALANG$Value[2] <- 0
 ALANG$S.E.[2] <- 0
 ALANG$`Row grandchild`[2] <- ConcoInd$Zero
-# ALANG$`Row parent`[2] <- "1:e"
-# ALANG$`Column parent`[2] <- paste0("1:e~3")
 ALANG$Coef1[2] <- 1
 
 # Write other variables
