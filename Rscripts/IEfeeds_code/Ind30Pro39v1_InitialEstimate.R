@@ -53,7 +53,6 @@ path[["IE_Subroutines"]] <- paste0(path$root,"Rscripts/IEfeeds_code/IE_subroutin
 path[["IE_Processed"]] <- paste0(path$root,"ProcessedData/",IEdatafeed_name,"/",regagg)
 path[["Agg_Processed"]] <- paste0(path$root,"ProcessedData/",IEdatafeed_name)
 
-remove(regagg)
 
 # Check whether output folder for processed data for the present initial estimate exists, if not then create it
 
@@ -82,7 +81,8 @@ IE_fun <- list("/IEFeed_PIOLab_WSA.R",
                "/IEDataProcessing_PIOLab_WasteMFAIOModelRun.R",
                "/IEDataProcessing_PIOLab_BuildingDomesticTables.R",
                "/IEDataProcessing_PIOLab_BuildingTradeBlocks.R",
-               "/IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables.R")
+               "/IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables.R",
+               "/Check_MassBalances.R")
 
 IE_fun <- paste0(path$IE_Subroutines,IE_fun)  # Add path to functions
 lapply(IE_fun,source)                         # Load functions into workspace
@@ -205,5 +205,7 @@ if(file.exists(path$mother))
   
   write.table(ALANG,file = filename,row.names = FALSE, quote = F,sep = "\t") 
 }
+
+Check_MassBalances()
   
 print( paste0("End of ",IEdatafeed_name," InitialEstimate.") )
