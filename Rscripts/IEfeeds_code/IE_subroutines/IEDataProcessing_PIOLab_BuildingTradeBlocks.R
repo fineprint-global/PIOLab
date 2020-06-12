@@ -51,7 +51,7 @@ IEDataProcessing_PIOLab_BuildingTradeBlocks <- function(year,path)
   
   # Run syntax to load Source2Root maps:
   
-  set <- read.xlsx(xlsxFile = paste0(path$Settings,"/Base/IE_settings.xlsx"),sheet = 2)
+  # set <- read.xlsx(xlsxFile = paste0(path$Settings,"/Base/IE_settings.xlsx"),sheet = 2)
   
   path_sel <- list("flow" = paste0(path$Concordance,"/WSA/WSA_Source2Root_Product.csv"),
                    "process" = paste0(path$Concordance,"/WSA/WSA_Source2Root_Industry.csv")

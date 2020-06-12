@@ -36,6 +36,33 @@ IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables <- function(year,path)
   path_source <- paste0(path$IE_Processed,"/SUT/")
   path_target <- paste0(path$mother,"Data/IE/")
   
+  # Load SUT templates, which are needed for grouping the 8-tupels and setting correct standard errors
+  
+  SUT_temp <- list( "Supply" = as.matrix( read.xlsx(path$IE_classification, sheet = 5, rowNames = TRUE) ),
+                    "Use" = as.matrix( read.xlsx(path$IE_classification, sheet = 6, rowNames = TRUE) ) )
+  
+  
+  SUT_temp$Use <- SUT_temp$Use[1:num$flow,]  # Remove the primary input block
+  
+  # Set col and row names to numeric
+  colnames(SUT_temp$Supply) <- rownames(SUT_temp$Use) <- 1:num$flow
+  rownames(SUT_temp$Supply) <- colnames(SUT_temp$Use) <- 1:num$process
+  
+  # Transform from wide to long
+  SUT_temp$Use <- melt(SUT_temp$Use)
+  SUT_temp$Supply <- melt(SUT_temp$Supply)
+  
+  colnames(SUT_temp$Use) <- colnames(SUT_temp$Supply) <- c("row","col","val")  
+  
+  # Set key for ease of identification
+  SUT_temp$Use["key"] <- paste0(SUT_temp$Use$row,"-",SUT_temp$Use$col)
+  SUT_temp$Supply["key"] <- paste0(SUT_temp$Supply$row,"-",SUT_temp$Supply$col)
+  
+  # fiter only non zero entries
+  SUT_temp$Supply <- SUT_temp$Supply[SUT_temp$Supply$val != 0,] 
+  SUT_temp$Use <- SUT_temp$Use[SUT_temp$Use$val != 0,] 
+  
+  
   ##############################################################################
   # Create empty S8 sheet
   
@@ -142,16 +169,25 @@ IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables <- function(year,path)
   
   S8 <- S8[S8$t != 0,]  # Remove alle zero elements
   
-  # Arrange IO elements differently to write standard errors more specificly
-  zero <- rbind(S8_sup[S8_sup$t == 0,],
-                S8_fd[S8_fd$t == 0,],
-                S8_va[S8_va$t == 0,])
   
-  # Note that the use table still includes zeros because the use side will be treated with more caution
-  # meaning SE are higher
+  ### Arrange supply table ###
   
-  sup <- S8_sup[S8_sup$t != 0,]
-  use <- S8_use
+  S8_sup["key"] <- paste0(S8_sup$x5,"-",S8_sup$x8)   # Set key
+  
+  # Separate into possible and not possible entries + remove key
+  sup_value <- S8_sup[S8_sup$key %in% SUT_temp$Supply$key,1:9]
+  sup_zero <- S8_sup[!S8_sup$key %in% SUT_temp$Supply$key,1:9]
+  
+  ### Arrange use table ###
+  
+  S8_use["key"] <- paste0(S8_use$x5,"-",S8_use$x8)   # Set key
+  
+  # Separate into possible and not possible entries + remove key
+  use_value <- S8_use[S8_use$key %in% SUT_temp$Use$key,1:9]
+  use_zero <- S8_use[!S8_use$key %in% SUT_temp$Use$key,1:9]
+  
+  ### Arrange other tables ###
+  
   fd <- S8_fd[S8_fd$t != 0,]
   # Separate waste from final demand
   wa <- fd[fd$x8 %in% base$demand$Code[base$demand$Type == "Waste"],]  
@@ -162,16 +198,21 @@ IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables <- function(year,path)
   eol <- va[va$x5 == base$input$Code[base$input$Name == "End-of-Life Scrap"],]
   res <- va[va$x5 %in% base$input$Code[base$input$Name %in% c("Flux","Coke","Air")],]
   
+  zero <- rbind(sup_zero,
+                use_zero,
+                S8_fd[S8_fd$t == 0,],
+                S8_va[S8_va$t == 0,])
+  
   # test if number of rows add up
-  nrow(sup)+nrow(use)+nrow(fd)+nrow(ore)+nrow(eol)+nrow(zero)+nrow(res)+nrow(wa)
+  nrow(sup_value)+nrow(use_value)+nrow(fd)+nrow(ore)+nrow(eol)+nrow(zero)+nrow(res)+nrow(wa)
   nrow(S8_fd)+nrow(S8_sup)+nrow(S8_use)+nrow(S8_va)
   # test if sums add up
-  sum(sup$t)+sum(use$t)+sum(fd$t)+sum(ore$t)+sum(eol$t)+sum(res$t)+sum(wa$t)
+  sum(sup_value$t)+sum(use_value$t)+sum(fd$t)+sum(ore$t)+sum(eol$t)+sum(res$t)+sum(wa$t)
   sum(S8_fd$t)+sum(S8_sup$t)+sum(S8_use$t)+sum(S8_va$t)
   
   # Write files to folder
-  write_file(sup,"Supply")
-  write_file(use,"Use")
+  write_file(sup_value,"Supply")
+  write_file(use_value,"Use")
   write_file(fd,"FinalOutput")
   write_file(ore,"Extraction")
   write_file(eol,"EolScrap")

@@ -14,9 +14,6 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
   
   print("IEDataProcessing_PIOLab_BuildingDomesticTables initiated.")
   
-  # Add path to IE classification setting file:
-  
-  path[["IE_classification"]] <- paste0(path$Settings,"/Base/",IEdatafeed_name,"_BaseSectorClassification.xlsx")
   
   # Load prorating function and Number2File:
   
@@ -80,7 +77,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
   
   SUT_temp <- list( "Supply" = as.matrix( read.xlsx(path$IE_classification, sheet = 5,rowNames = TRUE) ),
                     "Use" = as.matrix( read.xlsx(path$IE_classification, sheet = 6,rowNames = TRUE) )
-                  )
+  )
   
   for(i in 1:num$reg)
   {
@@ -289,12 +286,9 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     ##############################################
     
     # Read process factor for top gas per pig iron:
-    
     factor <- filter(Setting$IE, item == "TopGasPerPigIron") %>% pull(value)
     
-    
     # Write emissions in final output quadrant:
-    
     SUT["Blast furnace","Atmosphere"] <- SUT["Blast furnace","Pig iron"] * factor
     
     
@@ -334,6 +328,10 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     Value <- SUT["Electric arc furnace","Liquid steel EAF"] # EAF steel production
     
     SUT["Electric arc furnace","Landfill"] <- ( Value / factor ) - Value
+    
+    
+    
+    
     
     
     # Read slab and billet caster yields:
