@@ -31,13 +31,30 @@ path$ALANG <- paste0(path$ALANG,"/",datafeed_name)
 if( dir.exists(path$ALANG) ) unlink( path$ALANG,recursive = TRUE ) 
 dir.create( path$ALANG )
 
-Row <- read.xlsx( paste0(path$Concordance,"/Additional/20200426_Additional_Root2Mother_Sec_Ind30Pro39v1.xlsx"), sheet = 2 )
+### Create concordance and store in folder
 
-Row <- rowSums( Row[1:nrow(root$flow), colnames(Row) %in% 37:38] )
+Conco <- matrix(0, nrow = 2, ncol = nrow(root$flow))
 
-Row_scrap <- paste0( which( Row != 0 ), collapse = "," )
+# Read flow indices of scrap  
+Scrap <- read.xlsx( paste0(path$Concordance,"/Additional/20200426_Additional_Root2Mother_Sec_Ind30Pro39v1.xlsx"), sheet = 2 )
+Scrap <- rowSums( Scrap[1:nrow(root$flow), colnames(Scrap) %in% 37:38] )
+Conco[2,] <- Scrap 
 
-Row_iron <- paste0( which( Row == 0 ), collapse = "," )
+# Add other indices
+Other <- Scrap
+Other[c(1:7,30:nrow(root$flow))] <- 1
+Conco[1,which( Other == 0)] <- 1
+
+# Set path and create folder for concordance
+path$Concordance <- paste0( path$Concordance,"/",datafeed_name,"/")
+# Check if folder with ALANG files exists and delte it 
+if( dir.exists(path$Concordance) ) unlink( path$Concordance,recursive = TRUE ) 
+dir.create( path$Concordance )
+
+Numbers2File(Conco, paste0(path$Concordance,"Source2Root_Flows.csv") )
+
+# Row_scrap <- paste0( which( Row != 0 ), collapse = "," )
+# Row_iron <- "2,4,5,6"
 
 
 # Load ratios for blast furnace
@@ -47,13 +64,12 @@ set <- read.xlsx(xlsxFile = paste0(path$Settings,"/Base/IE_settings.xlsx"), shee
 com <- list("ind" = 1:2,
             "item" = c("ScrapRateBOF",
                        "ScrapRateEAF"),
-            "ColGrandChild" = c("20","22,23,24"),
+            "ColGrandChild" = c("20","[22,23,24]"),
             "Value" = c(0.2,0.9),
             "Filename" = c(NA,NA),
             stringsAsFactors = FALSE)
 
 com$Filename <- paste0("/",datafeed_name,"/",com$item,".csv")
-
 
 
 # Create empty ALANG table with header
@@ -70,9 +86,10 @@ ALANG$`1` <- paste("Ratio",rep(com$item[1:2],each = nrow(root$region) ), root$re
 
 ALANG$S.E. <- 0.1
 
-ALANG$`Row parent` <- rep( root$region$Code, 2 )
+ALANG$`Row parent` <- "1-e"
 ALANG$`Row child` <- 2
-ALANG$`Row grandchild` <- paste0("[",Row_iron,";",Row_scrap,"]")
+# ALANG$`Row grandchild` <- paste0("[",Row_iron,"];[",Row_scrap,"]")
+ALANG$`Row grandchild` <- paste0("1:e a CONCPATH/",datafeed_name,"/Source2Root_Flows.csv")
 
 ALANG$`Column parent` <- rep( root$region$Code, 2 )
 ALANG$`Column child` <- 1
