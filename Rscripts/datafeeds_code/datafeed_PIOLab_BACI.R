@@ -29,7 +29,7 @@ dir.create(path$set)
 
 dir.create( paste0(path$set,"/",year) )   # Create folder for year
 
-
+h<-2
 # Check if folder with ALANG files exists and delte it 
 if( dir.exists(path$ALANG) ) unlink( path$ALANG,recursive = TRUE ) 
 dir.create( path$ALANG )
