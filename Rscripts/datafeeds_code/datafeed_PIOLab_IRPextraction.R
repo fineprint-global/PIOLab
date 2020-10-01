@@ -52,7 +52,7 @@ filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",
                  "SE" = paste0("/",datafeed_name,"/",datafeed_name,"_SE_",
                                year,".csv"))
 
-Numbers2File( t(df$RHS) , paste0( path$Processed, filename$RHS ) ) 
+Numbers2File( df$RHS , paste0( path$Processed, filename$RHS ) ) 
 
 # Create empty ALANG table with header
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
@@ -67,11 +67,11 @@ ALANG$Coef1 <- 1
 ALANG$Years <- 1
 ALANG$Margin <- 1
 
-ALANG$`Row parent` <- "1-e"
+ALANG$`Row parent` <- "1:e"
 ALANG$`Row child` <- 3
 ALANG$`Row grandchild` <- root$input$Code[ root$input$Name == "Hematite & Magnetite" ]
 
-ALANG$`Column parent` <- "1:e t2 CONCPATH/Root2Root_Reg_Concordance.csv"
+ALANG$`Column parent` <- "1:e~3"
 ALANG$`Column child` <- "1"
 ALANG$`Column grandchild` <- paste( Conco$process$Code[Conco$process$binary == 1] , collapse = "," )
 

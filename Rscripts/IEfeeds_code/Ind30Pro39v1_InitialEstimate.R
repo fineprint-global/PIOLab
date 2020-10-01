@@ -2,18 +2,17 @@
 #                                             #
 #   This is the IE data feed for processing   #
 #     raw data of the iron and steel PIOT     #
-#     it covers 20 processes and 22 products  #
+#     it covers 30 processes and 39 flows     #
 #                                             #
 ###############################################
-# IE feed for 20 industries/processes and 22 products base classifications
 # hanspeter.wieland@wu.ac.at (c)
-# 04.16.2020 
+# 10.01.2020 
 
-# In case the code is executed not on the server (and the GUI) for debugging, 
+# In case the code is executed not on the server (and the IELab GUI) for debugging, 
 # the user can choose the desired region aggregator by setting the following variable
-# either to 5,35 or 49. If test_regagg is not defined it will be set automatically to 
+# either to 5,40 or 49. If test_regagg is not defined it will be set automatically to 
 # 5 regions later on in the code.
-# test_regagg <- "049"
+# test_regagg <- "040"
 
 ################################################################################
 ### 1. Set up workplace for building the initial estimate
@@ -27,7 +26,7 @@ if(Sys.info()[1] == "Linux"){
   .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
   # Define location for root directory
   root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
-  root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
+    root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
 
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
@@ -41,17 +40,18 @@ source(paste0(path$root,"Rscripts/Subroutines/Load_Root2Mother_sectors.R"))
 # Read region aggregation from classification to set the right path for the IE data
 
 if(max(base$region$Code) < 10) 
-  {
-    regagg <- paste0("00",max(base$region$Code))
-  } else
-  {
-    regagg <- paste0("0",max(base$region$Code))
-  }
+{
+  regagg <- paste0("00",max(base$region$Code))
+} else
+{
+  regagg <- paste0("0",max(base$region$Code))
+}
 
 # Set additional paths that are specific to the present run
 path[["IE_Subroutines"]] <- paste0(path$root,"Rscripts/IEfeeds_code/IE_subroutines")
 path[["IE_Processed"]] <- paste0(path$root,"ProcessedData/",IEdatafeed_name,"/",regagg)
 path[["Agg_Processed"]] <- paste0(path$root,"ProcessedData/",IEdatafeed_name)
+path[["IE_classification"]] <- paste0(path$Settings,"/Base/",IEdatafeed_name,"_BaseSectorClassification.xlsx")
 
 
 # Check whether output folder for processed data for the present initial estimate exists, if not then create it
@@ -142,7 +142,7 @@ RSE <- read.xlsx( paste0(path$Settings,"/Base/IE_settings.xlsx"), sheet = 3 )
 name <- "Supply"
 RSE_sel <- RSE[RSE$item == name,]
 ALANG <- NewALANG(name,
-                  paste0("E MX",RSE_sel$MX,";MN",RSE_sel$MN,";"),
+                  paste0("E MX",RSE_sel$MX,";MN",RSE_sel$MN,";CN",RSE_sel$CN,";"),
                   ALANG)
 
 name <- "Use"
@@ -184,7 +184,7 @@ ALANG <- NewALANG(name,
 name <- "Zero"
 RSE_sel <- RSE[RSE$item == name,]
 ALANG <- NewALANG(name,
-                  paste0("E CN",RSE_sel$CN,";"),
+                  "0",
                   ALANG)
 
 ALANG$`#` <- as.character(1:nrow(ALANG))

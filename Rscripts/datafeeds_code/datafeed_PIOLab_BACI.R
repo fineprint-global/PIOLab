@@ -20,8 +20,6 @@ path[["df_Processed"]] <- paste0(path$Processed,"/",datafeed_name)
 # Set path to specific ALANG folder
 path$ALANG <- paste0(path$ALANG,"/",datafeed_name)
 
-h<-2
-
 source(paste0(path$Subroutines,"/Numbers2File.R"))  # Load fun. to write arrays to files
 
 # Check if folder with processed data exists, in case delete and create empty one
@@ -30,7 +28,6 @@ if(dir.exists(path$set)) unlink(path$set,recursive = TRUE)
 dir.create(path$set)
 
 dir.create( paste0(path$set,"/",year) )   # Create folder for year
-
 
 # Check if folder with ALANG files exists and delte it 
 if( dir.exists(path$ALANG) ) unlink( path$ALANG,recursive = TRUE ) 
