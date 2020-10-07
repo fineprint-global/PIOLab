@@ -27,7 +27,7 @@ if(Sys.info()[1] == "Linux"){
   .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
   # Define location for root directory
   root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
-    root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
+    root_folder <- "C:/Users/polly/Google Drive/WU/GIT/PIOLab/"}
 
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
@@ -116,71 +116,20 @@ IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables(year,path)
 
 ### 5. Write ALANG commands
 
-# Set up wrapper for adding rows to ALANG
-
-NewALANG <- function(name,SE,ALANG)
-{
-  file <- paste0("S8 ",path$mother,"Data/IE/",gsub("-","",Sys.Date()),
-                 "_PIOLab_AllCountriesS8File_",name,year,".csv")
-  
-  ALANG <- add_row(ALANG,'1' = name,Coef1 = file, S.E. = SE,
-                   Value = "I",Incl = "Y",Parts = "1",'Row parent' = "",'Row child' = "",
-                   'Row grandchild' = "",'Column parent' = "",'Column child' = "",
-                   'Column grandchild' = "",Years = "",Margin = "",'Pre-map' = "",'Post-map' = "",
-                   'Pre-Map' = "",'Post-Map' = "")
-  
-  return(ALANG)
-}
-
-# n_reg <- nrow(base$region)
-# Create empty file with header
+source(paste0(path$root,"Rscripts/IEfeeds_code/IE_subroutines/IE_WriteALANGcommand.R"))
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))
 
 RSE <- read.xlsx( paste0(path$Settings,"/Base/IE_settings.xlsx"), sheet = 3 )
 
-# Write ALANG commands
+# Add rows to ALANG
 
-name <- "Supply"
-RSE_sel <- RSE[RSE$item == name,]
-ALANG <- NewALANG(name,
-                  paste0("E MX",RSE_sel$MX,";MN",RSE_sel$MN,";CN",RSE_sel$CN,";"),
-                  ALANG)
-
-name <- "Use"
-RSE_sel <- RSE[RSE$item == name,]
-ALANG <- NewALANG(name,
-                  paste0("E MX",RSE_sel$MX,";MN",RSE_sel$MN,";CN",RSE_sel$CN,";"),
-                  ALANG)
-
-name <- "FinalOutput"
-RSE_sel <- RSE[RSE$item == name,]
-ALANG <- NewALANG(name,
-                  paste0("E MX",RSE_sel$MX,";MN",RSE_sel$MN,";"),
-                  ALANG)
-
-name <- "Extraction"
-RSE_sel <- RSE[RSE$item == name,]
-ALANG <- NewALANG(name,
-                  paste0("E MX",RSE_sel$MX,";MN",RSE_sel$MN,";"),
-                  ALANG)
-
-name <- "EolScrap"
-RSE_sel <- RSE[RSE$item == name,]
-ALANG <- NewALANG(name,
-                  paste0("E MX",RSE_sel$MX,";MN",RSE_sel$MN,";"),
-                  ALANG)
-
-name <- "OtherInput"
-RSE_sel <- RSE[RSE$item == name,]
-ALANG <- NewALANG(name,
-                  paste0("E MX",RSE_sel$MX,";MN",RSE_sel$MN,";"),
-                  ALANG)
-
-name <- "Waste"
-RSE_sel <- RSE[RSE$item == name,]
-ALANG <- NewALANG(name,
-                  paste0("E MX",RSE_sel$MX,";MN",RSE_sel$MN,";"),
-                  ALANG)
+AddRowALANG_CN("Supply")
+AddRowALANG_CN("Use")
+AddRowALANG("FinalOutput")
+AddRowALANG("Extraction")
+AddRowALANG("EolScrap")
+AddRowALANG("OtherInput")
+AddRowALANG("Waste")
 
 name <- "Zero"
 RSE_sel <- RSE[RSE$item == name,]
@@ -210,3 +159,4 @@ if(file.exists(path$mother))
 Check_MassBalances()
   
 print( paste0("End of ",IEdatafeed_name," InitialEstimate.") )
+
