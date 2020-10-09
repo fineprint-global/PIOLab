@@ -25,9 +25,8 @@ print(paste0("Start of ",IEdatafeed_name," InitialEstimate."))
 if(Sys.info()[1] == "Linux"){
   .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
   # Define location for root directory
-  root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
-    root_folder <- "C:/Users/polly/Google Drive/WU/GIT/PIOLab/"}
-
+  root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else if(dir.exists("C:/Users/hwieland/Github workspace/PIOLab/")){
+    root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}else{root_folder <- "C:/Users/polly/Google Drive/WU/GIT/PIOLab/"}
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 

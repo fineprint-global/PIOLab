@@ -34,9 +34,12 @@ if(file.exists(OnServer))
   unlink(OnServer)
 } else
 {
-  if(Sys.info()[1] == "Windows")
+  if((Sys.info()[1] == "Windows") & (dir.exists("C:/Users/hwieland/Github workspace/PIOLab/")))
   {
-    mother <- readMat("C:/Users/hwieland/Documents/PIOLab_FilesForDebuggingR/WorkingDirectory4R.mat")
+    mother <- readMat("//Shares/data/Users/hwieland/Documents/PIOLab_FilesForDebuggingR/WorkingDirectory4R.mat")
+    mother <- c(mother$out)
+  }else if((Sys.info()[1] == "Windows")&(dir.exists("C:/Users/polly/Google Drive/WU/GIT/PIOLab/"))){
+    mother <- readMat("C:/Users/polly/Google Drive/WU/GIT/PIOLab/WorkingDirectory4R.mat")
     mother <- c(mother$out)  
   }else
   {
