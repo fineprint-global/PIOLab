@@ -2,18 +2,17 @@
 #                                             #
 #   This is the IE data feed for processing   #
 #     raw data of the iron and steel PIOT     #
-#     it covers 20 processes and 22 products  #
+#     it covers 30 processes and 39 flows     #
 #                                             #
 ###############################################
-# IE feed for 20 industries/processes and 22 products base classifications
 # hanspeter.wieland@wu.ac.at (c)
-# 04.16.2020 
+# 10.01.2020 
 
-# In case the code is executed not on the server (and the GUI) for debugging, 
+# In case the code is executed not on the server (and the IELab GUI) for debugging, 
 # the user can choose the desired region aggregator by setting the following variable
-# either to 5,35 or 49. If test_regagg is not defined it will be set automatically to 
+# either to 5,40 or 49. If test_regagg is not defined it will be set automatically to 
 # 5 regions later on in the code.
-# test_regagg <- "049"
+# test_regagg <- "040"
 
 ################################################################################
 ### 1. Set up workplace for building the initial estimate
