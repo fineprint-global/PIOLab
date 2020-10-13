@@ -13,7 +13,7 @@
 # either to 5,40 or 49. If test_regagg is not defined it will be set automatically to 
 # 5 regions later on in the code.
 # test_regagg <- "040"
-
+# This is a test string
 ################################################################################
 ### 1. Set up workplace for building the initial estimate
 
