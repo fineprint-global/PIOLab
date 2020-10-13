@@ -1,0 +1,20 @@
+"","Buildings","Infrastructure","Mechanical equipment","Cars","Trucks","Ships/other","Electrical equipment","Metal goods","Domestic appliances","Food packaging"
+"Light sections",34,11,0,0,0,0,0,0,0,0
+"Heavy sections",30,9,0,0,0,0,0,0,0,0
+"Rail",0,9,1,0,0,0,0,0,0,0
+"Reinforcing bar",92,82,0,0,0,0,0,0,0,0
+"Wire rod",43,38,1,5,5,1,8,47,0,0
+"Hot rolled bar",3,1,41,14,3,1,4,42,0,0
+"Plate",5,1,33,0,0,33,4,33,0,0
+"Hot rolled coil (HRC)",75,24,35,0,7,0,2,7,0,0
+"HRC galvanised",8,2,0,0,0,0,0,0,0,0
+"HR narrow strip",15,5,0,0,0,0,0,20,0,0
+"Cold rolled coil (CRC)",51,16,32,0,0,0,0,7,30,0
+"CRC galvanised",0,0,0,91,6,0,0,0,0,0
+"CRC organic coated",0,0,0,0,0,0,0,8,8,0
+"CRC tinned",0,0,0,0,0,0,0,0,0,12
+"Electrical sheet",0,0,0,0,0,0,10,0,0,0
+"Welded tube",14,25,17,0,1,1,4,1,0,0
+"Seamless tube",13,4,3,5,1,1,1,0,0,0
+"Cast iron products",3,25,9,13,3,1,6,9,0,0
+"Cast steel products",0,0,5,0,0,0,0,5,0,0

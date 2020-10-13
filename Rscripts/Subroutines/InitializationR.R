@@ -41,6 +41,9 @@ if(file.exists(OnServer))
   }else if((Sys.info()[1] == "Windows")&(dir.exists("C:/Users/polly/Google Drive/WU/GIT/PIOLab/"))){
     mother <- readMat("C:/Users/polly/Google Drive/WU/GIT/PIOLab/WorkingDirectory4R.mat")
     mother <- c(mother$out)  
+  }else if((Sys.info()[1] == "Windows")&(dir.exists("C:/Users/Rene/Google Drive/WU/GIT/PIOLab/"))){
+    mother <- readMat("C:/Users/Rene/Google Drive/WU/GIT/PIOLab/WorkingDirectory4R.mat")
+    mother <- c(mother$out)  
   }else
   {
     mother <- "xxx"
