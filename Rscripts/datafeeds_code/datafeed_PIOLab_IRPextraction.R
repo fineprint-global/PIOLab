@@ -9,7 +9,24 @@ if(Sys.info()[1] == "Linux"){
   .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
   # Define location for root directory
   root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
-  root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
+  #root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"
+    library(tidyverse)
+    library(tidyr)
+    getCurrentFileLocation <-  function()
+    {
+      this_file <- commandArgs() %>% 
+        tibble::enframe(name = NULL) %>%
+        tidyr::separate(col=value, into=c("key", "value"), sep="=", fill='right') %>%
+        dplyr::filter(key == "--file") %>%
+        dplyr::pull(value)
+      if (length(this_file)==0)
+      {
+        this_file <- rstudioapi::getSourceEditorContext()$path
+      }
+      return(substr(dirname(this_file),1,nchar(dirname(this_file))-23))
+    }
+    root_folder <- getCurrentFileLocation()
+    }
 ################################################################################
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
@@ -46,7 +63,7 @@ df$SE[data$Code] <- data$SE
 # Check if folder with processed data exists, in case delete and create empty one
 if(dir.exists(path$df_Processed)) unlink(path$df_Processed,recursive = TRUE) 
 dir.create(path$df_Processed)
-
+for (year in 2008:2010){
 filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",
                                 year,".csv"),
                  "SE" = paste0("/",datafeed_name,"/",datafeed_name,"_SE_",
@@ -84,6 +101,6 @@ ALANG$`Post-Map` <- ""
   
 # Call script that writes the ALANG file to the repsective folder in the root
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
-  
+}
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
 
