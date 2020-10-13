@@ -17,6 +17,8 @@
 ################################################################################
 ### 1. Set up workplace for building the initial estimate
 
+# This is a test
+
 IEdatafeed_name <- "Ind30Pro39v1" 
 
 print(paste0("Start of ",IEdatafeed_name," InitialEstimate."))
