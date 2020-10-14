@@ -6,8 +6,8 @@ print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 ################################################################################
 library(tidyverse)
 library(tidyr)
-for (year in 1982:1989){
-  year <- 2000
+
+year <- 1970
 # Set library path when running on suphys server
 if(Sys.info()[1] == "Linux"){
   .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
@@ -27,10 +27,15 @@ if(Sys.info()[1] == "Linux"){
       return(substr(dirname(this_file),1,nchar(dirname(this_file))-23))
     }
     root_folder <- getCurrentFileLocation()
-    }
+  }
+source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
+  
+# Loading raw data
+source(paste0(path$Subroutines,"/Read_ExtractionIRP.R"))
+
+#for (year in 2001:2008){
 ################################################################################
 # Initializing R script (load R packages and set paths to folders etc.)
-source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name)  # Add datafeed specific path for output data
 path["df_conco"] <- paste0(path$Concordance,"/IRP/")  # Add datafeed specific path for S2R concordance
 
@@ -42,9 +47,6 @@ set <- read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/IRP_settin
           
 Conco <- list("process" = read.xlsx(xlsxFile = paste0(path$df_conco,set$date,"_IRP_Extraction_SecConc.xlsx"),sheet = 1),
               "flow" =  read.xlsx(xlsxFile = paste0(path$df_conco,set$date,"_IRP_Extraction_SecConc.xlsx"),sheet = 2) )
-
-# Loading raw data
-source(paste0(path$Subroutines,"/Read_ExtractionIRP.R"))
 
 # Loading function for estimating SE with linear regression
 source(paste0(path$Subroutines,"/SE_LogRegression.R"))
@@ -105,5 +107,7 @@ ALANG$`Post-Map` <- ""
   
 # Call script that writes the ALANG file to the repsective folder in the root
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
+rm(list = ls()) # clear workspace
+
 }
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
