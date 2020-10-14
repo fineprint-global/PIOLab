@@ -1,17 +1,18 @@
+
 ################################################################################
 
 datafeed_name <- "IRPextraction"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
-
 ################################################################################
+library(tidyverse)
+library(tidyr)
+for (year in 1982:1989){
+  year <- 2000
 # Set library path when running on suphys server
 if(Sys.info()[1] == "Linux"){
   .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
   # Define location for root directory
   root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
-  #root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"
-    library(tidyverse)
-    library(tidyr)
     getCurrentFileLocation <-  function()
     {
       this_file <- commandArgs() %>% 
@@ -53,17 +54,20 @@ RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
 
 # Estimate standard error
 data <- SE_LogRegression(data,RSE$Minimum,RSE$Maximum)
-
+data
 n_reg <- nrow(root$region) # Number of root regions
 
 df <- data.frame("RHS" = rep(0,n_reg), "SE" = rep(0,n_reg))
 df$RHS[data$Code] <- data$Quantity
 df$SE[data$Code] <- data$SE
-
+head(data)
+sum(data)
+data$Code[34]
+data$SE
 # Check if folder with processed data exists, in case delete and create empty one
-if(dir.exists(path$df_Processed)) unlink(path$df_Processed,recursive = TRUE) 
-dir.create(path$df_Processed)
-for (year in 2008:2010){
+#if(dir.exists(path$df_Processed)) unlink(path$df_Processed,recursive = TRUE) 
+#dir.create(path$df_Processed)
+
 filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",
                                 year,".csv"),
                  "SE" = paste0("/",datafeed_name,"/",datafeed_name,"_SE_",
@@ -103,4 +107,3 @@ ALANG$`Post-Map` <- ""
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
 }
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
-
