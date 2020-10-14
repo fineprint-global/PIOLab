@@ -80,7 +80,7 @@ for(year in 1970:2014)
   # Write year-specific commands
   ALANG$`1` <- paste(datafeed_name,year)
   ALANG$Value <- paste0("DATAPATH",filename$RHS)
-  ALANG$Years <- year-2007
+  ALANG$Years <- 1
 
   # Add all other non-year-specific commands
   ALANG$`#` <- 1:nrow(ALANG)
