@@ -1,13 +1,6 @@
 ################################################################################
-# Write ALANG file to folder
-# 
-# This section is executed everytime an data feed is executed.
-# It stores the ALANG files to the respective
-
-# Check if ALANG folder exists and create new empty folder for storage
-path_set <- paste0(path$root,"ALANGfiles/",datafeed_name)
-if(dir.exists(path_set)) unlink(path_set,recursive = TRUE) 
-dir.create(path_set)
+# This script writes ALANG files to folder
+# It is executed everytime an data feed is executed.
 
 # Write data frame with ALANG commands as tab-delimited txt-file to root and working directory (mother)
 # Note HP: This is probably not the normal procedure, meaning no IE ALANG's in the root
