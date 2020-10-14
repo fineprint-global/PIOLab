@@ -1,13 +1,13 @@
 data <- read.csv(paste0(path$Raw,"/IRP/DE_CCC_ResearchDB.csv"),stringsAsFactors=FALSE)
-colnames(data)[7:50] <- 1970:2013
+colnames(data)[7:51] <- 1970:2014
 data <- data %>% filter(CCC_Name == "Iron ores") %>% select(Country,AlphaNumISO,as.character(year)) 
 
 data <- data %>% separate(AlphaNumISO, into = c('ISOCode', 'num'), sep = 3) %>% select(-num)  
 colnames(data)[ncol(data)] <- "Quantity"
 data <- filter(data,Quantity > 0)
 
-# Remove Yugoslavia and USSR from data because (sub-) regions are already included
-data <- data %>% filter(!ISOCode %in% c("YUG","SUN")) 
+# Remove Yugoslavia, USSR, Serbia-Monetnegro, Belgium-Luxembourg from data because (sub-) regions are already included
+data <- data %>% filter(!ISOCode %in% c("YUG","SUN","BLG","SCG")) 
 
 # Look up root codes
 data <- left_join(data,root$region[c("Code","RootCountryAbbreviation")] ,
