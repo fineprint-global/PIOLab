@@ -1,2 +1,0 @@
-1	Incl	#	Parts	Value	Pre-map	Post-map	S.E.	Pre-Map	Post-Map	Coef1	Years	Margin	Row parent	Row child	Row grandchild	Column parent	Column child	Column grandchild
-IRPextraction 2008	Y	1	1	DATAPATH/IRPextraction/IRPextraction_RHS_2008.csv			E MX0.25; MN1;			1	1	1	1:e	3	4	1:e~3	1	1,2,3,4
