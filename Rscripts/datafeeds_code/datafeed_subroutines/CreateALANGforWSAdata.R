@@ -5,29 +5,15 @@
 # Date: 13.03.2020
 
 
-# Initializing R script (R packages, folders etc.):
-source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
-path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name) # Add path for processed data
-
-print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
-
 source(paste0(path$Subroutines,"/Numbers2File.R"))  # Load fun. to write arrays to files
 source(paste0(path$Subroutines,"/Read_ProductionWSA.R")) # Fun. to align data with root classification
-
-
-# Check if folder with processed data exists and in case delete:
-if(dir.exists(path$df_Processed)) unlink(path$df_Processed,recursive = TRUE) 
-dir.create(path$df_Processed) # Create new (empty) folder
-
 
 # Get relative standard error for smallest and largest values in the data set:
 RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
 
-
 # Read settings (e.g. page in the specific yearbook) for WSA data feeds:
 Settings <- read.xlsx(paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"))
 Settings <- Settings[Settings$FeedName == datafeed_name,] # Select which feed
-
 
 # Load Yearbook R-object depending on the selected year:
 
@@ -142,7 +128,7 @@ ALANG$`#` <- 1:nrow(ALANG)
 ALANG$Incl <- "Y"
 ALANG$Parts <- 1
 
-ALANG$Years <- year-2007
+ALANG$Years <- 1
 ALANG$Margin <- 1
 
 ALANG$`Pre-map` <- ""
@@ -155,5 +141,5 @@ ALANG[] <- lapply(ALANG,as.character)  # Convert all entries to character
 # Call script that writes the ALANG file to the respective folder in the root
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
 
-print(paste0("datafeed_PIOLab_",datafeed_name," finished"))
+
              
