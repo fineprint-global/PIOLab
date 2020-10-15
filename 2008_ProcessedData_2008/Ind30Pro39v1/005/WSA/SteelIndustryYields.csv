@@ -1,9 +1,0 @@
-"Process","Average","Maximum","Minimum"
-"BF Losses",0.005,0.01,0.001
-"BF slag rate",265,366,159
-"BOF yield",0.9,1,0.81
-"EAF yield",0.91,0.96,0.86
-"Slab caster yield",0.955,1,0.91
-"Billet caster yield",0.98,1,0.96
-"Bloom caster yield",0.97,1,0.94
-"Hot rolling yield",0.975,0.985,0.961
