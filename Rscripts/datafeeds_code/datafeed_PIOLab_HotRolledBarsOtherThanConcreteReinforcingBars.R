@@ -37,23 +37,19 @@ if(Sys.info()[1] == "Linux")
 }
 ################################################################################
 
-# Set paths to folders
-root_folder1 <- root_folder
-path <- list("Processed" = paste0(root_folder,"ProcessedData"))   # create path list
+# Initializing R script (R packages, folders etc.):
+source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
+
+# Set path to processed data folder and data feed subroutines
 path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name)  # Add datafeed specific path for output data
+path["df_Subroutines"] <- paste0(path$Rscripts,"/datafeeds_code/datafeed_subroutines/") 
 
 # Call script to clear ALANG and processed data folders of the present data feed
-source(paste0(root_folder,"Rscripts/datafeeds_code/datafeed_subroutines/ClearFolders.R"))
+source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/ClearFolders.R"))
 
-for (year in 2008:2017){
-root_folder <- root_folder1  
+# Loop over time series and create ALANG files ans raw data vectors in root classification
+for(year in 2008:2017) source( paste0(path$df_Subroutines,"CreateALANGforWSAdata.R") ) # Run syntax
 
-# Location of the WSA syntax in the lab
-
-subfun <- "Rscripts/datafeeds_code/datafeed_subroutines/CreateALANGforWSAdata.R"
-
-source(paste0(root_folder,subfun)) # Run syntax
-}
 rm(list = ls()) # clear workspace
 
   
