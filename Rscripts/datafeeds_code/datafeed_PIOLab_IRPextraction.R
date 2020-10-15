@@ -47,7 +47,6 @@ set <- read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/IRP_settin
 Conco <- list("process" = read.xlsx(xlsxFile = paste0(path$df_conco,set$date,"_IRP_Extraction_SecConc.xlsx"),sheet = 1),
               "flow" =  read.xlsx(xlsxFile = paste0(path$df_conco,set$date,"_IRP_Extraction_SecConc.xlsx"),sheet = 2) )
 
-
 # read upper and lower error bounds (RSE = relative standard error) from settings file
 RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
 
