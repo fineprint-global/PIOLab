@@ -62,9 +62,6 @@ path <- list("Raw" = paste0(root_folder,"RawDataRepository"),
              "Settings" = paste0(root_folder,"Settings"),
              "RSE_settings" = paste0(root_folder,"Settings/datafeeds_settings/df_RSE_settings.xlsx"))
 
-# Set the year
-year <- 2008
-
 # Read root region, industry and products
 
 path_rootclass <- paste0(path$Settings,"/Root/Legends/PIOLab_RootClassification.xlsx")
