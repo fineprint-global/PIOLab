@@ -19,6 +19,8 @@
 
 IEdatafeed_name <- "Ind30Pro39v1" 
 
+year <- 2008  # Year that the initial estimate is built for
+
 print(paste0("Start of ",IEdatafeed_name," InitialEstimate."))
 
 # Set library path when running on suphys server
