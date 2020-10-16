@@ -4,20 +4,47 @@
 # This data feed formulates the ALANG commands for the balancing condition
 # for both industries and products
 #
+
 datafeed_name <- "balancing"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
+
+# Determine loaction of root folder
 ################################################################################
-# Set library path when running on suphys server
-if(Sys.info()[1] == "Linux"){
+
+# Set library path depending on whether data feed runs on Uni Sydney server or local
+if(Sys.info()[1] == "Linux")
+{
+  # Setting the R package library folder on Uni Sydney server
   .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
-  # Define location for root directory
-  root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
-    root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
+  
+  # Define location of root directory on the Uni Sydney server:
+  root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"
+  
+} else{
+  
+  # Locating folder where the present script is stored locally to derive the root folder 
+  this_file <- commandArgs() %>% 
+    tibble::enframe(name = NULL) %>%
+    tidyr::separate(col=value, into=c("key", "value"), sep="=", fill='right') %>%
+    dplyr::filter(key == "--file") %>%
+    dplyr::pull(value)
+  
+  if(length(this_file)==0) this_file <- rstudioapi::getSourceEditorContext()$path
+  
+  root_folder <- substr(dirname(this_file),1,nchar(dirname(this_file))-23)
+  remove(this_file)
+}
 ################################################################################
 
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
+# Check if ALANG folder exists and create new empty folder for storage
+path_set <- paste0(path$root,"ALANGfiles/",datafeed_name)
+if(dir.exists(path_set)) unlink(path_set,recursive = TRUE) 
+dir.create(path_set)
+
+for (year in 1970:2017){
 
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))  # Create ALANG header
 
@@ -53,7 +80,8 @@ ALANG$`Post-Map` <- ""
   
 # Call script that writes the ALANG file to the respective folder in the root
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
-
+}
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
 
 rm(list = ls()) # clear workspace
+
