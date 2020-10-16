@@ -4,24 +4,52 @@
 # Author: hanspeter.wieland@wu.ac.at
 # Date: 19.03.2020 
 
+
 datafeed_name <- "LiquidSteelForCastings"  # Set name of feed 
+
+library(tidyverse)
+library(tidyr)
 
 # Determine loaction of root folder
 ################################################################################
-# Set library path when running on suphys server
-if(Sys.info()[1] == "Linux"){
+
+# Set library path depending on whether data feed runs on Uni Sydney server or local
+if(Sys.info()[1] == "Linux")
+{
+  # Setting the R package library folder on Uni Sydney server
   .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
-  # Define location for root directory
-  root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
-  root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
+  
+  # Define location of root directory on the Uni Sydney server:
+  root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"
+  
+} else{
+  
+  # Locating folder where the present script is stored locally to derive the root folder 
+  this_file <- commandArgs() %>% 
+    tibble::enframe(name = NULL) %>%
+    tidyr::separate(col=value, into=c("key", "value"), sep="=", fill='right') %>%
+    dplyr::filter(key == "--file") %>%
+    dplyr::pull(value)
+  
+  if(length(this_file)==0) this_file <- rstudioapi::getSourceEditorContext()$path
+  
+  root_folder <- substr(dirname(this_file),1,nchar(dirname(this_file))-23)
+  remove(this_file)
+}
 ################################################################################
 
-# Location of the WSA syntax in the lab
+# Initializing R script (R packages, folders etc.):
+source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
-subfun <- "Rscripts/datafeeds_code/datafeed_subroutines/CreateALANGforWSAdata.R"
+# Set path to processed data folder and data feed subroutines
+path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name)  # Add datafeed specific path for output data
+path["df_Subroutines"] <- paste0(path$Rscripts,"/datafeeds_code/datafeed_subroutines/") 
 
-source(paste0(root_folder,subfun)) # Run syntax
+# Call script to clear ALANG and processed data folders of the present data feed
+source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/ClearFolders.R"))
+
+# Loop over time series and create ALANG files ans raw data vectors in root classification
+for(year in 2008:2017) source( paste0(path$df_Subroutines,"CreateALANGforWSAdata.R") ) # Run syntax
 
 rm(list = ls()) # clear workspace
 
-  
