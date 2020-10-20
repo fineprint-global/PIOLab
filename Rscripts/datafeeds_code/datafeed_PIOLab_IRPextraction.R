@@ -3,7 +3,7 @@
 datafeed_name <- "IRPextraction"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 
-library(tidyverse)
+
 library(tidyr)
 
 ################################################################################
@@ -35,8 +35,12 @@ if(Sys.info()[1] == "Linux")
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
+path$ALANG <- paste0(path$ALANG,"/",datafeed_name)
 path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name)  # Add datafeed specific path for output data
 path["df_conco"] <- paste0(path$Concordance,"/IRP/")  # Add datafeed specific path for S2R concordance
+
+# Call script to clear ALANG and processed data folders of the present data feed
+source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/ClearFolders.R"))
 
 # Load function to write arrays to files
 source( paste0(path$Subroutines,"/Numbers2File.R") )
@@ -52,8 +56,7 @@ RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
 
 n_reg <- nrow(root$region) # Number of root regions
 
-# Call script to clear ALANG and processed data folders of the present data feed
-source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/ClearFolders.R"))
+
 
 for(year in 1970:2014)
 {
