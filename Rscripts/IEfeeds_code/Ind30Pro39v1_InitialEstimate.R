@@ -124,13 +124,13 @@ RSE <- read.xlsx( paste0(path$Settings,"/Base/IE_settings.xlsx"), sheet = 3 )
 
 # Add rows to ALANG
 
-AddRowALANG_CN("Supply")
-AddRowALANG_CN("Use")
-AddRowALANG("FinalOutput")
-AddRowALANG("Extraction")
-AddRowALANG("EolScrap")
-AddRowALANG("OtherInput")
-AddRowALANG("Waste")
+ALANG <- AddRowALANG_CN("Supply",ALANG)
+ALANG <- AddRowALANG_CN("Use", ALANG)
+ALANG <- AddRowALANG("FinalOutput", ALANG)
+ALANG <- AddRowALANG("Extraction", ALANG)
+ALANG <- AddRowALANG("EolScrap", ALANG)
+ALANG <- AddRowALANG("OtherInput", ALANG)
+ALANG <- AddRowALANG("Waste", ALANG)
 
 name <- "Zero"
 RSE_sel <- RSE[RSE$item == name,]
