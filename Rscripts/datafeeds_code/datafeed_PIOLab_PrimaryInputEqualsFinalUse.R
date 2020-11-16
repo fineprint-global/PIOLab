@@ -5,10 +5,6 @@
 
 datafeed_name <- "PrimaryInputEqualsFinalUse"
 
-print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
-
-library(tidyr)
-
 # Determine loaction of root folder
 ################################################################################
 
@@ -23,6 +19,7 @@ if(Sys.info()[1] == "Linux")
   
 } else{
   
+  library(tidyr)
   # Locating folder where the present script is stored locally to derive the root folder 
   this_file <- commandArgs() %>% 
     tibble::enframe(name = NULL) %>%
@@ -42,8 +39,8 @@ source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
 # Set path to processed data and ALANG folder 
 path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name)  # Add datafeed specific path for output data
-path$ALANG <- paste0(path$ALANG,"/",datafeed_name)
 path["df_Subroutines"] <- paste0(path$Rscripts,"/datafeeds_code/datafeed_subroutines/") 
+path$ALANG <- paste0(path$ALANG,"/",datafeed_name)
 
 # Call script to clear ALANG and processed data folders of the present data feed
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/ClearFolders.R"))

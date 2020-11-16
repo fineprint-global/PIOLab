@@ -6,9 +6,6 @@
 
 datafeed_name <- "TinmillProducts"  # Set name of feed 
 
-
-library(tidyr)
-
 # Determine loaction of root folder
 ################################################################################
 
@@ -23,6 +20,7 @@ if(Sys.info()[1] == "Linux")
   
 } else{
   
+  library(tidyr)
   # Locating folder where the present script is stored locally to derive the root folder 
   this_file <- commandArgs() %>% 
     tibble::enframe(name = NULL) %>%

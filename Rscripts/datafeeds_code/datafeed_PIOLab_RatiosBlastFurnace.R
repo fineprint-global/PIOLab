@@ -4,11 +4,6 @@
 
 datafeed_name <- "RatiosBlastFurnace"
 
-print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
-
-
-library(tidyr)
-
 # Determine loaction of root folder
 ################################################################################
 # Set library path depending on whether data feed runs on Uni Sydney server or local
@@ -22,6 +17,7 @@ if(Sys.info()[1] == "Linux")
   
 } else{
   
+  library(tidyr)
   # Locating folder where the present script is stored locally to derive the root folder 
   this_file <- commandArgs() %>% 
     tibble::enframe(name = NULL) %>%
@@ -41,9 +37,10 @@ source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
 source(paste0(path$Subroutines,"/Numbers2File.R"))  # Load fun. to write arrays to files
 
-# Set path to specific ALANG folder
-path$ALANG <- paste0(path$ALANG,"/",datafeed_name)
 path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name)  # Add datafeed specific path for output data
+path["df_Subroutines"] <- paste0(path$Rscripts,"/datafeeds_code/datafeed_subroutines/")
+path$ALANG <- paste0(path$ALANG,"/",datafeed_name)  # Set path to specific ALANG folder
+
 
 # Call script to clear ALANG and processed data folders of the present data feed
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/ClearFolders.R"))
@@ -157,7 +154,7 @@ for(year in 1970:2017)
   
   
   ALANG$Coef1 <- paste0(rep(com$orientation[1:select],each = nrow(root$region) ),
-                       " DATAPATH",rep(com$Filename[1:select],each = nrow(root$region) ) )
+                       " DATAPATH/",datafeed_name,rep(com$Filename[1:select],each = nrow(root$region) ) )
   
   # Adjust for colsums
   ALANG$`Row parent`[ALANG$`Row child` == "2;3"] <- "1-e"
@@ -173,7 +170,6 @@ for(year in 1970:2017)
       Numbers2File( com$Value[[i]] , paste0(path$df_Processed, com$Filename[[i]] ) )
     }
   }
-  
   
   ALANG$Value <- "0"
   ALANG$Incl <- "Y"
@@ -193,4 +189,4 @@ for(year in 1970:2017)
   source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
 }
 
-print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
+

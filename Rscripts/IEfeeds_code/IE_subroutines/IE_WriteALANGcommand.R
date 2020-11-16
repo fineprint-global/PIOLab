@@ -15,14 +15,21 @@ NewALANG <- function(name,SE,ALANG)
   return(ALANG)
 }
 # Set up functions for adding rows with wrapper to ALANG
-AddRowALANG_CN <- function(name){
+AddRowALANG_CN <- function(name, ALANG)
+{
   RSE_sel <- RSE[RSE$item == name,]
   ALANG <- NewALANG(name,paste0("E MX",RSE_sel$MX,";MN",RSE_sel$MN,";CN",RSE_sel$CN,";"),
                     ALANG)
+  
+  return(ALANG)
 }
-AddRowALANG <- function(name){
+
+AddRowALANG <- function(name, ALANG)
+{
   RSE_sel <- RSE[RSE$item == name,]
   ALANG <- NewALANG(name,
                     paste0("E MX",RSE_sel$MX,";MN",RSE_sel$MN,";"),
                     ALANG)
+  
+  return(ALANG)
 }

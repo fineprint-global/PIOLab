@@ -4,8 +4,6 @@ datafeed_name <- "IRPextraction"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 
 
-library(tidyr)
-
 ################################################################################
 # Set library path depending on whether data feed runs on Uni Sydney server or local
 if(Sys.info()[1] == "Linux")
@@ -18,6 +16,7 @@ if(Sys.info()[1] == "Linux")
   
 } else{
   
+  library(tidyr)
   # Locating folder where the present script is stored locally to derive the root folder 
   this_file <- commandArgs() %>% 
     tibble::enframe(name = NULL) %>%

@@ -1,10 +1,6 @@
 ################################################################################
 #
 datafeed_name <- "BACI"
-print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
-
-
-library(tidyr)
 
 # Determine loaction of root folder
 ################################################################################
@@ -20,6 +16,7 @@ if(Sys.info()[1] == "Linux")
   
 } else{
   
+  library(tidyr)
   # Locating folder where the present script is stored locally to derive the root folder 
   this_file <- commandArgs() %>% 
     tibble::enframe(name = NULL) %>%
@@ -37,15 +34,15 @@ if(Sys.info()[1] == "Linux")
 
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
-path[["df_Processed"]] <- paste0(path$Processed,"/",datafeed_name)
 
-# Set path to specific ALANG folder
-path$ALANG <- paste0(path$ALANG,"/",datafeed_name)
+path[["df_Processed"]] <- paste0(path$Processed,"/",datafeed_name)
+path["df_Subroutines"] <- paste0(path$Rscripts,"/datafeeds_code/datafeed_subroutines/") 
+path$ALANG <- paste0(path$ALANG,"/",datafeed_name)  # Set path to specific ALANG folder
 
 source(paste0(path$Subroutines,"/Numbers2File.R"))  # Load fun. to write arrays to files
 
 # Call script to clear ALANG and processed data folders of the present data feed
-source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/ClearFolders.R"))
+source( paste0( path$df_Subroutines,"ClearFolders.R" ) )
 
 
 ### Ad-hoc trial to filter only non-RoW regions for feeding ###
