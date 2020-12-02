@@ -89,11 +89,11 @@ for(year in 1970:2014)
   ALANG$Margin <- 1
   ALANG$S.E. <- paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";")
   
-  ALANG$`Row parent` <- "1:e"
+  ALANG$`Row parent` <- "1:221"
   ALANG$`Row child` <- 3
   ALANG$`Row grandchild` <- root$input$Code[ root$input$Name == "Hematite & Magnetite" ]
   
-  ALANG$`Column parent` <- "1:e~3"
+  ALANG$`Column parent` <- "1:221~3"
   ALANG$`Column child` <- "1"
   ALANG$`Column grandchild` <- paste( Conco$process$Code[Conco$process$binary == 1] , collapse = "," )
   
@@ -103,6 +103,8 @@ for(year in 1970:2014)
   ALANG$`Post-map` <- ""
   ALANG$`Pre-Map` <- ""
   ALANG$`Post-Map` <- ""
+  
+  ALANG[] <- lapply(ALANG,as.character)  # Convert all entries to character
   
   # Call script that writes the ALANG file to the repsective folder in the root
   source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))

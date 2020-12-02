@@ -55,17 +55,17 @@ ALANG <- ALANG[,c(1:19,11:19)]  # Extend table with additional columns
 
 # Balancing industries
 ALANG <- add_row(ALANG,'1' = "Balancing industries",
-                 Coef1 = "1",'Row parent' = "1-e",'Row child' = "1-e",'Row grandchild' = "1-e",
-                 'Column parent' = "1:e",'Column child' = "1",'Column grandchild' = "1:e",
-                 'Coef1.1' = "-1",'Row parent.1' = "1:e",'Row child.1' = "1",'Row grandchild.1' = "1:e",
-                 'Column parent.1' = "1-e",'Column child.1' = "1-e",'Column grandchild.1' = "1-e")
+                 Coef1 = "1",'Row parent' = "1-221",'Row child' = "1-e",'Row grandchild' = "1-e",
+                 'Column parent' = "1:221",'Column child' = "1",'Column grandchild' = "1:e",
+                 'Coef1.1' = "-1",'Row parent.1' = "1:221",'Row child.1' = "1",'Row grandchild.1' = "1:e",
+                 'Column parent.1' = "1-221",'Column child.1' = "1-e",'Column grandchild.1' = "1-e")
   
 # Balancing products
 ALANG <- add_row(ALANG,'1' = "Balancing product markets",
-                 Coef1 = "1",'Row parent' = "1:e",'Row child' = "1",'Row grandchild' = "1-e",
-                 'Column parent' = "1:e~3",'Column child' = "2",'Column grandchild' = "1:e",
-                 'Coef1.1' = "-1",'Row parent.1' = "1:e",'Row child.1' = "2",'Row grandchild.1' = "1:e",
-                 'Column parent.1' = "1-e",'Column child.1' = "1-e",'Column grandchild.1' = "1-e")  
+                 Coef1 = "1",'Row parent' = "1:221",'Row child' = "2",'Row grandchild' = "1:e",
+                 'Column parent' = "1-221",'Column child' = "1-e",'Column grandchild' = "1-e",
+                 'Coef1.1' = "-1",'Row parent.1' = "1-221",'Row child.1' = "1-e",'Row grandchild.1' = "1-e",
+                 'Column parent.1' = "1:221",'Column child.1' = "2",'Column grandchild.1' = "1:e")  
 
 
 # Add other variables
