@@ -28,9 +28,9 @@ job <<- list("date" = "20200723",
              "IEdatafeed" = "Ind30Pro39v1")
 
 # 40 regions (new):
-job <<- list("date" = "20201129",
+job <<- list("date" = "20201202",
              "phase" = "666",
-             "loop" = "012",
+             "loop" = "014",
              "year" = 2008,
              "RegAgg" = "040",
              "IEdatafeed" = "Ind30Pro39v1")
