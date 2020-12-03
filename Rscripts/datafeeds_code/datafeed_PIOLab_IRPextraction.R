@@ -44,6 +44,9 @@ source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/ClearFolde
 # Load function to write arrays to files
 source( paste0(path$Subroutines,"/Numbers2File.R") )
 
+# Call function for estimating standard errors
+source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/standev.R"))
+
 # Read date of concordance for sourc2root industries and products
 set <- read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/IRP_settings.xlsx"),sheet = 1)
 
@@ -62,39 +65,31 @@ for(year in 1970:2014)
   # Loading raw data
   source(paste0(path$Subroutines,"/Read_ExtractionIRP.R"))
   
-  # Creating data vector in root classification
-  df <- data.frame("RHS" = rep(0,n_reg))
-  df$RHS[data$Code] <- data$Quantity
-  
-  # Set filename of processed data vector  
-  filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",year,".csv") )
-  
-  # Write data vector to folder
-  Numbers2File( df$RHS , paste0( path$Processed, filename$RHS ) ) 
+  data <- standev(data, RSE$Minimum, RSE$Maximum)  # Add standard errors to RHS
   
   # Create empty ALANG table with header
   source(paste0(path$Subroutines,"/makeALANGheadline.R"))
   
-  # Insert row in ALANG sheet 
-  ALANG <- add_row(ALANG)
+  ALANG <- ALANG[1:nrow(data),]
   
   # Write year-specific commands
-  ALANG$`1` <- paste(datafeed_name,year)
-  ALANG$Value <- paste0("DATAPATH",filename$RHS)
+  ALANG$`1` <- paste(datafeed_name,year, root$region$RootCountryAbbreviation[data$Code] )
+  ALANG$Value <- round( data$Quantity, digits = 2)
+  ALANG$S.E. <- round( data$SD, digits = 2)
+  
   ALANG$Years <- 1
   
   # Add all other non-year-specific commands
   ALANG$`#` <- 1:nrow(ALANG)
   ALANG$Coef1 <- 1
   ALANG$Margin <- 1
-  ALANG$S.E. <- paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";")
   
-  ALANG$`Row parent` <- "1:221"
+  ALANG$`Row parent` <- data$Code
   ALANG$`Row child` <- 3
   ALANG$`Row grandchild` <- root$input$Code[ root$input$Name == "Hematite & Magnetite" ]
   
-  ALANG$`Column parent` <- "1:221~3"
-  ALANG$`Column child` <- "1"
+  ALANG$`Column parent` <- data$Code
+  ALANG$`Column child` <- 1
   ALANG$`Column grandchild` <- paste( Conco$process$Code[Conco$process$binary == 1] , collapse = "," )
   
   ALANG$Incl <- "Y"
