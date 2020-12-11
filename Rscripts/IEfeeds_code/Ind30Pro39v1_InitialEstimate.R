@@ -12,7 +12,7 @@
 # the user can choose the desired region aggregator by setting the following variable
 # either to 5,40 or 49. If test_regagg is not defined it will be set automatically to 
 # 5 regions later on in the code.
-# test_regagg <- "040"
+# test_regagg <- "035"
 # This is a test string
 ################################################################################
 ### 1. Set up workplace for building the initial estimate
@@ -84,6 +84,7 @@ IE_fun <- list("/IEFeed_PIOLab_WSA.R",
                "/IEDataProcessing_PIOLab_BuildingDomesticTables.R",
                "/IEDataProcessing_PIOLab_BuildingTradeBlocks.R",
                "/IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables.R",
+               "/IEDataProcessing_PIOLab_ScalingProcessInputs.R",
                "/Check_MassBalances.R")
 
 IE_fun <- paste0(path$IE_Subroutines,IE_fun)  # Add path to functions
@@ -113,6 +114,7 @@ IEDataProcessing_PIOLab_WasteMFAIOModelRun(year,path)  # Run WIO Model calculati
 
 IEDataProcessing_PIOLab_BuildingDomesticTables(year,path)
 IEDataProcessing_PIOLab_BuildingTradeBlocks(year,path)
+# IEDataProcessing_PIOLab_ScalingProcessInputs(year,path)
 IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables(year,path)
 
 ### 5. Write ALANG commands
