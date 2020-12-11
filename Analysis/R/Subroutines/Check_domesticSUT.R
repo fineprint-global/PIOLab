@@ -25,8 +25,6 @@ Check_DomesticSUT <- function(reg)
   
   rownames(v) <- base$input$Name
   
-  str(w)
-  
   output <- list("Supply" = s,
                  "Use" = u,
                  "Y" = y,

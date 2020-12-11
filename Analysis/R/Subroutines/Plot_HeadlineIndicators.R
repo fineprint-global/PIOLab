@@ -3,7 +3,6 @@
 
 Plot_HeadlineIndicators <- function()
 {
-  
   # If the IOT is industry by industry, select industry codes:
   if(nrow(IOT$Z) == ncol(IOT$Z) & nrow(IOT$Z) == ( num$ind * num$reg)) sec_sel <- "Industry"
   
@@ -13,21 +12,23 @@ Plot_HeadlineIndicators <- function()
   Code_sel <- Code$Z$RegionCode[Code$Z$EntityName == sec_sel]  # Select codes
   
   # Load and aggregate population data
-  pop <- read.xlsx(paste0(path$repo,"/input/EXIOBASE population data.xlsx"),sheet = 3) %>%
+  pop <- read.xlsx(paste0(path$repo,"/input/EXIOBASE/EXIOBASE population data.xlsx"),sheet = 3) %>%
     select(EXIOcode,as.character(job$year)) 
   
   pop <- pop[1:49,] # Clean pop data
   
   # Load IRP raw data:
   
-  Rawdata <- list("DE" = read.csv(paste0(path$processed,"/IRPextraction/IRPextraction_RHS_",job$year,".csv"),header = FALSE),
-                  "IM" = read.csv(paste0(path$processed,"/IRPimports/IRPimports_RHS_",job$year,".csv"),header = FALSE),
-                  "EX" = read.csv(paste0(path$processed,"/IRPexports/IRPexports_RHS_",job$year,".csv"),header = FALSE) )
+  Rawdata <- data.frame("DE" = 0,
+                        "IM" = read.csv(paste0(path$input,"UNEP-IRP/imports_",job$year,".csv"),header = FALSE),
+                        "EX" = read.csv(paste0(path$input,"UNEP-IRP/exports_",job$year,".csv"),header = FALSE) )
   
-  Rawdata[["DMC"]] <- Rawdata$DE + Rawdata$IM - Rawdata$EX  # Calculate DMC
+  tmp <- read.csv(paste0(path$input,"UNEP-IRP/IRP_",job$year,".csv"),header = TRUE)
+  Rawdata$DE[tmp$base] <- tmp$Quantity
   
-  Rawdata <- lapply(Rawdata, t)  # Transpose vectors
-  Rawdata <- lapply(Rawdata, as.matrix)  # Transfrom into matrices
+  colnames(Rawdata) <- c("DE","IM","EX")
+  
+  Rawdata["DMC"] <- Rawdata$DE + Rawdata$IM - Rawdata$EX  # Calculate DMC
   
   # Load root-2-mother concordance and aggregate IRP data to mother classification:
   
@@ -40,11 +41,6 @@ Plot_HeadlineIndicators <- function()
     return(y)
   }
   
-  Rawdata <- data.frame("DE" = R2M_trans( Rawdata$DE ),
-                        "IM" =  R2M_trans( Rawdata$IM ),
-                        "EX" = R2M_trans( Rawdata$EX ),
-                        "DMC" = R2M_trans( Rawdata$DMC ) )
-  
   Rawdata["PTB"] <- Rawdata$IM - Rawdata$EX   # Calculate physical trade balance
   
   ## Load WSA data in mother classification:
@@ -52,29 +48,24 @@ Plot_HeadlineIndicators <- function()
   # Read WSA feed names
   WSA <- list("Settings" = read.xlsx(xlsxFile = paste0(path$settings,"/datafeeds_settings/WSA_settings.xlsx"), sheet = 1 ) )
   
-  WSA[["path"]] <- paste0(path$processed,"/",WSA$Settings$FeedName,"/",WSA$Settings$FeedName,"_RHS_",job$year,".csv")
+  WSA[["path"]] <- paste0(path$input,"WorldSteel/WSA_",job$year,"_",WSA$Setting$FeedName,".csv")
   
-  WSA[["data"]] <- lapply(X = WSA$path, FUN = read.csv, header = FALSE)
+  WSA[["data"]] <- lapply(X = WSA$path, FUN = read.csv, header = TRUE)
   
-  for(i in 1:length(WSA$data)) WSA$data[[i]][ is.na(WSA$data[[i]]) ] <- 0  # Replace NaN for summation
+  Steel <- as.data.frame( matrix(0, nrow = num$reg, ncol = 2) )
+  colnames(Steel) <- c("BOF", "EAF")  
   
-  WSA$data <- lapply(WSA$data, as.matrix) # tranform into matrix object for agggregation
+  Steel$BOF[ WSA$data[[4]]$base ] <- WSA$data[[4]]$Quantity
+  Steel$EAF[ WSA$data[[5]]$base ] <- WSA$data[[5]]$Quantity
   
-  WSA$data <- lapply(WSA$data, t) # transpose to row vectors
-  
-  WSA$data <- lapply(WSA$data, R2M_trans) # Multiply with R2M concordance
-    
-  Steel <- data.frame("BOF" = WSA$data[[4]],
-                      "EAF" = WSA$data[[5]] )
-  
-  Rawdata[,"BOF"] <- Steel$BOF
-  Rawdata[,"EAF"] <- Steel$EAF
+  Rawdata["BOF"] <- Steel$BOF
+  Rawdata["EAF"] <- Steel$EAF
   
   ## Load Pauliuk EoL scrap data in mother classification:
   
   if(job$year <= 2008)
   {
-    EoL <- read.csv( paste0(path$IE_processed,"/EOL/EOL_",job$year,".csv") )
+    EoL <- read.csv( paste0(path$input,"/PauliukEoL/EOL_",job$year,".csv") )
     
     Rawdata[EoL$base,"EoL"] <- EoL$Quantity
     
@@ -292,18 +283,18 @@ Plot_HeadlineIndicators <- function()
   {
     
     # Write both reported and realized data in one data frame and scale if required
-    dat <<- data.frame("Region" = world_regions,
+    dat <- data.frame("Region" = world_regions,
                        "X" = Raw[,i],
                        "Y" = PIOLab[,i],
                        stringsAsFactors = FALSE)
     
-    x_lab <<- labels[i]  # Read label of comparison data set
+    x_lab <- labels[i]  # Read label of comparison data set
     
     
     ## 1.1. Bar plot of aggregates ##
     
     # Aggregate into world regions for plotting bars
-    dat_agg <<- dat %>% group_by(Region) %>% summarise(X = sum(X), Y = sum(Y)) %>% ungroup(Region)
+    dat_agg <- dat %>% group_by(Region) %>% summarise(X = sum(X), Y = sum(Y)) %>% ungroup(Region)
     
     # Sort descending and use factors for setting order in plots 
     dat_agg <- dat_agg[order(-dat_agg$Y),]   

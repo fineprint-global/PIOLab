@@ -21,7 +21,6 @@ fun <- list(paste0(path$repo,"/R/Subroutines/Load_IOCodes.R"),
             paste0(path$repo,"/R/Subroutines/Prepare_SankeyData.R"),
             paste0(path$repo,"/R/Subroutines/mrSUT_heatmap.R"),
             paste0(path$repo,"/R/Subroutines/Numbers2File.R"),
-            paste0(path$repo,"/R/Subroutines/ParseBACI4Comparison.R"),
             paste0(path$repo,"/R/Subroutines/Analysis_Global.R"))
 
 

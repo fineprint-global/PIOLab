@@ -36,6 +36,8 @@ source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 # Read base classification settings (region, processe and flow codes) 
 source(paste0(path$root,"Rscripts/Subroutines/Read_BaseClassification.R"))
 
+source(paste0(path$root,"Rscripts/Subroutines/Numbers2File.R"))
+
 # Read root to mother sector aggregators
 source(paste0(path$root,"Rscripts/Subroutines/Load_Root2Mother_sectors.R"))
 

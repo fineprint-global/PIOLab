@@ -57,8 +57,8 @@ Diagnostics <- function()
     
     u[ (num$pro+2):nrow(u), 1:num$ind ] <- tables$In
     
-    u[ num$pro+1 , 7:10 ] <- 0
-    u[4:6, ncol(u) ] <- 0
+    # u[ num$pro+1 , 7:10 ] <- 0
+    # u[4:6, ncol(u) ] <- 0
     
     rownames(u) <- c( rownames(tables$Use), "Imports", paste0( "Boundary-inputs (",rownames(tables$In),")" )  )
     colnames(u) <- c( colnames(tables$Use), "Final use", "Exports" )

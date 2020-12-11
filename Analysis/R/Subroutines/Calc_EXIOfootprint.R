@@ -13,16 +13,11 @@ Calc_EXIOfootprint <- function()
               
   # Load extension data:
   
-  DE <- read.csv(paste0(path$processed,"/IRPextraction/IRPextraction_RHS_",job$year,".csv"),header = FALSE) 
-  DE <- as.matrix(DE)
+  DE <- read.csv(paste0(path$root,"/Analysis/input/EXIOBASE/EXIOBASE_CrudeOre_Extension_",job$year,".csv"),header = FALSE) 
+  colnames(DE) <- "value"
+  DE["Code"] <- 1:49
   
   # Load root to mother concordance:
-  
-  R2M <- read.csv( paste0( path$concordance,"/Region Aggregators/049_RegionAggregator.csv"), header = FALSE )
-  R2M <- as.matrix(R2M)  # Transform into matrix
-  
-  DE <- data.frame("Code" = 1:49,
-                   "value" = colSums( t(DE) %*% R2M ) )  # EXIOBASE region classification and codes
   
   ex_iron <- 33  # Product code of iron ore in EXIOBASE
   
@@ -83,7 +78,7 @@ Calc_EXIOfootprint <- function()
   {
     # Load mother-2-mother (M2M) aggregator (49 to 40 regions)
     M2M <- read.xlsx( paste0(path$concordance,'/Region Aggregators/RegionAggregator_49_to_',num$reg,'.xlsx') )
-    M2M <- as.matrix( M2M[,5:44] )
+    M2M <- as.matrix( M2M[,5:ncol(M2M)] )
     
     # Aggregate to actual mother classification
     FP <- t(M2M) %*% FP %*% M2M

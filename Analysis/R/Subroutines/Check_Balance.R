@@ -22,9 +22,13 @@ Check_Balance <- function()
   
   # Create new sector names for legend in plots:
   proc_labels <- data.frame("old" = unique(df$Type),
-                            "new" = c("Extraction","Iron/Steelmaking","Casting","Rolling & forming","Manufacturing","Recycling"))
+                            "new" = c("Extraction","Iron/Steelmaking","Casting","Rolling & forming","Manufacturing","Recycling"),
+                            stringsAsFactors = FALSE)
   
-  df$Type <- proc_labels$new[proc_labels$old  %in%  df$Type]  # Change labels to better name processes
+  
+  df <- left_join(df, proc_labels, by = c("Type" = "old") )  # Change labels to better name processes
+  df$Type <- df$new
+  df$new <- NULL
   df$Type <- factor(df$Type, levels =  unique(df$Type) )  # transform to factor for ordering
   
   # Export data for SI of paper

@@ -20,36 +20,26 @@ library(ggExtra)
 
 
 # 40 regions (orginal):
-job <<- list("date" = "20200723",
-             "phase" = "666",
-             "loop" = "331",
-             "year" = 2008,
-             "RegAgg" = "040",
-             "IEdatafeed" = "Ind30Pro39v1")
-
-# 40 regions (new):
-job <<- list("date" = "20201204",
-             "phase" = "666",
-             "loop" = "068",
-             "year" = 2008,
-             "RegAgg" = "040",
-             "IEdatafeed" = "Ind30Pro39v1")
-
-
-# # 40 regions (timeseries):
-# job <<- list("date" = "20201118",
+# job <<- list("date" = "20200723",
 #              "phase" = "666",
-#              "loop" = "366",
-#              "year" = 2014,
+#              "loop" = "331",
+#              "year" = 2008,
 #              "RegAgg" = "040",
 #              "IEdatafeed" = "Ind30Pro39v1")
 
+# xxx regions (new):
+job <<- list("date" = "20201211",
+             "phase" = "666",
+             "loop" = "096",
+             "year" = 2008,
+             "RegAgg" = "033",
+             "IEdatafeed" = "Ind30Pro39v1")
 
 # Set path to folder where results from AISHA runs are stored:
 
 github <- "C:/Users/hwieland/Github workspace"
 
-path <<- list("input" = paste0(github,"/PIOLab/Analysis/input/"),
+path <<- list("input" = paste0(github,"/PIOLab/Analysis/input/",job$RegAgg,"/"),
               "output" = paste0(github,"/PIOLab/Analysis/output/",job$loop),
               "run" = paste0(github,"/PIOLab/Analysis/input/AISHA_runs/",job$loop),
               "repo" = paste0(github,"/PIOLab/Analysis"),
@@ -74,24 +64,26 @@ source( paste0(path$subroutines,"/Load_Routines.R") )
 
 Code <<- Load_IOCodes()           # Compile IO model codes
 SUT <<- Load_SUT("Results")       # Create supply use tables from raw data
-IOT <<- Build_IOT(SUT,"pxp")      # Compile IO model
+IOT <<- Build_IOT(SUT,"ixi")      # Compile IO model
 
-## Make sure to have run all datafeeds before plotting headline indicators. Datafeeds are needed for the comparison
 
 Diagnostics()
-
 Prepare_SankeyData()
-
 mrSUT_heatmap("China")
-
 Plot_Ratios()
-
 Analysis_Global()
-
 Plot_HeadlineIndicators()
 
 
 
+
+
+tmp <- Check_import("Turkey","Switzerland")
+View(tmp$U)
+
+tmp <- Check_DomesticSUT("Turkey")
+View(tmp$U)
+View(tmp$Supply)
 
 
 

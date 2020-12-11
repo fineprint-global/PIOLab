@@ -2,6 +2,8 @@
 Analysis_Global <- function()
 {
   
+  IOT_pxp <- Build_IOT(SUT,"pxp")
+  
   # Names for plotting, aggregation key and product codes of manufacturing
   
   prod <- list( "name" = c("Metal products",
@@ -20,13 +22,14 @@ Analysis_Global <- function()
   
   Read_Y <- function()
   {
+    
     # Empty data frame for storing values
     df <- data.frame( "index" = 1:10,
                       "tot" = NA,
                       "dom" = NA,
                       "im" =  NA )
     
-    y <- Agg( IOT$y, rep( base$region$Code, each = 6), 2 )  # Aggregate final demand categories
+    y <- Agg( IOT_pxp$y, rep( base$region$Code, each = 6), 2 )  # Aggregate final demand categories
     
     
     
@@ -57,11 +60,11 @@ Analysis_Global <- function()
                       "dom" = NA,
                       "im" =  NA )
     
-    L <- IOT$L
-    e <- IOT$e
-    Z <- IOT$Z
+    L <- IOT_pxp$L
+    e <- IOT_pxp$e
+    Z <- IOT_pxp$Z
     
-    x <- rowSums(L %*% IOT$y)  # Estimate new gross production
+    x <- rowSums(L %*% IOT_pxp$y)  # Estimate new gross production
     
     if(!stressor %in% base$input$Name)
     {
@@ -84,7 +87,7 @@ Analysis_Global <- function()
     for( i in 1:length(prod$sel) )
     {
       
-      y <- rowSums( IOT$y )  # Aggregate across final userr
+      y <- rowSums( IOT_pxp$y )  # Aggregate across final user
       
       # Set all products but i to zero
       
