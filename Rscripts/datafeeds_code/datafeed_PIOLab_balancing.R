@@ -4,20 +4,50 @@
 # This data feed formulates the ALANG commands for the balancing condition
 # for both industries and products
 #
+
 datafeed_name <- "balancing"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
+
+# Determine loaction of root folder
 ################################################################################
-# Set library path when running on suphys server
-if(Sys.info()[1] == "Linux"){
+
+# Set library path depending on whether data feed runs on Uni Sydney server or local
+if(Sys.info()[1] == "Linux")
+{
+  # Setting the R package library folder on Uni Sydney server
   .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
-  # Define location for root directory
-  root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
-    root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
+  
+  # Define location of root directory on the Uni Sydney server:
+  root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"
+  
+} else{
+  
+  library(tidyr)
+  # Locating folder where the present script is stored locally to derive the root folder 
+  this_file <- commandArgs() %>% 
+    tibble::enframe(name = NULL) %>%
+    tidyr::separate(col=value, into=c("key", "value"), sep="=", fill='right') %>%
+    dplyr::filter(key == "--file") %>%
+    dplyr::pull(value)
+  
+  if(length(this_file)==0) this_file <- rstudioapi::getSourceEditorContext()$path
+  
+  root_folder <- substr(dirname(this_file),1,nchar(dirname(this_file))-23)
+  remove(this_file)
+}
 ################################################################################
 
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
+path["df_Subroutines"] <- paste0(path$Rscripts,"/datafeeds_code/datafeed_subroutines/") 
+path$ALANG <- paste0(path$ALANG,"/",datafeed_name)
+
+# Check if ALANG folder exists and create new empty folder for storage
+if(dir.exists(path$ALANG)) unlink(path$ALANG,recursive = TRUE) 
+dir.create(path$ALANG)
+
+for (year in 1970:2017){
 
 source(paste0(path$Subroutines,"/makeALANGheadline.R"))  # Create ALANG header
 
@@ -25,17 +55,17 @@ ALANG <- ALANG[,c(1:19,11:19)]  # Extend table with additional columns
 
 # Balancing industries
 ALANG <- add_row(ALANG,'1' = "Balancing industries",
-                 Coef1 = "1",'Row parent' = "1-e",'Row child' = "1-e",'Row grandchild' = "1-e",
-                 'Column parent' = "1:e",'Column child' = "1",'Column grandchild' = "1:e",
-                 'Coef1.1' = "-1",'Row parent.1' = "1:e",'Row child.1' = "1",'Row grandchild.1' = "1:e",
-                 'Column parent.1' = "1-e",'Column child.1' = "1-e",'Column grandchild.1' = "1-e")
+                 Coef1 = "1",'Row parent' = "1-221",'Row child' = "1-e",'Row grandchild' = "1-e",
+                 'Column parent' = "1:221",'Column child' = "1",'Column grandchild' = "1:e",
+                 'Coef1.1' = "-1",'Row parent.1' = "1:221",'Row child.1' = "1",'Row grandchild.1' = "1:e",
+                 'Column parent.1' = "1-221",'Column child.1' = "1-e",'Column grandchild.1' = "1-e")
   
 # Balancing products
 ALANG <- add_row(ALANG,'1' = "Balancing product markets",
-                 Coef1 = "1",'Row parent' = "1:e",'Row child' = "1",'Row grandchild' = "1-e",
-                 'Column parent' = "1:e~3",'Column child' = "2",'Column grandchild' = "1:e",
-                 'Coef1.1' = "-1",'Row parent.1' = "1:e",'Row child.1' = "2",'Row grandchild.1' = "1:e",
-                 'Column parent.1' = "1-e",'Column child.1' = "1-e",'Column grandchild.1' = "1-e")  
+                 Coef1 = "1",'Row parent' = "1:221",'Row child' = "2",'Row grandchild' = "1:e",
+                 'Column parent' = "1-221",'Column child' = "1-e",'Column grandchild' = "1-e",
+                 'Coef1.1' = "-1",'Row parent.1' = "1-221",'Row child.1' = "1-e",'Row grandchild.1' = "1-e",
+                 'Column parent.1' = "1:221",'Column child.1' = "2",'Column grandchild.1' = "1:e")  
 
 
 # Add other variables
@@ -53,7 +83,8 @@ ALANG$`Post-Map` <- ""
   
 # Call script that writes the ALANG file to the respective folder in the root
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
-
+}
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
 
 rm(list = ls()) # clear workspace
+

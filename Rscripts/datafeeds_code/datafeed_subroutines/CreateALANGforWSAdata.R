@@ -4,30 +4,21 @@
 # Author: hanspeter.wieland@wu.ac.at
 # Date: 13.03.2020
 
-
-# Initializing R script (R packages, folders etc.):
-source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
-path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name) # Add path for processed data
-
-print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
+# Remove processed data folder for WSA feeds, because values are stored directly in ALANG sheet
+if( dir.exists(path$df_Processed) ) unlink(path$df_Processed, recursive = TRUE)
 
 source(paste0(path$Subroutines,"/Numbers2File.R"))  # Load fun. to write arrays to files
 source(paste0(path$Subroutines,"/Read_ProductionWSA.R")) # Fun. to align data with root classification
 
-
-# Check if folder with processed data exists and in case delete:
-if(dir.exists(path$df_Processed)) unlink(path$df_Processed,recursive = TRUE) 
-dir.create(path$df_Processed) # Create new (empty) folder
-
+# Call function for estimating standard errors
+source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/standev.R"))
 
 # Get relative standard error for smallest and largest values in the data set:
 RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
 
-
 # Read settings (e.g. page in the specific yearbook) for WSA data feeds:
 Settings <- read.xlsx(paste0(path$Settings,"/datafeeds_settings/WSA_settings.xlsx"))
 Settings <- Settings[Settings$FeedName == datafeed_name,] # Select which feed
-
 
 # Load Yearbook R-object depending on the selected year:
 
@@ -92,48 +83,43 @@ ConcoPro <- paste( which(ConcoPro[Settings$id,] == 1) , collapse = "," )
 
 
 # Read RHS values and align with root classification
-
 data <- Read_ProductionWSA(path,year,pages,out,concord)
 
-n_reg <- nrow(root$region) # Number of regions in root
-
-RHS <- matrix(NA,nrow = 1,ncol = n_reg) # vector for RHS values all root regions
-
-RHS[1,data$Code] <- data$Quantity  # Write right-hand-side in vector
-
-
-# Set names and paths to data and concordances:
-
-filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",year,".csv") )
-
-
-Numbers2File( t( RHS ), paste0(path$Processed, filename$RHS)) # Write data to folder 
-
-
+data <- standev(data, RSE$Minimum, RSE$Maximum)  # Add standard errors
 
 source(paste0(path$Subroutines,"/makeALANGheadline.R")) # Create ALANG header
 
-ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year)) # Create entry
+ALANG <- ALANG[1:nrow(data),]  # Create entries for non-zero
+ALANG_zero <- ALANG[1:nrow(data),]  # Create entries for zeros
+
 
 # Write command for elements that are not zero:
-
-ALANG$Value <- paste0("DATAPATH",filename$RHS)
-ALANG$S.E. <- paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";")
+ALANG$`1` <- paste(datafeed_name,year,root$region$RootCountryAbbreviation[data$Code]) 
+ALANG$Value <- round( data$Quantity, digits = 2)
+ALANG$S.E. <- round( data$SD, digits = 2)
 ALANG$`Row grandchild` <- ConcoInd$One
 ALANG$Coef1 <- RSE$Coef
 
+ALANG$`Row parent` <- data$Code
+ALANG$`Column parent` <- data$Code
+
 # Write command for elements that are zero:
 
-ALANG <- add_row(ALANG,'1' = paste(datafeed_name,year, "Zero elements")) # Create entry
+ALANG_zero$`1` <- paste(datafeed_name,year, "Zero elements", root$region$RootCountryAbbreviation[data$Code] ) 
 
-ALANG$Value[2] <- 0
-ALANG$S.E.[2] <- 0
-ALANG$`Row grandchild`[2] <- ConcoInd$Zero
-ALANG$Coef1[2] <- 1
+ALANG_zero$Value <- 0
+ALANG_zero$S.E. <- 0
+ALANG_zero$`Row grandchild` <- ConcoInd$Zero
+ALANG_zero$Coef1 <- 1
+
+ALANG_zero$`Row parent` <- data$Code
+ALANG_zero$`Column parent` <- data$Code
+
+# Merge zero and non-zero entries into one array
+ALANG <- rbind(ALANG, ALANG_zero)
+remove(ALANG_zero)
 
 # Write other variables
-ALANG$`Row parent` <- "1:e"
-ALANG$`Column parent` <- "1:e~3"
 ALANG$`Row child` <- 1
 ALANG$`Column child` <- 2
 ALANG$`Column grandchild` <- ConcoPro
@@ -142,7 +128,7 @@ ALANG$`#` <- 1:nrow(ALANG)
 ALANG$Incl <- "Y"
 ALANG$Parts <- 1
 
-ALANG$Years <- year-2007
+ALANG$Years <- 1
 ALANG$Margin <- 1
 
 ALANG$`Pre-map` <- ""
@@ -150,10 +136,39 @@ ALANG$`Post-map` <- ""
 ALANG$`Pre-Map` <- ""
 ALANG$`Post-Map` <- ""
 
+if(datafeed_name == "TotalProductionOfCrudeSteel")
+{
+  extra <- nrow(ALANG) + 1
+  
+  ALANG <- add_row(ALANG)
+  
+  ALANG$`1`[extra] <- "Global final consumption of steel"
+  ALANG$Incl[extra] <- "Y"
+  ALANG$Parts[extra] <- 1
+  ALANG$Years[extra] <- 1
+  ALANG$Margin[extra] <- 1
+  
+  ALANG$`Pre-map`[extra] <- ""
+  ALANG$`Post-map`[extra] <- ""
+  ALANG$`Pre-Map`[extra] <- ""
+  ALANG$`Post-Map`[extra] <- ""
+  ALANG$`#`[extra] <- extra
+  ALANG$Value[extra] <- sum(data$Quantity) * 0.80
+  ALANG$S.E.[extra] <- ALANG$Value[extra] * 0.20 
+  ALANG$Coef1[extra] <- 1
+  ALANG$`Row parent`[extra] <- "1-221"
+  ALANG$`Column parent`[extra] <- "1-221"
+  ALANG$`Row child`[extra] <- 2
+  ALANG$`Column child`[extra] <- 3
+  ALANG$`Row grandchild`[extra] <- "256-266"
+  ALANG$`Column grandchild`[extra] <- "1-6"
+}
+
+
 ALANG[] <- lapply(ALANG,as.character)  # Convert all entries to character
 
 # Call script that writes the ALANG file to the respective folder in the root
 source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))
 
-print(paste0("datafeed_PIOLab_",datafeed_name," finished"))
+
              

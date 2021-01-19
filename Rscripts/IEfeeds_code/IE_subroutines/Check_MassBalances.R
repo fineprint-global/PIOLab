@@ -1,6 +1,6 @@
 # This script calculates balances of the initial estimate (for industries and products),
 # and stores it in a xlsx file report
-
+path$IE_Processed
 
 Check_MassBalances <- function()
 {

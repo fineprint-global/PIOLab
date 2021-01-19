@@ -3,13 +3,33 @@
 datafeed_name <- "PauliukEoL"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 
+# Determine loaction of root folder
 ################################################################################
-# Set library path when running on suphys server
-if(Sys.info()[1] == "Linux"){
+
+# Set library path depending on whether data feed runs on Uni Sydney server or local
+if(Sys.info()[1] == "Linux")
+{
+  # Setting the R package library folder on Uni Sydney server
   .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
-  # Define location for root directory
-  root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else{
-  root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}
+  
+  # Define location of root directory on the Uni Sydney server:
+  root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"
+  
+} else{
+  
+  library(tidyr)
+  # Locating folder where the present script is stored locally to derive the root folder 
+  this_file <- commandArgs() %>% 
+    tibble::enframe(name = NULL) %>%
+    tidyr::separate(col=value, into=c("key", "value"), sep="=", fill='right') %>%
+    dplyr::filter(key == "--file") %>%
+    dplyr::pull(value)
+  
+  if(length(this_file)==0) this_file <- rstudioapi::getSourceEditorContext()$path
+  
+  root_folder <- substr(dirname(this_file),1,nchar(dirname(this_file))-23)
+  remove(this_file)
+}
 ################################################################################
 
 # Initializing R script (load R packages and set paths to folders etc.)
@@ -17,10 +37,14 @@ if(Sys.info()[1] == "Linux"){
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
 path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name)
+path$ALANG <- paste0(path$ALANG,"/",datafeed_name)
 
+# Call script to clear ALANG and processed data folders of the present data feed
+source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/ClearFolders.R"))
 
 source(paste0(path$Subroutines,"/Numbers2File.R")) # Load fun. to write arrays to files
 
+year <- 2008
 
 # Load Pauliuk data in quasi root classification 
 
@@ -81,8 +105,6 @@ Conco[Reg$Source[4],Reg$Root[[4]]] <- 1 # Belgium-Luxembourg
 
 # Allocate the remaining root regions to source region NEC
 Conco[109,colSums(Conco) == 0] <- 1
-
-Conco <- Conco
 
 # Print sum of matrix which should be 221
 print(paste0("Sum of aggregator matrix = ",sum(Conco)))

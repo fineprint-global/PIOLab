@@ -4,14 +4,9 @@
 # This section is executed everytime an data feed is executed.
 # It stores the ALANG files to the respective
 
-# Check if ALANG folder exists and create new empty folder for storage
-path_set <- paste0(path$root,"ALANGfiles/",datafeed_name)
-if(dir.exists(path_set)) unlink(path_set,recursive = TRUE) 
-dir.create(path_set)
-
 # Write data frame with ALANG commands as tab-delimited txt-file to root and working directory (mother)
 # Note HP: This is probably not the normal procedure, meaning no IE ALANG's in the root
-filename <-  paste0(path_set,"/",gsub("-","",Sys.Date()),
+filename <-  paste0(path$ALANG,"/",gsub("-","",Sys.Date()),
                     "_PIOLab_",datafeed_name,"_000_Constraints-",year,"_000_RoWincluded.txt")
 print(filename)  
 

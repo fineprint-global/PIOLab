@@ -41,6 +41,9 @@ if(file.exists(OnServer))
   }else if((Sys.info()[1] == "Windows")&(dir.exists("C:/Users/polly/Google Drive/WU/GIT/PIOLab/"))){
     mother <- readMat("C:/Users/polly/Google Drive/WU/GIT/PIOLab/WorkingDirectory4R.mat")
     mother <- c(mother$out)  
+  }else if((Sys.info()[1] == "Windows")&(dir.exists("C:/Users/Rene/Google Drive/WU/GIT/PIOLab/"))){
+    mother <- readMat("C:/Users/Rene/Google Drive/WU/GIT/PIOLab/WorkingDirectory4R.mat")
+    mother <- c(mother$out)  
   }else
   {
     mother <- "xxx"
@@ -58,9 +61,6 @@ path <- list("Raw" = paste0(root_folder,"RawDataRepository"),
              "mother" = mother,
              "Settings" = paste0(root_folder,"Settings"),
              "RSE_settings" = paste0(root_folder,"Settings/datafeeds_settings/df_RSE_settings.xlsx"))
-
-# Set the year
-year <- 2008
 
 # Read root region, industry and products
 
