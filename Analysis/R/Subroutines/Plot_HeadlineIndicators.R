@@ -221,12 +221,14 @@ Plot_HeadlineIndicators <- function()
                  "Steel from Electric Arc Furnace",
                  "End-of-Life Scrap")
   
+  indi_add <- c("of crude iron ore", "of ferrous materials", "of crude iron ore","","","")
+  
   Raw <- Rawdata[,indi_short]
   PIOLab <- IOdata[,indi_short]
   
   labels <- c("UNEP-IRP database", "UNEP-IRP database","EXIOBASE MRIO","World Steel","World Steel","Pauliuk")  # Labels of data sources
   
-  limits <- list( c(5,9.2), c(5,9.2), c(5,9.2), c(5,9), c(5,8), c(5,8) )  # Limits of the scales in the scatter plot
+  limits <- list( c(5,9.2), c(6,9.2), c(6,9.2), c(5,9), c(5,8), c(5,8) )  # Limits of the scales in the scatter plot
   
   y_lab <<- "PIOLab"  # Label of the realized values
   
@@ -348,7 +350,7 @@ Plot_HeadlineIndicators <- function()
     bar_plots[[i]] <- bar_plots[[i]] + 
       theme( axis.title.x = element_blank(),
              legend.title = element_blank() ) +
-      ggtitle( paste0( indi_long[i],"\n(",indi_short[i],")\n" ) )
+      ggtitle( paste0( indi_short[i],"\n(",indi_long[i],")\n",indi_add[i],"\n" ) )
   }
   
   
