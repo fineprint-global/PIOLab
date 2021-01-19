@@ -4,14 +4,16 @@ Plot_BoundaryFlows <- function()
   
   # Changing names of boundary flows for better readability
   name_input <- base$input$Name
-  name_input[name_input == "End-of-Life Scrap"] <- "EoL-Scrap"
-  name_input[name_input == "Air"] <- "Air/Oxygen"
+  name_input[name_input == "End-of-Life Scrap"] <- "EoL-Scrap (O)"
+  name_input[name_input == "Air"] <- "Air/Oxygen (E)"
+  name_input[name_input == "Flux"] <- "Flux (O)"
+  name_input[name_input == "Coke"] <- "Coke (O)"
+  name_input[name_input == "Crude Ore"] <- "Crude Ore (E)"
   
-  
-  name_output <- c("steel","Solid/liquid residual","Gaseous residual")
+  name_output <- c("steel (Y)","Solid/liquid residual (P)","Gaseous residual (P)")
   
   # Create data vectors
-  input <- data.frame("Boundary" = "Total input",
+  input <- data.frame("Boundary" = "Boundary input",
                       "Type" = paste(c(rep("Input from SEM:",3),rep("Input from Nature:",2) ),name_input ) ,
                       "Value" = rowSums(SUT$v)/10^6,
                       stringsAsFactors = FALSE)
@@ -19,7 +21,7 @@ Plot_BoundaryFlows <- function()
   input <- input[order(input$Value),]
   
   
-  output <- data.frame("Boundary" = "Total output",
+  output <- data.frame("Boundary" = "Boundary output + final use",
                        "Type" = paste(c("Final use of",rep("Output to SEM:",2) ),name_output ),
                        "Value" =  c( sum(SUT$y), rowSums(SUT$w) ) / 10^6,
                        stringsAsFactors = FALSE)
@@ -30,7 +32,7 @@ Plot_BoundaryFlows <- function()
   
   dat$Type <- factor(dat$Type, levels = c(input$Type,output$Type) )
   
-  dat$Boundary <- factor(dat$Boundary, levels = c("Total output","Total input") )
+  dat$Boundary <- factor(dat$Boundary, levels = c("Boundary output + final use","Boundary input") )
   
   v_colors <- c(viridis_pal()(5),inferno(3))  # Define 
   
@@ -42,7 +44,7 @@ Plot_BoundaryFlows <- function()
              position = "stack",
              colour="grey",
              width = 0.75) +
-    scale_fill_manual(values = v_colors,name = "Total inputs & outputs:") +
+    scale_fill_manual(values = v_colors,name = "Legend:") +
     scale_y_continuous(expand=c(0,0),
                        breaks = seq(0,maximum,500),
                        position = "left") + 
