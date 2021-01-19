@@ -50,9 +50,10 @@ IEdatafeed_name <- "Ind30Pro39v1"
 test_regagg <- "049"
 source(paste0(path$Subroutines,"/Read_BaseClassification.R"))
 
+year <- 2008
 
-for(year in 1995:2017)
-{
+# for(year in 2008:2017)
+# {
   # Create folder for present year
   dir.create( paste0( path$df_Processed,"/", year,"/") )
   
@@ -163,7 +164,7 @@ for(year in 1995:2017)
   
   }
   
-}
+# }
 
 print(paste0("datafeed_PIOLab_",datafeed_name," finished."))
 
