@@ -136,6 +136,35 @@ ALANG$`Post-map` <- ""
 ALANG$`Pre-Map` <- ""
 ALANG$`Post-Map` <- ""
 
+if(datafeed_name == "TotalProductionOfCrudeSteel")
+{
+  extra <- nrow(ALANG) + 1
+  
+  ALANG <- add_row(ALANG)
+  
+  ALANG$`1`[extra] <- "Global final consumption of steel"
+  ALANG$Incl[extra] <- "Y"
+  ALANG$Parts[extra] <- 1
+  ALANG$Years[extra] <- 1
+  ALANG$Margin[extra] <- 1
+  
+  ALANG$`Pre-map`[extra] <- ""
+  ALANG$`Post-map`[extra] <- ""
+  ALANG$`Pre-Map`[extra] <- ""
+  ALANG$`Post-Map`[extra] <- ""
+  ALANG$`#`[extra] <- extra
+  ALANG$Value[extra] <- sum(data$Quantity) * 0.80
+  ALANG$S.E.[extra] <- ALANG$Value[extra] * 0.20 
+  ALANG$Coef1[extra] <- 1
+  ALANG$`Row parent`[extra] <- "1-221"
+  ALANG$`Column parent`[extra] <- "1-221"
+  ALANG$`Row child`[extra] <- 2
+  ALANG$`Column child`[extra] <- 3
+  ALANG$`Row grandchild`[extra] <- "256-266"
+  ALANG$`Column grandchild`[extra] <- "1-6"
+}
+
+
 ALANG[] <- lapply(ALANG,as.character)  # Convert all entries to character
 
 # Call script that writes the ALANG file to the respective folder in the root
