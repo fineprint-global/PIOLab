@@ -12,7 +12,7 @@
 # the user can choose the desired region aggregator by setting the following variable
 # either to 5,40 or 49. If test_regagg is not defined it will be set automatically to 
 # 5 regions later on in the code.
-# test_regagg <- "040"
+# test_regagg <- "035"
 # This is a test string
 ################################################################################
 ### 1. Set up workplace for building the initial estimate
@@ -35,6 +35,8 @@ source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
 # Read base classification settings (region, processe and flow codes) 
 source(paste0(path$root,"Rscripts/Subroutines/Read_BaseClassification.R"))
+
+source(paste0(path$root,"Rscripts/Subroutines/Numbers2File.R"))
 
 # Read root to mother sector aggregators
 source(paste0(path$root,"Rscripts/Subroutines/Load_Root2Mother_sectors.R"))
@@ -84,6 +86,7 @@ IE_fun <- list("/IEFeed_PIOLab_WSA.R",
                "/IEDataProcessing_PIOLab_BuildingDomesticTables.R",
                "/IEDataProcessing_PIOLab_BuildingTradeBlocks.R",
                "/IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables.R",
+               "/IEDataProcessing_PIOLab_ScalingProcessInputs.R",
                "/Check_MassBalances.R")
 
 IE_fun <- paste0(path$IE_Subroutines,IE_fun)  # Add path to functions
@@ -113,6 +116,7 @@ IEDataProcessing_PIOLab_WasteMFAIOModelRun(year,path)  # Run WIO Model calculati
 
 IEDataProcessing_PIOLab_BuildingDomesticTables(year,path)
 IEDataProcessing_PIOLab_BuildingTradeBlocks(year,path)
+# IEDataProcessing_PIOLab_ScalingProcessInputs(year,path)
 IEDataProcessing_PIOLab_BuildS8fromSupplyUseTables(year,path)
 
 ### 5. Write ALANG commands
@@ -124,13 +128,13 @@ RSE <- read.xlsx( paste0(path$Settings,"/Base/IE_settings.xlsx"), sheet = 3 )
 
 # Add rows to ALANG
 
-AddRowALANG_CN("Supply")
-AddRowALANG_CN("Use")
-AddRowALANG("FinalOutput")
-AddRowALANG("Extraction")
-AddRowALANG("EolScrap")
-AddRowALANG("OtherInput")
-AddRowALANG("Waste")
+ALANG <- AddRowALANG_CN("Supply",ALANG)
+ALANG <- AddRowALANG_CN("Use", ALANG)
+ALANG <- AddRowALANG("FinalOutput", ALANG)
+ALANG <- AddRowALANG("Extraction", ALANG)
+ALANG <- AddRowALANG("EolScrap", ALANG)
+ALANG <- AddRowALANG("OtherInput", ALANG)
+ALANG <- AddRowALANG("Waste", ALANG)
 
 name <- "Zero"
 RSE_sel <- RSE[RSE$item == name,]

@@ -3,8 +3,6 @@
 datafeed_name <- "IRPextraction"
 print(paste0("datafeed_PIOLab_",datafeed_name," initiated."))
 
-library(tidyverse)
-library(tidyr)
 
 ################################################################################
 # Set library path depending on whether data feed runs on Uni Sydney server or local
@@ -18,6 +16,7 @@ if(Sys.info()[1] == "Linux")
   
 } else{
   
+  library(tidyr)
   # Locating folder where the present script is stored locally to derive the root folder 
   this_file <- commandArgs() %>% 
     tibble::enframe(name = NULL) %>%
@@ -35,11 +34,18 @@ if(Sys.info()[1] == "Linux")
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
+path$ALANG <- paste0(path$ALANG,"/",datafeed_name)
 path["df_Processed"] <- paste0(path$Processed,"/",datafeed_name)  # Add datafeed specific path for output data
 path["df_conco"] <- paste0(path$Concordance,"/IRP/")  # Add datafeed specific path for S2R concordance
 
+# Call script to clear ALANG and processed data folders of the present data feed
+source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/ClearFolders.R"))
+
 # Load function to write arrays to files
 source( paste0(path$Subroutines,"/Numbers2File.R") )
+
+# Call function for estimating standard errors
+source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/standev.R"))
 
 # Read date of concordance for sourc2root industries and products
 set <- read.xlsx(xlsxFile = paste0(path$Settings,"/datafeeds_settings/IRP_settings.xlsx"),sheet = 1)
@@ -52,47 +58,38 @@ RSE <- filter(read.xlsx(path$RSE_settings),Item == datafeed_name)
 
 n_reg <- nrow(root$region) # Number of root regions
 
-# Call script to clear ALANG and processed data folders of the present data feed
-source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/ClearFolders.R"))
+
 
 for(year in 1970:2014)
 {
   # Loading raw data
   source(paste0(path$Subroutines,"/Read_ExtractionIRP.R"))
   
-  # Creating data vector in root classification
-  df <- data.frame("RHS" = rep(0,n_reg))
-  df$RHS[data$Code] <- data$Quantity
-  
-  # Set filename of processed data vector  
-  filename <- list("RHS" = paste0("/",datafeed_name,"/",datafeed_name,"_RHS_",year,".csv") )
-  
-  # Write data vector to folder
-  Numbers2File( df$RHS , paste0( path$Processed, filename$RHS ) ) 
+  data <- standev(data, RSE$Minimum, RSE$Maximum)  # Add standard errors to RHS
   
   # Create empty ALANG table with header
   source(paste0(path$Subroutines,"/makeALANGheadline.R"))
   
-  # Insert row in ALANG sheet 
-  ALANG <- add_row(ALANG)
+  ALANG <- ALANG[1:nrow(data),]
   
   # Write year-specific commands
-  ALANG$`1` <- paste(datafeed_name,year)
-  ALANG$Value <- paste0("DATAPATH",filename$RHS)
+  ALANG$`1` <- paste(datafeed_name,year, root$region$RootCountryAbbreviation[data$Code] )
+  ALANG$Value <- round( data$Quantity, digits = 2)
+  ALANG$S.E. <- round( data$SD, digits = 2)
+  
   ALANG$Years <- 1
   
   # Add all other non-year-specific commands
   ALANG$`#` <- 1:nrow(ALANG)
   ALANG$Coef1 <- 1
   ALANG$Margin <- 1
-  ALANG$S.E. <- paste0("E MX",RSE$Maximum,"; MN",RSE$Minimum,";")
   
-  ALANG$`Row parent` <- "1:e"
+  ALANG$`Row parent` <- data$Code
   ALANG$`Row child` <- 3
   ALANG$`Row grandchild` <- root$input$Code[ root$input$Name == "Hematite & Magnetite" ]
   
-  ALANG$`Column parent` <- "1:e~3"
-  ALANG$`Column child` <- "1"
+  ALANG$`Column parent` <- data$Code
+  ALANG$`Column child` <- 1
   ALANG$`Column grandchild` <- paste( Conco$process$Code[Conco$process$binary == 1] , collapse = "," )
   
   ALANG$Incl <- "Y"
@@ -101,6 +98,8 @@ for(year in 1970:2014)
   ALANG$`Post-map` <- ""
   ALANG$`Pre-Map` <- ""
   ALANG$`Post-Map` <- ""
+  
+  ALANG[] <- lapply(ALANG,as.character)  # Convert all entries to character
   
   # Call script that writes the ALANG file to the repsective folder in the root
   source(paste0(path$root,"Rscripts/datafeeds_code/datafeed_subroutines/WriteALANG2Folder.R"))

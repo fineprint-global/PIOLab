@@ -1,0 +1,5 @@
+# Ignore large datafiles within this folder but not the folder itself
+
+*
+*/
+!.gitignore

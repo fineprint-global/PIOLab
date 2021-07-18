@@ -6,7 +6,7 @@
 
 # Write data frame with ALANG commands as tab-delimited txt-file to root and working directory (mother)
 # Note HP: This is probably not the normal procedure, meaning no IE ALANG's in the root
-filename <-  paste0(path_set,"/",gsub("-","",Sys.Date()),
+filename <-  paste0(path$ALANG,"/",gsub("-","",Sys.Date()),
                     "_PIOLab_",datafeed_name,"_000_Constraints-",year,"_000_RoWincluded.txt")
 print(filename)  
 

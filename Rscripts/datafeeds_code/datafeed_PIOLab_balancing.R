@@ -22,6 +22,7 @@ if(Sys.info()[1] == "Linux")
   
 } else{
   
+  library(tidyr)
   # Locating folder where the present script is stored locally to derive the root folder 
   this_file <- commandArgs() %>% 
     tibble::enframe(name = NULL) %>%
@@ -39,10 +40,12 @@ if(Sys.info()[1] == "Linux")
 # Initializing R script (load R packages and set paths to folders etc.)
 source(paste0(root_folder,"Rscripts/Subroutines/InitializationR.R"))
 
+path["df_Subroutines"] <- paste0(path$Rscripts,"/datafeeds_code/datafeed_subroutines/") 
+path$ALANG <- paste0(path$ALANG,"/",datafeed_name)
+
 # Check if ALANG folder exists and create new empty folder for storage
-path_set <- paste0(path$root,"ALANGfiles/",datafeed_name)
-if(dir.exists(path_set)) unlink(path_set,recursive = TRUE) 
-dir.create(path_set)
+if(dir.exists(path$ALANG)) unlink(path$ALANG,recursive = TRUE) 
+dir.create(path$ALANG)
 
 for (year in 1970:2017){
 
@@ -52,17 +55,17 @@ ALANG <- ALANG[,c(1:19,11:19)]  # Extend table with additional columns
 
 # Balancing industries
 ALANG <- add_row(ALANG,'1' = "Balancing industries",
-                 Coef1 = "1",'Row parent' = "1-e",'Row child' = "1-e",'Row grandchild' = "1-e",
-                 'Column parent' = "1:e",'Column child' = "1",'Column grandchild' = "1:e",
-                 'Coef1.1' = "-1",'Row parent.1' = "1:e",'Row child.1' = "1",'Row grandchild.1' = "1:e",
-                 'Column parent.1' = "1-e",'Column child.1' = "1-e",'Column grandchild.1' = "1-e")
+                 Coef1 = "1",'Row parent' = "1-221",'Row child' = "1-e",'Row grandchild' = "1-e",
+                 'Column parent' = "1:221",'Column child' = "1",'Column grandchild' = "1:e",
+                 'Coef1.1' = "-1",'Row parent.1' = "1:221",'Row child.1' = "1",'Row grandchild.1' = "1:e",
+                 'Column parent.1' = "1-221",'Column child.1' = "1-e",'Column grandchild.1' = "1-e")
   
 # Balancing products
 ALANG <- add_row(ALANG,'1' = "Balancing product markets",
-                 Coef1 = "1",'Row parent' = "1:e",'Row child' = "1",'Row grandchild' = "1-e",
-                 'Column parent' = "1:e~3",'Column child' = "2",'Column grandchild' = "1:e",
-                 'Coef1.1' = "-1",'Row parent.1' = "1:e",'Row child.1' = "2",'Row grandchild.1' = "1:e",
-                 'Column parent.1' = "1-e",'Column child.1' = "1-e",'Column grandchild.1' = "1-e")  
+                 Coef1 = "1",'Row parent' = "1:221",'Row child' = "2",'Row grandchild' = "1:e",
+                 'Column parent' = "1-221",'Column child' = "1-e",'Column grandchild' = "1-e",
+                 'Coef1.1' = "-1",'Row parent.1' = "1-221",'Row child.1' = "1-e",'Row grandchild.1' = "1-e",
+                 'Column parent.1' = "1:221",'Column child.1' = "2",'Column grandchild.1' = "1:e")  
 
 
 # Add other variables
