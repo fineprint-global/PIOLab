@@ -67,10 +67,13 @@ Plot_Ratios <- function()
                                                             "Output: Gas",
                                                             "Output: Slag") )
   
+  
+  
   y_max <- ceiling( max(realized$value) * 10 )/10
   
   # Create plot
   ggplot(data = realized, mapping = aes(x = region, y = value, color = variable) ) +
+    geom_hline(yintercept = Constraints, linetype="dashed", color = "grey30") +
     geom_point(alpha = 1, size = 4, aes(shape = variable) ) + 
     scale_color_viridis_d(begin = 0, end = 1) +
     scale_y_continuous(expand = c(0,0),
@@ -84,6 +87,8 @@ Plot_Ratios <- function()
           legend.position="bottom",
           text = element_text(size=12),
           panel.grid.minor = element_blank() )
+    
+
   
     
   # Save plot 

@@ -43,7 +43,7 @@ Prepare_SankeyData <- function()
   }
   
   
-  ## Remove own-use flows (on the diagonal) fpr the Sankeys
+  ## Remove own-use flows (on the diagonal) for the Sankeys
   
   diag(dom$Z) <- 0
   diag(im$Z) <- 0

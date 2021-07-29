@@ -40,9 +40,9 @@ path <<- list("input" = paste0(github,"/PIOLab/Analysis/input/",job$RegAgg,"/"),
 
 
 # Create empty folder for model outputs of selected raw data files (i.e. loop)
-if(dir.exists(path$output)) unlink(path$output,recursive = TRUE)
-dir.create(path$output)
-dir.create( path$SI )
+# if(dir.exists(path$output)) unlink(path$output,recursive = TRUE)
+# dir.create(path$output)
+# dir.create( path$SI )
 
 
 # Load functions into workspace
@@ -57,15 +57,17 @@ SUT <<- Load_SUT("Results")
 # Create PIOTs
 IOT <<- Build_IOT(SUT,"ixi")      # Compile IO model
 
-View(IOT$L)   # Total Requirement Matrix (Leontief inverse)
-View(IOT$y)   # Final demand matrix
-View(IOT$e)   # Extensions (boundary input and output vectors)
+# View(IOT$L)   # Total Requirement Matrix (Leontief inverse)
+# View(IOT$y)   # Final demand matrix
+# View(IOT$e)   # Extensions (boundary input and output vectors)
 
 # Calculate ewMFA indicators from gPIOT
-ewMFA <- Calc_ewMFA(IOT, Code)
+# ewMFA <- Calc_ewMFA(IOT, Code)
 
 # Calculate footprints for selected stressor (i.e. boundary input/output flow)
-FP <- Calc_FP("Crude Ore", 1)
+# FP <- Calc_FP("Crude Ore", 1)
 
 # Read domestic variables/tables for specific region
-SUT_sel <- Check_DomesticSUT("China")
+# SUT_sel <- Check_DomesticSUT("China")
+
+# Prepare_SankeyData()
