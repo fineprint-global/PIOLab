@@ -1,0 +1,109 @@
+---
+title: "Panjiva analysis"
+subtitle: "Countries, Ports & HS Codes"
+output: pdf_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, tidy = TRUE)
+#startPat = "<" + wildcardPattern + ">"
+#endPat = "</" + wildcardPattern + ">"
+#newStr = extractBetween(str,startPat,endPat)
+```
+
+
+# YEAR: 2016
+
+Numbers of interest:
+
+Get unique numbers of ports and goods shipped for Brazil, China, Chile, Peru and USA.
+  
+
+# 26.01 Iron ores and concentrates, including roasted iron pyrites.
+2601.11 -- Non-agglomerated
+2601.12 -- Agglomerated
+2601.20 -- Roasted iron pyrites 
+
+```{r, include=FALSE}
+source("00.datafeed_PAN_init.R")
+details_Port_Lad_Text <- function(filename){
+  HS <- substr(filename, start = 1, stop = 5)
+  ###############
+  #first create data for the countries
+  len_data <- 0
+  for(x in 1:5){
+    assign(paste0(short[x],HS),create_country_data(filename,countries[x]))
+    len_data <- len_data + nrow(get(paste0(short[x],HS)))
+  }
+  ###############
+  #LADING
+  PL <- "Port_Lad"
+  ###############
+  #Names of unique ports of lading saved in extra variables
+  for (x in paste0(short,HS)){assign(paste0("names_",x,PL),unique(get(x)$Port.of.Lading[unique(get(x)$Port.of.Lading)!=0]))}
+  ###############
+  #Numbers of unique Ports lading
+  for (x in 1:5){print(paste0("Number of unique ports lading in ", countries[x],": ",length(get(paste0("names_",short[x],HS,PL)))))}
+  ###############
+  #Percentage of NA for ports lading for different countries
+  for (x in 1:5){print(paste0("Percentage of NA for ports lading in ", countries[x],": ",round(sum(get(paste0(short[x],HS))$Port.of.Lading==0)*100/nrow(get(paste0(short[x],HS))),2),"%"))}
+  #Percentage of Shipment different countries (use len_data)
+  for (x in 1:5){print(paste0("Percentage on all shipments for ", countries[x],": ",round(nrow(get(paste0(short[x],HS)))*100/len_data,2),"%"))}
+}
+######################################################################
+details_Port_Unlad_Text <- function(filename){
+  HS <- substr(filename, start = 1, stop = 5)
+  ###############
+  #first create data for the countries
+  for(x in 1:5){assign(paste0(short[x],HS),create_country_data(filename,countries[x]))}
+  ###############
+  #UNLADING
+  PU <- "Port_Unlad"
+  ###############
+  #Names of unique ports of unlading saved in extra variables
+  for (x in paste0(short,HS)){assign(paste0("names_",x,PU),unique(get(x)$Port.of.Unlading[unique(get(x)$Port.of.Unlading)!=0]))}
+  ###############
+  #Numbers of unique Ports unlading
+  for (x in 1:5){print(paste0("Number of unique ports unlading in ", countries[x],": ",length(get(paste0("names_",short[x],HS,PU)))))}
+  ###############
+  #Percentage of NA for ports unlading
+  for (x in 1:5){print(paste0("Percentage of NA for ports unlading in ", countries[x],": ",round(sum(get(paste0(short[x],HS))$Port.of.Unlading==0)*100/nrow(get(paste0(short[x],HS))),2),"%"))}
+}
+######################################################################
+details_HS_whole_Text <- function(filename){
+  ###############
+  #first load data
+  data <- load_all_data(filename)
+  ###############
+  #unique HS codes from the data
+  un_HS <<- unique(data$HS.Code)
+  print(paste0("number of unique HS codes: ",length(un_HS)))
+  print(paste0("thereof more than one HS code: ",sum(str_count(un_HS, pattern = ";")+1>1)))
+  for(x in products){print(paste0("Percentage on all shipments of HS code",x,": " ,round(sum(str_count(data$HS.Code, pattern = x))*100/nrow(data),2),"%"))}
+}
+######################################################################
+```
+
+```{r warning=FALSE}
+filename <- "26.01_2016.xlsx" 
+source("00.datafeed_PAN_Details_Port_Lading.R")
+details_Port_Lad(filename)
+source("00.datafeed_PAN_Details_Port_Unlading.R")
+details_Port_Unlad(filename)
+source("00.datafeed_PAN_Details_HS_Codes.R")
+details_HS_whole(filename)
+```
+
+```{r}
+#un_HS
+#grepl("es", "test", fixed = TRUE)
+#v <- as.numeric(lapply(products,function(x){sum(grepl(x,data$HS.Code, fixed = TRUE))}))
+#sum(v)==nrow(data)
+#sum(v)
+#nrow(data)
+#p1 <- grepl(products[1],data$HS.Code, fixed = TRUE)
+#p2 <- grepl(products[2],data$HS.Code, fixed = TRUE)
+#p3 <- grepl(products[3],data$HS.Code, fixed = TRUE)
+#p4 <- grepl(products[4],data$HS.Code, fixed = TRUE)
+#ind <- (p1==p2) & (p2==p3) & (p3==p4) 
+#data$HS.Code[ind]
+```
