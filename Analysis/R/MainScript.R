@@ -40,9 +40,9 @@ path <<- list("input" = paste0(github,"/PIOLab/Analysis/input/",job$RegAgg,"/"),
 
 
 # Create empty folder for model outputs of selected raw data files (i.e. loop)
-# if(dir.exists(path$output)) unlink(path$output,recursive = TRUE)
-# dir.create(path$output)
-# dir.create( path$SI )
+if(dir.exists(path$output)) unlink(path$output,recursive = TRUE)
+dir.create(path$output)
+dir.create( path$SI )
 
 
 # Load functions into workspace
