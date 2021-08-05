@@ -1,8 +1,8 @@
 ################################################################################
 # This function aggregates the global PSUTs for drawing Sankeys in eSankey
 
-Prepare_regional_SankeyData <- function(r)
-{
+# Prepare_regional_SankeyData <- function(r)
+# {
   
   # r contains a string selecting regions (either single country or a country group, e.g. Europe)
   
@@ -81,13 +81,9 @@ Prepare_regional_SankeyData <- function(r)
   write.xlsx(bal, file = paste0( path$output,"/Process_balances_regional_sankey_",r,".xlsx"), colnames = TRUE)
   
 
+  IO$Z <- Z_r
   
-  
-  
-  
-  
-  
-  
+  #unique(Code$Z %>% filter(EntityCode == 1, RegionName==r) %>% pull(RegionCode))
   
     
 
@@ -96,43 +92,57 @@ Prepare_regional_SankeyData <- function(r)
   # Create objects for storing sankey data; dom = domestic tables; IM = imports
   
   dom <- list( "Z" = matrix(data = 0, nrow = num$ind, ncol = num$ind),
-               "Y" = matrix(data = 0, nrow = num$ind, ncol = ncol(IO$y)/num$reg),
+               "Y" = matrix(data = 0, nrow = num$ind, ncol = 1),
                "IN" = matrix(data = 0, nrow = num$va, ncol = num$ind ),
                "OUT" = matrix(data = 0, nrow = num$ind, ncol = nrow(SUT$w)) )
   
   im <- list( "Z" = matrix( data = 0, nrow = num$ind, ncol = num$ind ),
-              "Y" = matrix( data = 0, nrow = num$ind, ncol = ncol(IO$y)/num$reg) )
+              "Y" = matrix( data = 0, nrow = num$ind, ncol = 1) )
+  
+  #########NEW
+  row <- list( "Z" = matrix(data = 0, nrow = num$ind, ncol = num$ind))
   
   # Loop over each region and aggreate results
   
-  for(m in 1:num$reg)
-  {
-  
+  # for(m in 1:num$reg)
+  # {
+    m =  unique(Code$Z %>% filter(EntityCode == 1, RegionName==r) %>% pull(RegionCode))
+
     # Read indices of region m
     indi <- Code$Z %>% filter(RegionCode == m, EntityCode == 1) %>%  pull(SectorIndex)
     
     # Read and store domestic table of country i and 
     dom$Z <- dom$Z + IO$Z[indi, indi]
-    dom$Y <- dom$Y + IO$y[indi, m]
+    dom$Y <- dom$Y + y_r[indi]
     dom$IN <- dom$IN + t( IO$e[indi, 1:5] )
     dom$OUT <- dom$OUT + IO$e[indi, 6:7]
-      
+    
     for(n in setdiff(1:num$reg,m) )
     {
       # Read indices of importing region
       indi_foreign <- Code$Z %>% filter(RegionCode == n, EntityCode == 1) %>% pull(SectorIndex)
       
+      #########NEW
+      for(k in setdiff(1:num$reg,m))
+      {
+        
+        indi1 <- Code$Z %>% filter(RegionCode == k, EntityCode == 1) %>%  pull(SectorIndex)
+        
+        row$Z <- row$Z + IO$Z[indi_foreign, indi1]
+      }
+      
       # Read and store imports from region n
-      im$Z <- im$Z + IO$Z[ indi_foreign, indi]
-      im$Y <- im$Y + IO$y[ indi_foreign, m]
+      im$Z <- im$Z + IO$Z[ indi_foreign, indi]+IO$Z[ indi, indi_foreign]
+      im$Y <- im$Y + y_r[ indi_foreign]
     }
-  }
-  
+  # }
   
   ## Remove own-use flows (on the diagonal) for the Sankeys
   
   diag(dom$Z) <- 0
   diag(im$Z) <- 0
+  #########NEW
+  diag(row$Z) <- 0
   
   ## Aggregating sectors into groups
   
@@ -140,8 +150,8 @@ Prepare_regional_SankeyData <- function(r)
   # One is for the Z matrix (more aggregated) and one for the Y (less aggregated) matrix
   
   Y_disagg <- list( "dom" = Agg(x = dom$Y, aggkey = base$industry$Aggregate, dim = 1),
-                    "im" = Agg(x = im$Y, aggkey = base$industry$Aggregate, dim = 1) )
-  
+                    "im" = Agg(x = im$Y, aggkey = base$industry$Aggregate, dim = 1),
+                    'row' = as.matrix(rep(0,length(unique(base$industry$Aggregate)))))
   
   agg_key <- base$industry$Aggregate  # Select predefined aggregater
   
@@ -160,20 +170,24 @@ Prepare_regional_SankeyData <- function(r)
   
   im$Y <- Agg(x = im$Y, aggkey = agg_key, dim = 1)
   
+  #########NEW
+  row$Z <- Agg(x =  row$Z, aggkey = agg_key, dim = 1)
+  row$Z <- Agg(x =  row$Z, aggkey = agg_key, dim = 2)
   
   ## Prepare more aggregated Z,Y,IN,OUT for export to eSankey
   # Note that boundary inputs and outputs are aggregated into one item each here
   
   # Create empty table to merge all tables into one
   result <- matrix( data = 0,
-                    nrow = ( 2 * nrow(dom$Z) + 1 ),
-                    ncol = ( ncol(dom$Z) + ncol(dom$Y) + 1 ) )
+                    nrow = ( 3 * nrow(dom$Z) + 1 ),
+                    ncol = ( ncol(dom$Z) + 1#ncol(dom$Y) 
+                             + 1 ) )
   
   # Merge transaction matrices
-  result[1:(2*nrow(dom$Z)) ,1:nrow(dom$Z)] <- rbind( dom$Z, im$Z )                
+  result[1:(3*nrow(dom$Z)) ,1:nrow(dom$Z)] <- rbind( dom$Z, im$Z, row$Z )                
   
   # Merge final demand
-  result[1:(2*nrow(dom$Z)), ncol(dom$Z)+1 ] <- rbind(dom$Y,im$Y)
+  result[1:(3*nrow(dom$Z)), ncol(dom$Z)+1 ] <- c(dom$Y,im$Y, rep(0,length(im$Y)))
   
   # Add boundary inputs
   result[ nrow(result), 1:ncol(dom$Z)  ] <- colSums( dom$IN )
@@ -183,6 +197,7 @@ Prepare_regional_SankeyData <- function(r)
   
   rownames(result) <- c( paste( "Domestic -",rownames(dom$Z) ),
                          paste( "Foreign - ",rownames(dom$Z) ),
+                         paste( "ROW - ",rownames(dom$Z) ),
                          "Boundary inputs" )
   
   colnames(result) <- c( colnames(dom$Z), "Final Use", "Boundary outputs" )
@@ -190,17 +205,23 @@ Prepare_regional_SankeyData <- function(r)
   
   ## Prepare more disaggregated final demand for export
   
+  ###########NEW
+  rownames(Y_disagg$row)  <- paste( "ROW -" ,rownames(Y_disagg$im) )
+  disagg_names = rownames(Y_disagg$im)
+  
   rownames(Y_disagg$dom)  <- paste( "Domestic -" ,rownames(Y_disagg$dom) ) 
   rownames(Y_disagg$im)  <- paste( "Foreign -" ,rownames(Y_disagg$im) ) 
   
-  result_disagg <- rbind( Y_disagg$dom, Y_disagg$im )  # Combine in one data frame
+  
+  result_disagg <- rbind( Y_disagg$dom, Y_disagg$im, Y_disagg$row)  # Combine in one data frame
   
   colnames(result_disagg) <- "Final Use"
   
   ## Put both results in one list for writing to xlsx
   
   out <- list("agg" = result,
-              "disagg" = result_disagg)
+              "disagg" = result_disagg,
+              'disagg_names'= disagg_names)
   
   # Change units to mega tonnes
   out$agg <- out$agg / 10^6   
@@ -208,5 +229,14 @@ Prepare_regional_SankeyData <- function(r)
   
   write.xlsx( out, paste0(path$output,"/",job$year,"_Data_for_",r,"_Sankey.xlsx"), rowNames = TRUE )
   
-}
+# }
 
+sum(Z)-sum(diag(Z))#8424067574
+# sum(dom$Z)+sum(im$Z)+sum(row$Z)#7510974898
+sum(Z_r)#2977983171
+sum(Z_r)-sum(diag(Z_r))#2639699049
+sum(dom$Z)+sum(im$Z)+sum(row$Z)#2637973951
+
+sum(Y[,17])
+sum(y_r)
+sum(dom$Y)+sum(im$Y)
