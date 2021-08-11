@@ -21,43 +21,10 @@ job <<- list("date" = "20201218",
              "RegAgg" = "032",
              "IEdatafeed" = "Ind30Pro39v1")
 
+
 # Set path to folder with GitHub repositories:
-######################################################################
+github <- "C:/Users/hwieland/Github workspace"
 
-# Determine loaction of root folder
-################################################################################
-#install.packages("xlsx", INSTALL_opts=c("--no-multiarch"))
-#install.packages("xlsx")
-
-
-
-# Set library path depending on whether data feed runs on Uni Sydney server or local
-if(Sys.info()[1] == "Linux")
-{
-  # Setting the R package library folder on Uni Sydney server
-  .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
-  
-  # Define location of root directory on the Uni Sydney server:
-  root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"
-  
-} else{
-  
-  # Locating folder where the present script is stored locally to derive the root folder 
-  this_file <- commandArgs() %>% 
-    tibble::enframe(name = NULL) %>%
-    tidyr::separate(col=value, into=c("key", "value"), sep="=", fill='right') %>%
-    dplyr::filter(key == "--file") %>%
-    dplyr::pull(value)
-  
-  if(length(this_file)==0) this_file <- rstudioapi::getSourceEditorContext()$path
-  
-  root_folder <- substr(dirname(this_file),1,nchar(dirname(this_file)))
-  root_folder1 <- substr(dirname(this_file),1,nchar(dirname(this_file)))
-  remove(this_file)
-}
-# github <- "C:/Users/hwieland/Github workspace"
-github <- substr(root_folder,1,nchar(root_folder)-17)
-# github
 # Set paths to important folders
 path <<- list("input" = paste0(github,"/PIOLab/Analysis/input/",job$RegAgg,"/"),
               "output" = paste0(github,"/PIOLab/Analysis/output/",job$loop),
@@ -74,9 +41,9 @@ path <<- list("input" = paste0(github,"/PIOLab/Analysis/input/",job$RegAgg,"/"),
 
 
 # Create empty folder for model outputs of selected raw data files (i.e. loop)
-if(dir.exists(path$output)) unlink(path$output,recursive = TRUE)
-dir.create(path$output)
-dir.create( path$SI )
+# if(dir.exists(path$output)) unlink(path$output,recursive = TRUE)
+# dir.create(path$output)
+# dir.create( path$SI )
 
 
 # Load functions into workspace
