@@ -1,16 +1,19 @@
 ################################################################################
 # This function aggregates the global PSUTs for drawing Sankeys in eSankey
 
-Prepare_regional_SankeyData <- function(rr)
+Prepare_regional_SankeyData <- function(r)
 {
   
   # r contains a string selecting regions (either single country or a country group, e.g. Europe)
+  # See country and country group list in object base$region
   
-  # For test purposes and code development, we select China for now
-  r<-rr
-  if (rr=='Africa'){r<-'RoW Africa'}
-  if (rr=='Middle East'){r<-'RoW Middle East'}
-  print(r)
+  # For test purposes and code development, we select an arbitrary country here
+  r <- "India"
+  
+  # The following two lines transform the country name for those regions that represent single country groups
+  # if (r == 'Africa'){r<-'RoW Africa'}
+  # if (r == 'Middle East' ){r<-'RoW Middle East'}
+  
   if (r %in% base$region$Name){
   
     # Compile IO model
@@ -29,21 +32,21 @@ Prepare_regional_SankeyData <- function(rr)
     A <- t( t(Z)/x )
     
     # Aggregate e into total boundary inputs and outputs
-    e <- Agg(x = e, Code$V$Boundary, 2)
+    # e <- Agg(x = e, Code$V$Boundary, 2)
     
     # Check that total inputs (almost) equal total outputs
-    sum(e[,1])   # Boundary inputs (BI)
-    sum(e[,2],Y) # Boundary outputs (BO)
+    sum(e[,1:5])   # Boundary inputs (BI)
+    sum(e[,6:7],Y) # Boundary outputs (BO)
     
     # Create direct intensities 
     f <- e/x
     f[is.na(f)] <- 0   # Remove NA just in case
-    colnames(f)
     
-    ### Now the compilation of the region-specfic flow matrix starts ###
+    
+    ### Now the compilation of the region-specific flow matrix starts ###
     
     # Select final demand of region r
-    y_r <- Y[, Code$Y$index[ Code$Y$RegionName == r ] ]
+    y_r <- Y[, Code$Y$index[ Code$Y$RegionName == r ] ]  ### Rene start here!
     
     # Calculate gross output reflecting only flows associated with Y of r
     x_r <- as.vector( L %*% y_r )
@@ -61,18 +64,19 @@ Prepare_regional_SankeyData <- function(rr)
     
     # Calculate new BI & BO, stored in object B_r now reflecting only flows associated with Y of r
     B_r <- f * x_r
-    colnames(B_r)
+    colnames(B_r) <- Code$V$Entity
     
     # Check that total inputs and outputs, that are associates with r, balance out
-    sum(B_r[,1])
-    sum(B_r[,2],y_r)
+    dif <- round( ( sum(B_r[,1:5]) - sum(B_r[,6:7],y_r) ) * 100 / sum(B_r[,1:5]),digits = 2 )
+    print(paste("discrepancy of inputs minus outputs:",dif,"%") )
+    remove(dif)
     
     # Create data frame to check process balances
     bal <- data.frame(Code$Z[ Code$Z$EntityCode == 1,],
                       "Intermediate_input" = colSums(Z_r),
-                      "Boundary_input" = B_r[,1],
+                      "Boundary_input" = rowSums(B_r[,1:5]),
                       "Intermediate_output" = rowSums(Z_r),
-                      "Boundary_output" = B_r[,2],
+                      "Boundary_output" = rowSums(B_r[,6:7]),
                       "Final_use" = y_r,
                       stringsAsFactors = FALSE) 
     
@@ -82,7 +86,35 @@ Prepare_regional_SankeyData <- function(rr)
     write.xlsx(bal, file = paste0( path$output,"/Process_balances_regional_sankey_",r,".xlsx"), colnames = TRUE)
     
   
-    ### Creating aggregated data set for sankey ###
+    ### Creating aggregated data set for sankey of region r ###
+    
+    # First, compute new codes for aggregating the orginal tables
+    Code_r <- Code   # Rene here!
+    Code_r$Z <- Code_r$Z %>% filter(EntityCode == 1) %>% mutate(Key = "RoW") %>% 
+      mutate(Key = replace(Key, RegionName == r, "Dom") )  %>% mutate(Key = paste0(Key,"§",SectorName)) %>% 
+      select(RegionName,SectorCode, SectorName, SectorIndex,Key)
+    
+    # Aggregate all tables with key
+    Z_r <- Agg( Z_r, Code_r$Z$Key, 1 )
+    Z_r <- Agg( Z_r, Code_r$Z$Key, 2 )
+    y_r <- Agg(y_r, Code_r$Z$Key, 1)
+    B_r <- Agg(B_r, Code_r$Z$Key, 1)
+    
+    # Rearrange order of tables in case this is necessary (order depends on country that is selected as r)
+    if(colnames(Z_r)[1] != 'Dom§Mining') Z_r <- Z_r[ c(31:60,1:30), c(31:60,1:30) ]
+    if(rownames(y_r)[1] != 'Dom§Mining') y_r <- y_r[ c(31:60,1:30), ]
+    if(rownames(B_r)[1] != 'Dom§Mining') B_r <- B_r[ c(31:60,1:30), ]
+    
+    # Check again that total inputs and outputs, that are associates with r, balance out
+    dif <- round( ( sum(B_r[,1:5]) - sum(B_r[,6:7],y_r) ) * 100 / sum(B_r[,1:5]),digits = 2 )
+    print(paste("discrepancy of total boundary inputs minus total boundary outputs:",dif,"%") )
+    remove(dif)
+    
+    
+    
+    
+    
+    
     
     # Create objects for storing sankey data; dom = domestic tables; IM = imports
     
@@ -94,30 +126,27 @@ Prepare_regional_SankeyData <- function(rr)
     im <- list( "Z" = matrix( data = 0, nrow = num$ind, ncol = num$ind ),
                 "Y" = matrix( data = 0, nrow = num$ind, ncol = 1) )
     
-    #########NEW
+    
     row <- list( "Z" = matrix(data = 0, nrow = num$ind, ncol = num$ind))
     
-    # Loop over each region and aggreate results
     
-    # for(m in 1:num$reg)
-    # {
-      m =  unique(Code$Z %>% filter(EntityCode == 1, RegionName==r) %>% pull(RegionCode))
+    m =  unique(Code$Z %>% filter(EntityCode == 1, RegionName==r) %>% pull(RegionCode))
   
-      # Read indices of region m
-      indi <- Code$Z %>% filter(RegionCode == m, EntityCode == 1) %>%  pull(SectorIndex)
+    # Read indices of region m
+    indi <- Code$Z %>% filter(RegionCode == m, EntityCode == 1) %>%  pull(SectorIndex)
       
-      # Read and store domestic table of country i and 
-      dom$Z <- dom$Z + Z_r[indi, indi]
-      dom$Y <- dom$Y + y_r[indi]
-      dom$IN <- dom$IN + t( IO$e[indi, 1:5] )
-      dom$OUT <- dom$OUT + IO$e[indi, 6:7]
+    # Read and store domestic table of country i and 
+    dom$Z <- Z_r[indi, indi]
+    dom$Y <- y_r[indi]
+    dom$IN <- t( IO$e[indi, 1:5] )
+    dom$OUT <- IO$e[indi, 6:7]
       
       for(n in setdiff(1:num$reg,m) )
       {
         # Read indices of importing region
         indi_foreign <- Code$Z %>% filter(RegionCode == n, EntityCode == 1) %>% pull(SectorIndex)
         
-        #########NEW
+        
         for(k in setdiff(1:num$reg,m))
         {
           
@@ -130,7 +159,7 @@ Prepare_regional_SankeyData <- function(rr)
         im$Z <- im$Z + Z_r[ indi_foreign, indi]+Z_r[ indi, indi_foreign]
         im$Y <- im$Y + y_r[ indi_foreign]
       }
-    # }
+    
     
     ## Remove own-use flows (on the diagonal) for the Sankeys
     
