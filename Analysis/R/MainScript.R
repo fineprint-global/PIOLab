@@ -23,7 +23,9 @@ job <<- list("date" = "20201218",
 
 
 # Set path to folder with GitHub repositories:
-github <- "C:/Users/hwieland/Github workspace"
+# github <- "C:/Users/hwieland/Github workspace"
+github <- "C:/Users/polly/OneDrive/Documents/GIT"
+# github <- "C:/Users/hwieland/Github workspace"
 
 # Set paths to important folders
 path <<- list("input" = paste0(github,"/PIOLab/Analysis/input/",job$RegAgg,"/"),
