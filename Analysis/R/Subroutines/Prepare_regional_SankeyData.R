@@ -8,7 +8,7 @@ Prepare_regional_SankeyData <- function(r)
   # See country and country group list in object base$region
   
   # For test purposes and code development, we select an arbitrary country here
-  r <- "Europe"
+  # r <- "Europe"
   
   # Compile IO model
   IO <- Build_IOT(SUT,"ixi")      
@@ -43,7 +43,7 @@ Prepare_regional_SankeyData <- function(r)
   if (r %in% base$region$Name){
     y_r <- Y[, Code$Y$index[ Code$Y$RegionName == r ] ]  ### Rene start here!
   }
-  if (r %in% base$region$Region){
+  if (r %in% base$region$Region& r!='China'){
     rind = base$region$Code[base$region$Region==r]
     y_r <- rowSums(Y[, rind ])
   }
@@ -96,7 +96,7 @@ Prepare_regional_SankeyData <- function(r)
     mutate(Key = replace(Key, RegionName == r, "Dom") )  %>% mutate(Key = paste0(Key,"§",SectorName)) %>% 
     select(RegionName,SectorCode, SectorName, SectorIndex,Key)
   }
-  if (r %in% base$region$Region){
+  if (r %in% base$region$Region & r!='China'){
     Code_r$Z <- Code_r$Z %>% filter(EntityCode == 1) %>% mutate(Key = "RoW") %>% 
       mutate(Key = replace(Key, RegionName %in% base$region$Name[base$region$Region==r], "Dom") )  %>% mutate(Key = paste0(Key,"§",SectorName)) %>% 
       select(RegionName,SectorCode, SectorName, SectorIndex,Key)
@@ -226,7 +226,8 @@ Prepare_regional_SankeyData <- function(r)
   
   ###########NEW
   rownames(Y_disagg$row)  <- paste( "ROW -" ,rownames(Y_disagg$im) )
-  disagg_names = rownames(Y_disagg$im).copy()
+  disagg_names = rownames(Y_disagg$im)
+  disagg_names = disagg_names
   
   rownames(Y_disagg$dom)  <- paste( "Domestic -" ,rownames(Y_disagg$dom) ) 
   rownames(Y_disagg$im)  <- paste( "Foreign -" ,rownames(Y_disagg$im) ) 
@@ -240,7 +241,7 @@ Prepare_regional_SankeyData <- function(r)
   
   out <- list("agg" = result,
               "disagg" = result_disagg,
-              'disagg_names'= substr(disagg_names,11,100))
+              'disagg_names'= disagg_names)#substr(disagg_names,11,100))
   
   # Change units to mega tonnes
   out$agg <- out$agg / 10^6   
@@ -746,6 +747,8 @@ for (i in base$region$Name){
   Prepare_regional_SankeyData(i)
 }
 for (i in unique(base$region$Region)){
+  if (i=='Africa'){i <- 'RoW Africa'}
+  if (i=='Middle East'){i <- 'RoW Middle East'}
   Prepare_regional_SankeyData(i)
 }
 
