@@ -17,7 +17,7 @@ library(ggExtra)
 job <<- list("date" = "20201218",
              "phase" = "666",
              "loop" = "666",
-             "year" = 2008,
+             "year" = 2017,
              "RegAgg" = "032",
              "IEdatafeed" = "Ind30Pro39v1")
 
@@ -46,7 +46,11 @@ path <<- list("input" = paste0(github,"/PIOLab/Analysis/input/",job$RegAgg,"/"),
 # if(dir.exists(path$output)) unlink(path$output,recursive = TRUE)
 # dir.create(path$output)
 # dir.create( path$SI )
-
+# dir.create(paste0(path$output,'/Sankey/'))
+# dir.create(paste0(path$output,'/Sankey/Data/'))
+dir.create(paste0(path$output,'/Sankey/Data/',job$year,'/'))
+# dir.create(paste0(path$output,'/Sankey/Images/'))
+dir.create(paste0(path$output,'/Sankey/Images/',job$year,'/'))
 
 # Load functions into workspace
 source( paste0(path$subroutines,"/Load_Routines.R") )
@@ -59,6 +63,8 @@ SUT <<- Load_SUT("Results")
 
 # Create PIOTs
 IOT <<- Build_IOT(SUT,"ixi")      # Compile IO model
+
+
 
 # View(IOT$L)   # Total Requirement Matrix (Leontief inverse)
 # View(IOT$y)   # Final demand matrix
