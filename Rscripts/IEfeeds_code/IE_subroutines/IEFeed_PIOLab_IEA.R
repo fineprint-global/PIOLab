@@ -34,7 +34,7 @@ IEFeed_PIOLab_IEA <- function(year,path)
   
   # Aggregate into base table classificiation
   data_clean <- data %>% group_by(base,PRODUCT,PRODUCT.1,FLOW,FLOW.1) %>% 
-    summarise(Value = sum(Value)) %>% ungroup(data_clean)
+    summarise(Value = sum(Value))
   
   # TBLASTFUR includes the production of recovered gases (e.g. blast furnace gas and
   # oxygen steel furnace gas) whereas EBLASTFUR represents the energy which is used in blast furnaces.
