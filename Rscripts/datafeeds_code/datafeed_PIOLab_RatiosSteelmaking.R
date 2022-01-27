@@ -9,11 +9,18 @@ datafeed_name <- "RatiosSteelmaking"
 # Set library path depending on whether data feed runs on Uni Sydney server or local
 if(Sys.info()[1] == "Linux")
 {
-  # Setting the R package library folder on Uni Sydney server
-  .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
-  
   # Define location of root directory on the Uni Sydney server:
   root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"
+  
+  if(dir.exists(root_folder))
+  {
+    # Setting the R package library folder on Uni Sydney server
+    .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")  
+  } else{
+    # Define location of root directory on the WU Vienna server:
+    root_folder <- "/data/WULab/Roots/PIOLab/"
+  }
+  
   
 } else{
   
@@ -101,7 +108,7 @@ for(year in 1970:2017)
   
   ALANG$S.E. <- 0.1
   
-  ALANG$`Row parent` <- "1-e"
+  ALANG$`Row parent` <- "1-221"
   ALANG$`Row child` <- 2
   # ALANG$`Row grandchild` <- paste0("[",Row_iron,"];[",Row_scrap,"]")
   ALANG$`Row grandchild` <- paste0("1:e a CONCPATH/",datafeed_name,"/Source2Root_Flows.csv")

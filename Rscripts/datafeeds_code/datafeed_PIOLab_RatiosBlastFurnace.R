@@ -9,11 +9,18 @@ datafeed_name <- "RatiosBlastFurnace"
 # Set library path depending on whether data feed runs on Uni Sydney server or local
 if(Sys.info()[1] == "Linux")
 {
-  # Setting the R package library folder on Uni Sydney server
-  .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
-  
   # Define location of root directory on the Uni Sydney server:
   root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"
+  
+  if(dir.exists(root_folder))
+  {
+    # Setting the R package library folder on Uni Sydney server
+    .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")  
+  } else{
+    # Define location of root directory on the WU Vienna server:
+    root_folder <- "/data/WULab/Roots/PIOLab/"
+  }
+  
   
 } else{
   
@@ -157,7 +164,7 @@ for(year in 1970:2017)
                        " DATAPATH/",datafeed_name,rep(com$Filename[1:select],each = nrow(root$region) ) )
   
   # Adjust for colsums
-  ALANG$`Row parent`[ALANG$`Row child` == "2;3"] <- "1-e"
+  ALANG$`Row parent`[ALANG$`Row child` == "2;3"] <- "1-221"
   
   # Write vectors in different orientation dependign on the adress space
   for(i in 1:select) 
