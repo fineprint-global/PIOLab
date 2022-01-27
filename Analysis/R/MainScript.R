@@ -11,15 +11,24 @@ library(viridis)
 library(hrbrthemes)
 library(ggpubr)
 library(ggExtra)
-
+library(stringr)
+library(reshape2)
 
 # Set parameters to select raw data files (version and/or year) for the construction of PIOTs
-job <<- list("date" = "20201218",
-             "phase" = "666",
-             "loop" = "666",
+# job <<- list("date" = "20201218",
+#              "phase" = "666",
+#              "loop" = "666",
+#              "year" = 2014,
+#              "RegAgg" = "032",
+#              "IEdatafeed" = "Ind30Pro39v1")
+
+job <<- list("date" = "20220124",
+             "phase" = "333",
+             "loop" = "013",
              "year" = 2008,
              "RegAgg" = "032",
              "IEdatafeed" = "Ind30Pro39v1")
+
 
 # Set path to folder with GitHub repositories:
 github <- "C:/Users/hwieland/Github workspace"
@@ -57,10 +66,6 @@ SUT <<- Load_SUT("Results")
 # Create PIOTs
 IOT <<- Build_IOT(SUT,"ixi")      # Compile IO model
 
-View(IOT$L)   # Total Requirement Matrix (Leontief inverse)
-View(IOT$y)   # Final demand matrix
-View(IOT$e)   # Extensions (boundary input and output vectors)
-
 # Calculate ewMFA indicators from gPIOT
 ewMFA <- Calc_ewMFA(IOT, Code)
 
@@ -69,3 +74,7 @@ FP <- Calc_FP("Crude Ore", 1)
 
 # Read domestic variables/tables for specific region
 SUT_sel <- Check_DomesticSUT("China")
+
+Diagnostics()
+Plot_HeadlineIndicators()
+Plot_Ratios()
