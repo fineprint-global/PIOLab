@@ -25,9 +25,10 @@ print(paste0("Start of ",IEdatafeed_name," InitialEstimate."))
 
 # Set library path when running on suphys server
 if(Sys.info()[1] == "Linux"){
-  .libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
+  #.libPaths("/suphys/hwie3321/R/x86_64-redhat-linux-gnu-library/3.5")
+  .libPaths("/home/wucloud/R/x86_64-pc-linux-gnu-library/3.6")
   # Define location for root directory
-  root_folder <- "/import/emily1/isa/IELab/Roots/PIOLab/"}else if(dir.exists("C:/Users/hwieland/Github workspace/PIOLab/")){
+  root_folder <- "/data/WULab/Roots/PIOLab/"}else if(dir.exists("C:/Users/hwieland/Github workspace/PIOLab/")){
     root_folder <- "C:/Users/hwieland/Github workspace/PIOLab/"}else if(dir.exists("C:/Users/Rene/Google Drive/WU/GIT/PIOLab/")){
       root_folder <- "C:/Users/Rene/Google Drive/WU/GIT/PIOLab/"}else{root_folder <- "C:/Users/polly/Google Drive/WU/GIT/PIOLab/"}
 # Initializing R script (load R packages and set paths to folders etc.)
