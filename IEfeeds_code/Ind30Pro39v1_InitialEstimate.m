@@ -43,7 +43,8 @@ function [RegMap,IndMap,ProdMap]=Ind30Pro39v1_InitialEstimate(handles)
     ind_proxy = ones(size(IndMap,2),1);
     IndMap = prorate(IndMap,'col_proxy',ind_proxy);
     
-    command = 'Rscript /import/emily1/isa/IELab/Roots/PIOLab/Rscripts/IEfeeds_code/Ind30Pro39v1_InitialEstimate.R';
+    % To run Lab on Sydney machine: command = 'Rscript /import/emily1/isa/IELab/Roots/PIOLab/Rscripts/IEfeeds_code/Ind30Pro39v1_InitialEstimate.R';
+    command = 'Rscript /data/WULab/Roots/PIOLab/Rscripts/IEfeeds_code/Ind30Pro39v1_InitialEstimate.R';
     system(command,'-echo');
         
     end    
