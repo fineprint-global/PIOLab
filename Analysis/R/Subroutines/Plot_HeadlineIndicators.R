@@ -296,7 +296,7 @@ Plot_HeadlineIndicators <- function()
     ## 1.1. Bar plot of aggregates ##
     
     # Aggregate into world regions for plotting bars
-    dat_agg <- dat %>% group_by(Region) %>% summarise(X = sum(X), Y = sum(Y)) %>% ungroup(Region)
+    dat_agg <- dat %>% group_by(Region) %>% summarise(X = sum(X), Y = sum(Y))
     
     # Sort descending and use factors for setting order in plots 
     dat_agg <- dat_agg[order(-dat_agg$Y),]   
@@ -354,8 +354,43 @@ Plot_HeadlineIndicators <- function()
   }
   
   
+  # # Object for all plots, including a missing object for adjusting spacing
+  # overview <- vector(mode = "list", length = 5)
+  # 
+  # # Create overview of MFA headline indicators using bars
+  # overview[[1]] <- ggarrange(plotlist = bar_plots[1:3],
+  #                            ncol = 3,
+  #                            nrow = 1 )
+  # 
+  # # Overview of MFA headline indicators using scatter plots
+  # overview[[2]] <- ggarrange(plotlist = scatter_plots[1:3],
+  #                            ncol = 3,
+  #                            nrow = 1,
+  #                            common.legend = TRUE,
+  #                            legend = "bottom")
+  # 
+  # # Create overview of source data using bars
+  # overview[[4]] <- ggarrange(plotlist = bar_plots[4:6],
+  #                            ncol = 3,
+  #                            nrow = 1 )
+  # 
+  # # Overview of source data using scatter plots
+  # overview[[5]] <- ggarrange(plotlist = scatter_plots[4:6],
+  #                            ncol = 3,
+  #                            nrow = 1,
+  #                            common.legend = TRUE,
+  #                            legend = "bottom")
+  # 
+  # space <- .7   # Set space between upper and lower group of plots
+  # 
+  # ggarrange(plotlist = overview,
+  #           ncol = 1,
+  #           nrow = 5,
+  #           heights = c(6,5,space,6,5) )
+  
+  
   # Object for all plots, including a missing object for adjusting spacing
-  overview <- vector(mode = "list", length = 5)
+  overview <- vector(mode = "list", length = 2)
   
   # Create overview of MFA headline indicators using bars
   overview[[1]] <- ggarrange(plotlist = bar_plots[1:3],
@@ -369,30 +404,20 @@ Plot_HeadlineIndicators <- function()
                              common.legend = TRUE,
                              legend = "bottom")
   
-  # Create overview of source data using bars
-  overview[[4]] <- ggarrange(plotlist = bar_plots[4:6],
-                             ncol = 3,
-                             nrow = 1 )
-  
-  # Overview of source data using scatter plots
-  overview[[5]] <- ggarrange(plotlist = scatter_plots[4:6],
-                             ncol = 3,
-                             nrow = 1,
-                             common.legend = TRUE,
-                             legend = "bottom")
-  
-  space <- .7   # Set space between upper and lower group of plots
   
   ggarrange(plotlist = overview,
             ncol = 1,
-            nrow = 5,
-            heights = c(6,5,space,6,5) )
+            nrow = 2,
+            heights = c(6,5) )
+  
   
   
   # Write plot to file:
   ggsave(path = path$output,
-         filename = paste0(job$year,"_Overview.png"),
-         width = 15, height = 22 + space )
+         filename = paste0(job$year,"_Overview.tiff"),
+         width = 15, height = 11,
+         device='tiff', dpi=1000,
+         compression = 'lzw')
   
   
   
