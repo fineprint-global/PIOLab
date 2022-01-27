@@ -33,7 +33,7 @@ IEFeed_PIOLab_Grades <- function(path)
   # Look-up base classification codes
   data_clean <- left_join(data,reg_agg,by = c("Code" = "root"),copy = FALSE) %>% 
     filter(!is.na(base)) %>% select(base,Concentration) %>% group_by(base) %>%
-    summarise(Concentration = mean(Concentration)) %>% ungroup(base)
+    summarise(Concentration = mean(Concentration))
   
   # Check if subfolder in processed data exists and if not create it
   path_set <- paste0(path$IE_Processed,"/Grades")
