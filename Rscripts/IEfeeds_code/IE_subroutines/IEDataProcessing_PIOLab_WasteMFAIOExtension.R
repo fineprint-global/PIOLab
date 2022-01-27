@@ -203,11 +203,11 @@ IEDataProcessing_PIOLab_WasteMFAIOExtension <- function(year,path)
     
     BACI_export <- filter(BACI,From == r) %>% select(Product,Quantity) %>%
       group_by(Product) %>% summarise(Quantity = sum(Quantity)) %>%
-      ungroup(Product) %>% filter(Product %in% Code$base$Finished)
+      filter(Product %in% Code$base$Finished)
     
     BACI_import <- filter(BACI,To == r) %>% select(Product,Quantity) %>%
       group_by(Product) %>% summarise(Quantity = sum(Quantity)) %>%
-      ungroup(Product) %>% filter(Product %in% Code$base$Finished)
+      filter(Product %in% Code$base$Finished)
     
     
     # Write trade flows into data frame and estimate domestic use:
