@@ -130,12 +130,10 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     data_sel <- list()
     
     data_sel[["inter"]] <- data$Fab2Demand %>% filter(base.from == i) %>% select(sector.from,Quantity) %>% 
-      group_by(sector.from) %>% summarise(Quantity = sum(Quantity)) %>% 
-      ungroup(sector.from)
+      group_by(sector.from) %>% summarise(Quantity = sum(Quantity))
     
     data_sel[["upstr"]] <- data$Fab2Demand %>% filter(base.to == i) %>%
-      select(sector.to, Quantity) %>% group_by(sector.to) %>% summarise(Quantity = sum(Quantity)) %>% 
-      ungroup(sector.to)
+      select(sector.to, Quantity) %>% group_by(sector.to) %>% summarise(Quantity = sum(Quantity))
     
     # Create empty df for total of intermediates and upstream inputs
     data_sel[["total"]] <- data.frame("sector" = 1:length( base$process$Code[base$process$Type == "Final"] ),
@@ -390,7 +388,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     # Read export of intermediates:
     
     export <- filter(data$BACI,From == i,Product %in% index$product) %>% select(Product,Quantity) %>% 
-      group_by(Product) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(Product)
+      group_by(Product) %>% summarise(Quantity = sum(Quantity))
     
     
     offset <- min(index$product)-1  # Offset product codes to write in Map
@@ -535,7 +533,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
       # Read export of iron ore:
       
       export <- filter(data$BACI,From == i,Product %in% (index$use$product-num$process) ) %>% select(Product,Quantity) %>% 
-        group_by(Product) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(Product) %>% pull(Quantity)
+        group_by(Product) %>% summarise(Quantity = sum(Quantity)) %>% pull(Quantity)
       
       if( length(export) == 0 ) export <- 0  # Check if exports are unavailable and if so set to zero
       
@@ -596,7 +594,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     DomOut <- SUT["Scrap preparation","Steel scrap"]  # Read domestic production of steel scrap
     
     export <- filter(data$BACI,From == i,Product %in% (index$product-num$process) ) %>% select(Product,Quantity) %>% 
-      group_by(Product) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(Product) %>% pull(Quantity)
+      group_by(Product) %>% summarise(Quantity = sum(Quantity)) %>% pull(Quantity)
     
   
     
@@ -638,7 +636,7 @@ IEDataProcessing_PIOLab_BuildingDomesticTables <- function(year,path)
     # Read export of pig iron and sponge iron:
     
     export <- filter(data$BACI,From == i,Product %in% (iron$pro - num$process) ) %>% select(Product,Quantity) %>% 
-      group_by(Product) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(Product)
+      group_by(Product) %>% summarise(Quantity = sum(Quantity))
     
     offset <- min(iron$pro - num$process)-1
     

@@ -46,10 +46,10 @@ IEDataProcessing_PIOLab_AligningData <- function(year,path)
   Ingots[["Code"]] <- filter(base$flow, Name == "Ingots") %>% pull(Code)
   
   Ingots[["Export"]] <- filter(BACI, Product == Ingots$Code) %>% select(-Product) %>%
-    group_by(From) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(From)
+    group_by(From) %>% summarise(Quantity = sum(Quantity))
   
   Ingots[["Import"]] <- filter(BACI, Product == Ingots$Code) %>% select(-Product) %>%
-    group_by(To) %>% summarise(Quantity = sum(Quantity)) %>% ungroup(To)
+    group_by(To) %>% summarise(Quantity = sum(Quantity))
   
   # Estimate forging output:
   
