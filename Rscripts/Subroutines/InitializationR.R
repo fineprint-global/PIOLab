@@ -16,6 +16,7 @@ suppressMessages(library(reshape2))
 suppressMessages(library(openxlsx))
 suppressMessages(library(stringr))
 suppressMessages(library(R.matlab))
+# library(ff)
 
 ################################################################################
 # 1. Set global variables and paths
@@ -36,7 +37,7 @@ if(file.exists(OnServer))
 {
   if((Sys.info()[1] == "Windows") & (dir.exists("C:/Users/hwieland/Github workspace/PIOLab/")))
   {
-    mother <- readMat("C:/Users/hwieland/Documents/PIOLab_FilesForDebuggingR/WorkingDirectory4R.mat")
+    mother <- readMat("C:/Users/hwieland/Github workspace/PIOLab/WorkingDirectory4R.mat")
     mother <- c(mother$out)
   }else if((Sys.info()[1] == "Windows")&(dir.exists("C:/Users/polly/Google Drive/WU/GIT/PIOLab/"))){
     mother <- readMat("C:/Users/polly/Google Drive/WU/GIT/PIOLab/WorkingDirectory4R.mat")
