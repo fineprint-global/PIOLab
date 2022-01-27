@@ -15,19 +15,19 @@ library(stringr)
 library(reshape2)
 
 # Set parameters to select raw data files (version and/or year) for the construction of PIOTs
-# job <<- list("date" = "20201218",
-#              "phase" = "666",
-#              "loop" = "666",
-#              "year" = 2014,
-#              "RegAgg" = "032",
-#              "IEdatafeed" = "Ind30Pro39v1")
-
-job <<- list("date" = "20220124",
-             "phase" = "333",
-             "loop" = "013",
-             "year" = 2008,
+job <<- list("date" = "20201218",
+             "phase" = "666",
+             "loop" = "666",
+             "year" = 2014,
              "RegAgg" = "032",
              "IEdatafeed" = "Ind30Pro39v1")
+
+# job <<- list("date" = "20220124",
+#              "phase" = "333",
+#              "loop" = "013",
+#              "year" = 2008,
+#              "RegAgg" = "032",
+#              "IEdatafeed" = "Ind30Pro39v1")
 
 
 # Set path to folder with GitHub repositories:
