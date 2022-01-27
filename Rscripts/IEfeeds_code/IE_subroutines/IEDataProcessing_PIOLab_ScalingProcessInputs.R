@@ -39,6 +39,7 @@ IEDataProcessing_PIOLab_ScalingProcessInputs <- function(year,path)
     Scale <- data.frame("In" = rowSums(In), "Out" = rowSums(Out) ) 
     Scale["factor"] <- Scale$Out / Scale$In
     Scale$factor[is.na(Scale$factor)] <- 1  # Write 1 for no production
+    Scale$factor[Scale$factor == Inf] <- 1  # Write 1 for no production
     
     P <- t( t(P) * Scale$factor )  # Scale boundary inputs and store in folder
     Numbers2File( P, paste0(path$IE_Processed,"/SUT/",year,"_PrimaryInput_Region",r,".csv") )
