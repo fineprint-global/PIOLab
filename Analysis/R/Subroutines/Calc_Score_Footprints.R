@@ -1,3 +1,45 @@
+# This script computes the footprint scores for Biodiversity-Carbon-Water
+
+
+Plot_Impact_Footprint <- function(FP_data)
+{
+  regions <- colnames(FP_data)
+  
+  for(i in 1:ncol(FP_data))
+  {
+    dat <- data.frame("score" = E$score, 
+                      "extraction" = FP_data[,i],
+                      "region" = base$region$Name)
+    
+    dat <- dat[dat$extraction > 1,]
+    dat <- dat[order(-dat$extraction),]
+    dat_row <- dat[6:nrow(dat),]
+    dat <- dat[1:5,]
+    dat <- dat %>% add_row()
+    dat$score[6] <- sum(dat_row$score * dat_row$extraction)/sum(dat_row$extraction)
+    dat$extraction[6] <- sum(dat_row$extraction)
+    dat$region[6] <- "RoW"
+    dat$extraction <- dat$extraction/sum(dat$extraction)
+    dat$extraction <- dat$extraction * 100
+    
+    ggplot( data = dat, aes(x = score, y = extraction, color = region ) ) +
+      geom_point(alpha = 0.8, size=8, aes(shape = region) ) +
+      labs( x= " Biodiversity-Carbon-Water Score",
+            y = "% of Consumption Footprint") +
+      theme( panel.grid.minor = element_blank(), 
+             legend.position = "top",
+             text = element_text(size=14),
+             legend.text=element_text(size=14),
+             legend.background = element_rect(fill="gray90", size=.5) ) +
+      ggtitle(str_c("Iron Ore Footprint of ",regions[i]," by source region and impact score in ",job$year))
+    
+    # Save plot: 
+    ggsave(path = path$output, 
+           filename = paste0(job$year,"_Footprint_",regions[i],"_SourceRegion_ImpactScore.png"),
+           width = 10, height = 10 )
+  }
+}
+
 
 load("./Analysis/input/EPIP/score_in_root.R")
 
@@ -67,7 +109,7 @@ FP <- Agg(FP, Code$Z %>% filter(EntityName == "Industry") %>% pull(RegionCode), 
 
 colnames(FP) <- base$region$Name
 
-Plot_Impact_Footprint(FP)
+Plot_Impact_Footprint(FP_data = FP)
 
 Mat_Footprint <- colSums(FP)
 FP <- colSums( E$score * FP ) / colSums(FP)
@@ -97,42 +139,6 @@ regions <- colnames(FP)
 #                      "Footprint" = Mat_Footprint)
 # 
 # write.xlsx(result, file = str_c( path$output,"/BiodiversityCarbonWater_IronOre_2014_6_regions.xlsx"))
+Plot_Impact_Footprint(FP_data = FP)
 
-Plot_Impact_Footprint <- function(FP_data)
-{
-  regions <- colnames(FP_data)
-  
-  for(i in 1:ncol(FP_data))
-  {
-    dat <- data.frame("score" = E$score, 
-                      "extraction" = FP_data[,i],
-                      "region" = base$region$Name)
-    
-    dat <- dat[dat$extraction > 1,]
-    dat <- dat[order(-dat$extraction),]
-    dat_row <- dat[6:nrow(dat),]
-    dat <- dat[1:5,]
-    dat <- dat %>% add_row()
-    dat$score[6] <- sum(dat_row$score * dat_row$extraction)/sum(dat_row$extraction)
-    dat$extraction[6] <- sum(dat_row$extraction)
-    dat$region[6] <- "RoW"
-    dat$extraction <- dat$extraction/sum(dat$extraction)
-    dat$extraction <- dat$extraction * 100
-    
-    ggplot( data = dat, aes(x = score, y = extraction, color = region ) ) +
-      geom_point(alpha = 0.8, size=4, aes(shape = region) ) +
-      labs( x= " Biodiversity-Carbon-Water Score",
-            y = "% of Consumption Footprint") +
-      theme( panel.grid.minor = element_blank(), 
-             legend.position = "top",
-             text = element_text(size=14),
-             legend.text=element_text(size=14),
-             legend.background = element_rect(fill="gray90", size=.5) ) +
-      ggtitle(str_c("Iron Ore Footprint of ",regions[i]," by source region and impact score in ",job$year))
-    
-    # Save plot: 
-    ggsave(path = path$output, 
-           filename = paste0(job$year,"_Footprint_",regions[i],"_SourceRegion_ImpactScore.png"),
-           width = 10, height = 10 )
-  }
-}
+
